@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.service;
+package com.holovin.smidatestproject.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

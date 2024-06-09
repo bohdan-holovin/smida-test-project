@@ -1,7 +1,6 @@
-package com.holovin.smidatestproject.config;
+package com.holovin.smidatestproject.config.jwt;
 
-import com.holovin.smidatestproject.service.JwtService;
-import com.holovin.smidatestproject.service.UserInfoService;
+import com.holovin.smidatestproject.service.UserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private JwtService jwtService;
-    private UserInfoService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

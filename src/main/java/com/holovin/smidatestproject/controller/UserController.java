@@ -1,56 +1,63 @@
 package com.holovin.smidatestproject.controller;
 
-import com.holovin.smidatestproject.controller.dto.AuthRequest;
-import com.holovin.smidatestproject.model.UserInfo;
-import com.holovin.smidatestproject.service.JwtService;
-import com.holovin.smidatestproject.service.UserInfoService;
+import com.holovin.smidatestproject.controller.dto.AuthRequestDto;
+import com.holovin.smidatestproject.controller.dto.RegisterUserRequestDto;
+import com.holovin.smidatestproject.exceptions.UserNotFoundException;
+import com.holovin.smidatestproject.model.User;
+import com.holovin.smidatestproject.config.jwt.JwtService;
+import com.holovin.smidatestproject.service.UserDetailsService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import static com.holovin.smidatestproject.controller.mapper.Mapper.mapToUser;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping()
 public class UserController {
 
-    private UserInfoService service;
+    private UserDetailsService userDetailsService;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
     @GetMapping("/auth/not_secured")
-    public String notSecured() {
-        return "This endpoint is not secure";
+    public ResponseEntity<String> notSecured() {
+        return ResponseEntity.ok("This endpoint is not secure");
     }
 
     @PostMapping("/auth/register")
-    public String addNewUser(@RequestBody UserInfo userInfo) {
-        return service.addUser(userInfo);
+    public ResponseEntity<String> registerUser(@RequestBody RegisterUserRequestDto registerUserRequestDto) {
+        User user = userDetailsService.registerUser(mapToUser(registerUserRequestDto));
+        return ResponseEntity.ok("User register successfully with username:" + user.getUsername());
     }
 
     @PostMapping("/auth/login")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> authenticateAndGetToken(@RequestBody AuthRequestDto authRequestDto) {
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
-        } else {
-            throw new UsernameNotFoundException("invalid user request !");
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        authRequestDto.getUsername(),
+                        authRequestDto.getPassword())
+                );
+        if (!authentication.isAuthenticated()) {
+            throw new UserNotFoundException(authRequestDto.getUsername());
         }
+        return ResponseEntity.ok(jwtService.generateToken(authRequestDto.getUsername()));
     }
 
     @GetMapping("/user/profile")
     @PreAuthorize("hasAuthority('USER')")
-    public String userProfile() {
-        return "You are logged in USER";
+    public ResponseEntity<String> userProfile() {
+        return ResponseEntity.ok("You are logged in USER");
     }
 
     @GetMapping("/admin/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String adminProfile() {
-        return "You are logged in ADMIN";
+    public ResponseEntity<String> adminProfile() {
+        return ResponseEntity.ok("You are logged in ADMIN");
     }
 }
