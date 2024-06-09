@@ -1,7 +1,7 @@
 package com.holovin.smidatestproject.repository;
 
 import com.holovin.smidatestproject.model.Company;
-import com.holovin.smidatestproject.utils.RandomCompany;
+import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +12,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-//@DataJpaTest
-public class CompanyRepositoryIT {
+public class CompanyRepositoryTest {
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -21,8 +20,8 @@ public class CompanyRepositoryIT {
     @Test
     public void shouldGiveCompaniesWhenUseFindAll() {
         // Given
-        Company company1 = RandomCompany.create();
-        Company company2 = RandomCompany.create();
+        Company company1 = RandomUtils.createCompany();
+        Company company2 = RandomUtils.createCompany();
 
         companyRepository.save(company1);
         companyRepository.save(company2);
@@ -39,7 +38,7 @@ public class CompanyRepositoryIT {
     @Test
     public void shouldGiveCompanyWhenUseFindById() {
         // Given
-        Company company = RandomCompany.create();
+        Company company = RandomUtils.createCompany();
         Company savedCompany = companyRepository.save(company);
 
         // When
@@ -54,7 +53,7 @@ public class CompanyRepositoryIT {
     @Test
     public void shouldDeleteCompanyWhenDeleteById() {
         // Given
-        Company company = RandomCompany.create();
+        Company company = RandomUtils.createCompany();
         Company savedCompany = companyRepository.save(company);
 
         // When

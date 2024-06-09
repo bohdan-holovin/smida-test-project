@@ -1,10 +1,10 @@
 package com.holovin.smidatestproject.controller;
 
+import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.controller.dto.AuthRequestDto;
 import com.holovin.smidatestproject.controller.dto.RegisterUserRequestDto;
-import com.holovin.smidatestproject.exceptions.UserNotFoundException;
+import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
 import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.service.UserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterUserRequestDto registerUserRequestDto) {
         User user = userDetailsService.registerUser(mapToUser(registerUserRequestDto));
-        return ResponseEntity.ok("User register successfully with username:" + user.getUsername());
+        return ResponseEntity.ok("User register successfully with username: " + user.getUsername());
     }
 
     @PostMapping("/auth/login")
@@ -44,7 +44,7 @@ public class UserController {
                         authRequestDto.getPassword())
                 );
         if (!authentication.isAuthenticated()) {
-            throw new UserNotFoundException(authRequestDto.getUsername());
+            throw new UserIsUnauthorizedException(authRequestDto.getUsername());
         }
         return ResponseEntity.ok(jwtService.generateToken(authRequestDto.getUsername()));
     }
@@ -55,7 +55,7 @@ public class UserController {
         return ResponseEntity.ok("You are logged in USER");
     }
 
-    @GetMapping("/admin/admin")
+    @GetMapping("/admin/profile")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> adminProfile() {
         return ResponseEntity.ok("You are logged in ADMIN");

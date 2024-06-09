@@ -3,7 +3,7 @@ package com.holovin.smidatestproject.service;
 import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.repository.CompanyRepository;
-import com.holovin.smidatestproject.utils.RandomCompany;
+import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class CompanyServiceTest {
 
     @BeforeEach
     void setUp() {
-        testCompany = RandomCompany.create();
+        testCompany = RandomUtils.createCompany();
     }
 
     @Test
@@ -92,7 +92,7 @@ class CompanyServiceTest {
     void shouldGiveUpdatedCompanyWhenUseUpdate() {
         // Given
         UUID id = testCompany.getId();
-        Company updatedCompany = RandomCompany.create();
+        Company updatedCompany = RandomUtils.createCompany();
         when(companyRepository.findById(id)).thenReturn(Optional.of(testCompany));
         when(companyRepository.save(any(Company.class))).thenReturn(updatedCompany);
 
@@ -111,7 +111,7 @@ class CompanyServiceTest {
     void shouldThrowCompanyNotFoundExceptionWhenUseUpdate() {
         // Given
         UUID id = UUID.randomUUID();
-        Company updatedCompany = RandomCompany.create();
+        Company updatedCompany = RandomUtils.createCompany();
         when(companyRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then

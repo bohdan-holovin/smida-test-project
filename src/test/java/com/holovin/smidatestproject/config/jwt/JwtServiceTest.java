@@ -1,0 +1,103 @@
+package com.holovin.smidatestproject.config.jwt;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+public class JwtServiceTest {
+
+    private JwtService jwtService;
+
+    @Mock
+    private UserDetails userDetails;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        jwtService = new JwtService();
+    }
+
+    @Test
+    public void shouldGenerateTokenWhenCallGenerateToken() {
+        // Given
+        String userName = "testUser";
+
+        // When
+        String token = jwtService.generateToken(userName);
+
+        // Then
+        assertNotNull(token);
+        assertThat(token).isNotEmpty();
+    }
+
+    @Test
+    public void shouldGiveValidUsernameWhenCallExtractUsername() {
+        // Given
+        String userName = "testUser";
+        String token = jwtService.generateToken(userName);
+
+        // When
+        String extractedUsername = jwtService.extractUsername(token);
+
+        // Then
+        assertEquals(userName, extractedUsername);
+    }
+
+    @Test
+    public void shouldGiveValidExtractExpirationWhenCallExtractExpiration() {
+        // Given
+        String userName = "testUser";
+        String token = jwtService.generateToken(userName);
+
+        // When
+        Date expirationDate = jwtService.extractExpiration(token);
+
+        // Then
+        assertNotNull(expirationDate);
+        assertTrue(expirationDate.after(new Date()));
+    }
+
+    @Test
+    public void shouldGiveTrueWhenTokenIsValid() {
+        // Given
+        String userName = "testUser";
+        String token = jwtService.generateToken(userName);
+        when(userDetails.getUsername()).thenReturn(userName);
+
+        // When
+        Boolean isValid = jwtService.validateToken(token, userDetails);
+
+        // Then
+        assertTrue(isValid);
+    }
+
+    @Test
+    public void shouldThrowExpiredJwtExceptionWhenTokenInvalid() {
+        // Given
+        String userName = "testUser";
+        Map<String, Object> claims = new HashMap<>();
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userName)
+                .setIssuedAt(new Date(System.currentTimeMillis() - 1000 * 60 * 31))
+                .setExpiration(new Date(System.currentTimeMillis() - 1000 * 60 * 30))
+                .signWith(jwtService.getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+        // When-Then
+        assertThrows(ExpiredJwtException.class, () -> jwtService.isTokenExpired(token));
+    }
+}
