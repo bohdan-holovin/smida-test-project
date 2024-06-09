@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: SmidaTestProject
+  jpa:
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:postgresql://localhost:5432/smidadb
+    username: postgres
+    password: postgres
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/smidadb?authSource=admin
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
