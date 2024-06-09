@@ -14,36 +14,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping()
 public class UserController {
 
     private UserInfoService service;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
-    @GetMapping("/welcome")
-    public String welcome() {
-        return "Welcome this endpoint is not secure";
+    @GetMapping("/auth/not_secured")
+    public String notSecured() {
+        return "This endpoint is not secure";
     }
 
-    @PostMapping("/addNewUser")
+    @PostMapping("/auth/register")
     public String addNewUser(@RequestBody UserInfo userInfo) {
         return service.addUser(userInfo);
     }
 
-    @GetMapping("/user/userProfile")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public String userProfile() {
-        return "Welcome to User Profile";
-    }
-
-    @GetMapping("/admin/adminProfile")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String adminProfile() {
-        return "Welcome to Admin Profile";
-    }
-
-    @PostMapping("/generateToken")
+    @PostMapping("/auth/login")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -52,5 +40,17 @@ public class UserController {
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
+    }
+
+    @GetMapping("/user/profile")
+    @PreAuthorize("hasAuthority('USER')")
+    public String userProfile() {
+        return "You are logged in USER";
+    }
+
+    @GetMapping("/admin/admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String adminProfile() {
+        return "You are logged in ADMIN";
     }
 }
