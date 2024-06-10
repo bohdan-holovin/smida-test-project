@@ -16,7 +16,7 @@ import static com.holovin.smidatestproject.controller.mapper.CompanyMapper.toCom
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/companies")
+@RequestMapping("/reports")
 public class ReportController {
 
     private final CompanyService companyService;
