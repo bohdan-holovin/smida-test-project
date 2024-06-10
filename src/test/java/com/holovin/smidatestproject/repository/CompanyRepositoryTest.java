@@ -18,8 +18,12 @@ public class CompanyRepositoryTest {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private ReportRepository reportRepository;
+
     @BeforeEach
     public void setUp() {
+        reportRepository.deleteAll();
         companyRepository.deleteAll();
     }
 

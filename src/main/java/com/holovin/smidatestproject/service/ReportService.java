@@ -1,7 +1,9 @@
 package com.holovin.smidatestproject.service;
 
+import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
 import com.holovin.smidatestproject.exceptions.ReportDetailsNotFoundException;
 import com.holovin.smidatestproject.exceptions.ReportNotFoundException;
+import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;
@@ -11,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.holovin.smidatestproject.service.mapper.ReportMapper.*;
@@ -47,8 +50,14 @@ public class ReportService {
         return toFullReport(report, reportDetails);
     }
 
-    public Report createReport(Report report) {
-        return reportRepository.save(report);
+    public Report createReport(UUID companyId, Report report) {
+        return Optional.of(companyService.getCompanyByCompanyId(companyId))
+                .map(it -> {
+                    report.setCompany(it);
+                    return report;
+                })
+                .map(reportRepository::save)
+                .orElseThrow(() -> new CompanyNotFoundException(companyId));
     }
 
     public ReportDetails createReportDetails(ReportDetails report) {
@@ -56,16 +65,17 @@ public class ReportService {
         return reportDetailsRepository.save(report);
     }
 
-    public FullReport createFullReport(FullReport fullReport) {
-        createReport(toReport(fullReport));
+    public FullReport createFullReport(UUID companyId, FullReport fullReport) {
+        createReport(companyId, toReport(fullReport));
         createReportDetails(toReportDetails(fullReport));
         return fullReport;
     }
 
-    public Report updateReport(Report report) {
+    public Report updateReport(UUID companyId, Report report) {
+        Company companyByCompanyId = companyService.getCompanyByCompanyId(companyId);
         return reportRepository.findById(report.getId())
                 .map(it -> {
-                    it.setCompany(report.getCompany());
+                    it.setCompany(companyByCompanyId);
                     it.setNetProfit(report.getNetProfit());
                     it.setReportDate(report.getReportDate());
                     it.setTotalRevenue(report.getTotalRevenue());
@@ -87,8 +97,8 @@ public class ReportService {
                 .orElseThrow(() -> new ReportDetailsNotFoundException(reportDetails.getReportId()));
     }
 
-    public FullReport updateFullreport(FullReport fullReport) {
-        Report report = updateReport(toReport(fullReport));
+    public FullReport updateFullreport(UUID companyId, FullReport fullReport) {
+        Report report = updateReport(companyId, toReport(fullReport));
         ReportDetails reportDetails = updateReportDetails(toReportDetails(fullReport));
         return toFullReport(report, reportDetails);
     }

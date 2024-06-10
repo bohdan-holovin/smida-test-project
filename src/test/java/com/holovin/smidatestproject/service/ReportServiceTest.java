@@ -151,13 +151,15 @@ class ReportServiceTest {
     @Test
     void shouldCreateReport() {
         // Given
+        when(companyService.getCompanyByCompanyId(testReport.getId())).thenReturn(testReport.getCompany());
         when(reportRepository.save(testReport)).thenReturn(testReport);
 
         // When
-        Report actualReport = reportService.createReport(testReport);
+        Report actualReport = reportService.createReport(testReport.getId(), testReport);
 
         // Then
         assertThat(actualReport).isEqualTo(testReport);
+        verify(companyService).getCompanyByCompanyId(testReport.getId());
         verify(reportRepository).save(testReport);
     }
 
@@ -183,16 +185,18 @@ class ReportServiceTest {
         // Given
         testReportDetails.setReportId(testReport.getId());
 
+        when(companyService.getCompanyByCompanyId(testReport.getCompany().getId())).thenReturn(testReport.getCompany());
         when(reportRepository.save(any(Report.class))).thenReturn(testReport);
         when(reportRepository.findById(testReport.getId())).thenReturn(Optional.ofNullable(testReport));
         when(reportDetailsRepository.save(any(ReportDetails.class))).thenReturn(testReportDetails);
         FullReport expectedFullReport = toFullReport(testReport, testReportDetails);
 
         // When
-        FullReport actualFullReport = reportService.createFullReport(expectedFullReport);
+        FullReport actualFullReport = reportService.createFullReport(testReport.getCompany().getId(), expectedFullReport);
 
         // Then
         assertThat(actualFullReport).isEqualTo(expectedFullReport);
+        verify(companyService).getCompanyByCompanyId(testReport.getCompany().getId());
         verify(reportRepository).save(any(Report.class));
         verify(reportRepository).findById(testReport.getId());
         verify(reportDetailsRepository).save(any(ReportDetails.class));
@@ -205,13 +209,15 @@ class ReportServiceTest {
         Report expectedReport = toReport(testFullReport);
         expectedReport.setId(reportId);
 
+        when(companyService.getCompanyByCompanyId(testReport.getCompany().getId())).thenReturn(testReport.getCompany());
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
         when(reportRepository.save(expectedReport)).thenReturn(expectedReport);
 
         // When
-        Report actualReport = reportService.updateReport(expectedReport);
+        Report actualReport = reportService.updateReport(testFullReport.getCompany().getId(), expectedReport);
 
         // Then
+        verify(companyService).getCompanyByCompanyId(testReport.getCompany().getId());
         assertThat(actualReport).isEqualTo(expectedReport);
         verify(reportRepository).findById(reportId);
         verify(reportRepository).save(any(Report.class));
@@ -247,16 +253,18 @@ class ReportServiceTest {
 
         FullReport expectedReportDetails = toFullReport(testReport, testReportDetails);
 
+        when(companyService.getCompanyByCompanyId(testReport.getCompany().getId())).thenReturn(testReport.getCompany());
         when(reportRepository.findById(reportId)).thenReturn(Optional.ofNullable(testReport));
         when(reportRepository.save(testReport)).thenReturn(updatedReport);
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
         when(reportDetailsRepository.save(testReportDetails)).thenReturn(reportDetails);
 
         // When
-        FullReport actualReportDetails = reportService.updateFullreport(testFullReport);
+        FullReport actualReportDetails = reportService.updateFullreport(updatedReport.getCompany().getId(), testFullReport);
 
         // Then
         assertThat(actualReportDetails).isEqualTo(expectedReportDetails);
+        verify(companyService).getCompanyByCompanyId(testReport.getCompany().getId());
         verify(reportRepository, times(2)).findById(reportId);
         verify(reportRepository).save(testReport);
         verify(reportDetailsRepository).findById(reportId);

@@ -1,20 +1,18 @@
 package com.holovin.smidatestproject.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Entity
-@Table(name = "companies")
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "companies")
 public class Company {
 
     @Id

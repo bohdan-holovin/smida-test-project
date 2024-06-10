@@ -1,7 +1,8 @@
 package com.holovin.smidatestproject.controller;
 
+import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.CompanyUpdateRequestDto;
 import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
-import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.toCompanyResponseDto;
-import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.toCompanyResponseDtoList;
+import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.*;
 
 @RestController
 @AllArgsConstructor
@@ -35,14 +35,14 @@ public class CompanyController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CompanyResponseDto> createCompany(@RequestBody Company company) {
-        return ResponseEntity.ok(toCompanyResponseDto(companyService.createUpdate(company)));
+    public ResponseEntity<CompanyResponseDto> createCompany(@RequestBody CompanyCreateRequestDto company) {
+        return ResponseEntity.ok(toCompanyResponseDto(companyService.createUpdate(toCompany(company))));
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CompanyResponseDto> updateCompany(@RequestBody Company updatedCompany) {
-        return ResponseEntity.ok(toCompanyResponseDto(companyService.updateCompany(updatedCompany)));
+    public ResponseEntity<CompanyResponseDto> updateCompany(@RequestBody CompanyUpdateRequestDto company) {
+        return ResponseEntity.ok(toCompanyResponseDto(companyService.updateCompany(toCompany(company))));
     }
 
     @DeleteMapping("/{id}")

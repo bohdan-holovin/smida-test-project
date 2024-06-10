@@ -1,5 +1,7 @@
 package com.holovin.smidatestproject.controller.mapper;
 
+import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.CompanyUpdateRequestDto;
 import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.utils.RandomUtils;
@@ -35,7 +37,7 @@ class CompanyDtoMapperTest {
     void shouldMapCompanyListToCompanyResponseDtoList() {
         // Given
         List<Company> testCompanies = List.of(RandomUtils.createCompany(), RandomUtils.createCompany());
-        List<CompanyResponseDto> expectedDtos = testCompanies.stream()
+        List<CompanyResponseDto> expected = testCompanies.stream()
                 .map(company -> new CompanyResponseDto(
                         company.getId(),
                         company.getName(),
@@ -46,9 +48,48 @@ class CompanyDtoMapperTest {
                 .collect(Collectors.toList());
 
         // When
-        List<CompanyResponseDto> actualDtos = CompanyDtoMapper.toCompanyResponseDtoList(testCompanies);
+        List<CompanyResponseDto> actual = CompanyDtoMapper.toCompanyResponseDtoList(testCompanies);
 
         // Then
-        assertThat(actualDtos).isEqualTo(expectedDtos);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldMapCompanyCreateRequestDtoToCompany() {
+        // Given
+        Company expectedCompany = RandomUtils.createCompany();
+        CompanyCreateRequestDto requestDto = new CompanyCreateRequestDto();
+        requestDto.setName(expectedCompany.getName());
+        requestDto.setRegistrationNumber(expectedCompany.getRegistrationNumber());
+        requestDto.setAddress(expectedCompany.getAddress());
+
+
+        // When
+        Company actualCompany = CompanyDtoMapper.toCompany(requestDto);
+
+        // Then
+        assertThat(actualCompany.getName()).isEqualTo(expectedCompany.getName());
+        assertThat(actualCompany.getRegistrationNumber()).isEqualTo(expectedCompany.getRegistrationNumber());
+        assertThat(actualCompany.getAddress()).isEqualTo(expectedCompany.getAddress());
+    }
+
+    @Test
+    void shouldMapCompanyUpdateRequestDtoToCompany() {
+        // Given
+        Company expectedCompany = RandomUtils.createCompany();
+        CompanyUpdateRequestDto requestDto = new CompanyUpdateRequestDto();
+        requestDto.setId(expectedCompany.getId());
+        requestDto.setName(expectedCompany.getName());
+        requestDto.setRegistrationNumber(expectedCompany.getRegistrationNumber());
+        requestDto.setAddress(expectedCompany.getAddress());
+
+        // When
+        Company actualCompany = CompanyDtoMapper.toCompany(requestDto);
+
+        // Then
+        assertThat(actualCompany.getId()).isEqualTo(expectedCompany.getId());
+        assertThat(actualCompany.getName()).isEqualTo(expectedCompany.getName());
+        assertThat(actualCompany.getRegistrationNumber()).isEqualTo(expectedCompany.getRegistrationNumber());
+        assertThat(actualCompany.getAddress()).isEqualTo(expectedCompany.getAddress());
     }
 }

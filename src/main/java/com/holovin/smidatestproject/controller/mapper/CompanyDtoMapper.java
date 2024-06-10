@@ -1,5 +1,7 @@
 package com.holovin.smidatestproject.controller.mapper;
 
+import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.CompanyUpdateRequestDto;
 import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
 import com.holovin.smidatestproject.model.Company;
 
@@ -7,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CompanyDtoMapper {
-
 
     public static CompanyResponseDto toCompanyResponseDto(Company company) {
         return new CompanyResponseDto(
@@ -23,5 +24,22 @@ public class CompanyDtoMapper {
         return companies.stream()
                 .map(CompanyDtoMapper::toCompanyResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public static Company toCompany(CompanyCreateRequestDto createRequestDto) {
+        Company company = new Company();
+        company.setName(createRequestDto.getName());
+        company.setAddress(createRequestDto.getAddress());
+        company.setRegistrationNumber(createRequestDto.getRegistrationNumber());
+        return company;
+    }
+
+    public static Company toCompany(CompanyUpdateRequestDto updateRequestDto) {
+        Company company = new Company();
+        company.setId(updateRequestDto.getId());
+        company.setName(updateRequestDto.getName());
+        company.setAddress(updateRequestDto.getAddress());
+        company.setRegistrationNumber(updateRequestDto.getRegistrationNumber());
+        return company;
     }
 }
