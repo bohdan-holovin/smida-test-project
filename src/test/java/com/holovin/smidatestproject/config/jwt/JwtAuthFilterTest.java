@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.config.jwt;
 
-import com.holovin.smidatestproject.service.UserDetailsService;
+import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ class JwtAuthFilterTest {
     private JwtService jwtService;
 
     @Mock
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Mock
     private HttpServletRequest request;
@@ -82,7 +82,7 @@ class JwtAuthFilterTest {
         String invalidToken = "Bearer invalidToken";
         when(request.getHeader("Authorization")).thenReturn(invalidToken);
         when(jwtService.extractUsername(anyString())).thenReturn("user");
-        when(userDetailsService.loadUserByUsername(anyString())).thenReturn(mock(UserDetails.class));
+        when(userDetailsServiceImpl.loadUserByUsername(anyString())).thenReturn(mock(UserDetails.class));
         when(jwtService.validateToken(eq("invalidToken"), any(UserDetails.class))).thenReturn(false);
 
         // When
@@ -105,7 +105,7 @@ class JwtAuthFilterTest {
 
         when(request.getHeader("Authorization")).thenReturn(validToken);
         when(jwtService.extractUsername(anyString())).thenReturn(username);
-        when(userDetailsService.loadUserByUsername(anyString())).thenReturn(userDetails);
+        when(userDetailsServiceImpl.loadUserByUsername(anyString())).thenReturn(userDetails);
         when(jwtService.validateToken(eq("validToken"), eq(userDetails))).thenReturn(true);
 
         // When

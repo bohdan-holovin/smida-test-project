@@ -1,8 +1,6 @@
 package com.holovin.smidatestproject.controller.handler;
 
-import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
-import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
-import com.holovin.smidatestproject.exceptions.UserNotFoundException;
+import com.holovin.smidatestproject.exceptions.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +17,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ReportNotFoundException.class)
+    public ResponseEntity<String> handleReportNotFoundException(ReportNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ReportDetailsNotFoundException.class)
+    public ResponseEntity<String> handleReportDetailsNotFoundException(ReportDetailsNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

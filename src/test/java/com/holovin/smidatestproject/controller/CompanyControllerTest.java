@@ -4,7 +4,7 @@ import com.holovin.smidatestproject.config.SecurityConfig;
 import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.service.CompanyService;
-import com.holovin.smidatestproject.service.UserDetailsService;
+import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -41,7 +41,7 @@ public class CompanyControllerTest {
     private CompanyService companyService;
 
     @MockBean
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @MockBean
     private JwtService jwtService;
@@ -56,7 +56,7 @@ public class CompanyControllerTest {
         String endpoint = "/companies";
         Company company = RandomUtils.createCompany();
         List<Company> companyList = List.of(company);
-        when(companyService.findAll()).thenReturn(companyList);
+        when(companyService.getAllCompanies()).thenReturn(companyList);
 
         // When-Then
         mockMvc.perform(get(endpoint))
@@ -76,7 +76,7 @@ public class CompanyControllerTest {
         Company company = RandomUtils.createCompany();
         String endpoint = "/companies/" + company.getId();
 
-        when(companyService.findById(company.getId())).thenReturn(company);
+        when(companyService.getCompanyByCompanyId(company.getId())).thenReturn(company);
 
         // When-Then
         mockMvc.perform(get(endpoint))
@@ -94,7 +94,7 @@ public class CompanyControllerTest {
         // Given
         String endpoint = "/companies";
         Company company = RandomUtils.createCompany();
-        when(companyService.create(any(Company.class))).thenReturn(company);
+        when(companyService.createUpdate(any(Company.class))).thenReturn(company);
 
         // When-Then
         mockMvc.perform(post(endpoint)
@@ -164,8 +164,8 @@ public class CompanyControllerTest {
         // Given
         UUID id = UUID.randomUUID();
         String endpoint = "/companies/" + id;
-        Mockito.doNothing().when(companyService).deleteById(id);
-        when(companyService.findById(id)).thenReturn(new Company());
+        Mockito.doNothing().when(companyService).deleteCompanyByCompanyId(id);
+        when(companyService.getCompanyByCompanyId(id)).thenReturn(new Company());
 
         // When-Then
         mockMvc.perform(delete(endpoint))
@@ -179,7 +179,7 @@ public class CompanyControllerTest {
         // Given
         UUID id = UUID.randomUUID();
         String endpoint = "/companies/" + id;
-        Mockito.doNothing().when(companyService).deleteById(id);
+        Mockito.doNothing().when(companyService).deleteCompanyByCompanyId(id);
 
         // When-Then
         mockMvc.perform(delete(endpoint))

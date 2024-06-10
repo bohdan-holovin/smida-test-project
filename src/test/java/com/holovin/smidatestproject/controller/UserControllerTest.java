@@ -3,7 +3,7 @@ package com.holovin.smidatestproject.controller;
 import com.holovin.smidatestproject.config.SecurityConfig;
 import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.service.UserDetailsService;
+import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @MockBean
     private JwtService jwtService;
@@ -64,7 +64,7 @@ public class UserControllerTest {
 
         User user = createUser();
 
-        when(userDetailsService.registerUser(any(User.class))).thenReturn(user);
+        when(userDetailsServiceImpl.registerUser(any(User.class))).thenReturn(user);
 
         // When-Then
         mockMvc.perform(post(endpoint)

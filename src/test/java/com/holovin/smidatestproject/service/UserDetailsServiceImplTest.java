@@ -2,7 +2,6 @@ package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.exceptions.UserNotFoundException;
 import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.model.UserDetails;
 import com.holovin.smidatestproject.repository.UserRepository;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -23,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class UserDetailsServiceTest {
+class UserDetailsServiceImplTest {
 
     @Mock
     private UserRepository repository;
@@ -32,7 +30,7 @@ class UserDetailsServiceTest {
     private PasswordEncoder encoder;
 
     @InjectMocks
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     private User user;
 
@@ -48,7 +46,7 @@ class UserDetailsServiceTest {
 
         // When
         org.springframework.security.core.userdetails.UserDetails result =
-                userDetailsService.loadUserByUsername(user.getUsername());
+                userDetailsServiceImpl.loadUserByUsername(user.getUsername());
 
         // Then
         assertThat(result).isNotNull();
@@ -64,7 +62,7 @@ class UserDetailsServiceTest {
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.empty());
 
         // When / Then
-        assertThatThrownBy(() -> userDetailsService.loadUserByUsername(user.getUsername()))
+        assertThatThrownBy(() -> userDetailsServiceImpl.loadUserByUsername(user.getUsername()))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(user.getUsername());
         verify(repository).findByUsername(user.getUsername());
@@ -80,7 +78,7 @@ class UserDetailsServiceTest {
         given(repository.save(user)).willReturn(userDb);
 
         // When
-        User result = userDetailsService.registerUser(user);
+        User result = userDetailsServiceImpl.registerUser(user);
 
         // Then
         assertThat(result).isNotNull();

@@ -15,15 +15,15 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-    public List<Company> findAll() {
+    public List<Company> getAllCompanies() {
         return companyRepository.findAll();
     }
 
-    public Company findById(UUID id) {
+    public Company getCompanyByCompanyId(UUID id) {
         return companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException(id));
     }
 
-    public Company create(Company company) {
+    public Company createUpdate(Company company) {
         return companyRepository.save(company);
     }
 
@@ -36,8 +36,8 @@ public class CompanyService {
         }).orElseThrow(() -> new CompanyNotFoundException(updatedCompany.getId()));
     }
 
-    public void deleteById(UUID id) {
-        findById(id);
+    public void deleteCompanyByCompanyId(UUID id) {
+        getCompanyByCompanyId(id);
         companyRepository.deleteById(id);
     }
 }

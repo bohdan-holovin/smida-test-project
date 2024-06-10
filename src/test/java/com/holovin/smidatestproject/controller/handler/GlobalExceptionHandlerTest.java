@@ -1,8 +1,6 @@
 package com.holovin.smidatestproject.controller.handler;
 
-import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
-import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
-import com.holovin.smidatestproject.exceptions.UserNotFoundException;
+import com.holovin.smidatestproject.exceptions.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +43,34 @@ public class GlobalExceptionHandlerTest {
 
         // When
         ResponseEntity<String> responseEntity = exceptionHandler.handleUsernameNotFoundException(exception);
+
+        // Then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isEqualTo(exception.getMessage());
+    }
+
+    @Test
+    public void shouldHandleReportNotFoundException() {
+        // Given
+        UUID reportId = UUID.randomUUID();
+        ReportNotFoundException exception = new ReportNotFoundException(reportId);
+
+        // When
+        ResponseEntity<String> responseEntity = exceptionHandler.handleReportNotFoundException(exception);
+
+        // Then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isEqualTo(exception.getMessage());
+    }
+
+    @Test
+    public void shouldHandleReportDetailsNotFoundException() {
+        // Given
+        UUID reportId = UUID.randomUUID();
+        ReportDetailsNotFoundException exception = new ReportDetailsNotFoundException(reportId);
+
+        // When
+        ResponseEntity<String> responseEntity = exceptionHandler.handleReportDetailsNotFoundException(exception);
 
         // Then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

@@ -37,13 +37,13 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldReturnCompaniesWhenFindAllCompanies() {
+    void shouldReturnCompaniesWhenCallAllCompaniesCompanies() {
         // Given
         List<Company> expectedCompanies = List.of(testCompany);
         when(companyRepository.findAll()).thenReturn(expectedCompanies);
 
         // When
-        List<Company> actualCompanies = companyService.findAll();
+        List<Company> actualCompanies = companyService.getAllCompanies();
 
         // Then
         assertThat(actualCompanies).isEqualTo(expectedCompanies);
@@ -51,13 +51,13 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldReturnCompanyWhenUseFindByCompanyId() {
+    void shouldReturnCompanyWhenCallFindByCompanyId() {
         // Given
         UUID companyId = testCompany.getId();
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(testCompany));
 
         // When
-        Company actualCompany = companyService.findById(companyId);
+        Company actualCompany = companyService.getCompanyByCompanyId(companyId);
 
         // Then
         assertThat(actualCompany).isEqualTo(testCompany);
@@ -65,23 +65,23 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldThrowCompanyNotFoundExceptionWhenFindByCompanyId() {
+    void shouldThrowCompanyNotFoundExceptionWhenCallFindByCompanyId() {
         // Given
         UUID id = UUID.randomUUID();
         when(companyRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(CompanyNotFoundException.class, () -> companyService.findById(id));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.getCompanyByCompanyId(id));
         verify(companyRepository, times(1)).findById(id);
     }
 
     @Test
-    void shouldReturnCompanyWhenCreateCompany() {
+    void shouldReturnCompanyWhenCallCreateUpdateCompany() {
         // Given
         when(companyRepository.save(testCompany)).thenReturn(testCompany);
 
         // When
-        Company createdCompany = companyService.create(testCompany);
+        Company createdCompany = companyService.createUpdate(testCompany);
 
         // Then
         assertThat(createdCompany).isEqualTo(testCompany);
@@ -89,7 +89,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldReturnUpdatedCompanyWhenUpdateCompany() {
+    void shouldReturnUpdatedCompanyWhenCallUpdateCompany() {
         // Given
         UUID id = testCompany.getId();
         Company updatedCompany = RandomUtils.createCompany();
@@ -111,7 +111,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldThrowCompanyNotFoundExceptionWhenUpdateCompany() {
+    void shouldThrowCompanyNotFoundExceptionWhenCallUpdateCompany() {
         // Given
         UUID id = testCompany.getId();
         Company updatedCompany = RandomUtils.createCompany();
@@ -132,7 +132,7 @@ class CompanyServiceTest {
         doNothing().when(companyRepository).deleteById(id);
 
         // When
-        companyService.deleteById(id);
+        companyService.deleteCompanyByCompanyId(id);
 
         // Then
         verify(companyRepository, times(1)).deleteById(id);

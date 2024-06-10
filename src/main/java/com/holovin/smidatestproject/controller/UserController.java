@@ -5,7 +5,7 @@ import com.holovin.smidatestproject.controller.dto.request.UserAuthRequestDto;
 import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
 import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.service.UserDetailsService;
+import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +21,7 @@ import static com.holovin.smidatestproject.controller.mapper.UserMapper.ToUser;
 @RequestMapping()
 public class UserController {
 
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        User user = userDetailsService.registerUser(ToUser(userRegisterRequestDto));
+        User user = userDetailsServiceImpl.registerUser(ToUser(userRegisterRequestDto));
         return ResponseEntity.ok("User register successfully with username: " + user.getUsername());
     }
 
