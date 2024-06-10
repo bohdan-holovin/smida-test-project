@@ -6,19 +6,16 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect=org:
-          hibernate:
-            dialect:
-              PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
     url: jdbc:postgresql://localhost:5432/smidadb
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
   data:
     mongodb:
       uri: mongodb://admin:admin@localhost:27017/smidadb?authSource=admin
-
 
 logging:
   level:
