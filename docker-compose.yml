@@ -1,23 +1,50 @@
+version: '3.8'
+
 services:
 
-  postgres:
-    image: postgres:16.1
-    container_name: postgres
+  smida-app:
+    build: .
+    container_name: smida-app
+    depends_on:
+      - postgres-db
+      - mongo-db
     ports:
-      - "5432:5432"
+      - target: 8080
+        published: 8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/postgres
+      - SPRING_DATABASE_USERNAME=postgres
+      - SPRING_DATABASE_PASSWORD=postgres
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo-db:27017/smidadb
+
+  postgres-db:
+    image: postgres:16.1
+    container_name: postgres-db
+    ports:
+      - target: 5432
+        published: 5432
     environment:
       - POSTGRES_DB=smidadb
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
     healthcheck:
-      test: "pg_isready -U postgres"
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  mongodb:
+  mongo-db:
     image: mongo:7.0.6
-    container_name: "mongodb"
+    container_name: mongo-db
     ports:
-      - 27017:27017
+      - target: 27017
+        published: 27017
     environment:
       - MONGO_INITDB_DATABASE=smidadb
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
+    healthcheck:
+      test: [ "CMD", "mongo", "--username", "admin", "--password", "admin", "--authenticationDatabase", "admin", "--eval", "db.runCommand({ ping: 1 })", "--quiet" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
