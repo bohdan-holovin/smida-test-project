@@ -2,6 +2,7 @@ package com.holovin.smidatestproject.repository;
 
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.utils.RandomUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,11 @@ public class CompanyRepositoryTest {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @BeforeEach
+    public void setUp() {
+        companyRepository.deleteAll();
+    }
 
     @Test
     public void shouldReturnCompaniesWhenCallFindAll() {
@@ -38,8 +44,8 @@ public class CompanyRepositoryTest {
     @Test
     public void shouldReturnCompanyWhenCallFindById() {
         // Given
-        Company expectedCompany = RandomUtils.createCompany();
-        companyRepository.save(expectedCompany);
+        Company company = RandomUtils.createCompany();
+        Company expectedCompany = companyRepository.save(company);
 
         // When
         Optional<Company> actualOptionalCompany = companyRepository.findById(expectedCompany.getId());

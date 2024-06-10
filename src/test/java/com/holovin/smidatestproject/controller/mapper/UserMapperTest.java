@@ -18,7 +18,7 @@ public class UserMapperTest {
         dto.setRoles(roles);
 
         // When
-        User actualUser = UserMapper.ToUser(dto);
+        User actualUser = UserMapper.toUser(dto);
 
         // Then
         assertThat(actualUser).isNotNull();

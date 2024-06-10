@@ -28,12 +28,15 @@ public class CompanyService {
     }
 
     public Company updateCompany(Company updatedCompany) {
-        return companyRepository.findById(updatedCompany.getId()).map(company -> {
-            company.setName(updatedCompany.getName());
-            company.setRegistrationNumber(updatedCompany.getRegistrationNumber());
-            company.setAddress(updatedCompany.getAddress());
-            return companyRepository.save(company);
-        }).orElseThrow(() -> new CompanyNotFoundException(updatedCompany.getId()));
+        return companyRepository.findById(updatedCompany.getId())
+                .map(company -> {
+                    company.setName(updatedCompany.getName());
+                    company.setRegistrationNumber(updatedCompany.getRegistrationNumber());
+                    company.setAddress(updatedCompany.getAddress());
+                    return company;
+                })
+                .map(companyRepository::save)
+                .orElseThrow(() -> new CompanyNotFoundException(updatedCompany.getId()));
     }
 
     public void deleteCompanyByCompanyId(UUID id) {

@@ -2,6 +2,7 @@ package com.holovin.smidatestproject.repository;
 
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.utils.RandomUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,11 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+    }
 
     @Test
     public void shouldReturnUserWhenCallFindByUsername() {
@@ -34,8 +40,8 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUserWhenCallFindById() {
         // Given
-        User expectedUser = RandomUtils.createUser();
-        userRepository.save(expectedUser);
+        User user = RandomUtils.createUser();
+        User expectedUser = userRepository.save(user);
 
         // When
         Optional<User> actualUser = userRepository.findById(expectedUser.getId());

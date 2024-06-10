@@ -14,7 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static com.holovin.smidatestproject.controller.mapper.UserMapper.ToUser;
+import static com.holovin.smidatestproject.controller.mapper.UserMapper.toUser;
 
 @RestController
 @AllArgsConstructor
@@ -25,14 +25,14 @@ public class UserController {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
-    @GetMapping("/auth/not_secured")
+    @GetMapping("/auth/not-secured")
     public ResponseEntity<String> notSecured() {
         return ResponseEntity.ok("This endpoint is not secure");
     }
 
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        User user = userDetailsServiceImpl.registerUser(ToUser(userRegisterRequestDto));
+        User user = userDetailsServiceImpl.registerUser(toUser(userRegisterRequestDto));
         return ResponseEntity.ok("User register successfully with username: " + user.getUsername());
     }
 

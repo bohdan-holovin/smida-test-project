@@ -5,7 +5,7 @@ import com.holovin.smidatestproject.model.User;
 
 public class UserMapper {
 
-    public static User ToUser(UserRegisterRequestDto userRegisterRequestDto) {
+    public static User toUser(UserRegisterRequestDto userRegisterRequestDto) {
         User user = new User();
         user.setUsername(userRegisterRequestDto.getUsername());
         user.setPassword(userRegisterRequestDto.getPassword());

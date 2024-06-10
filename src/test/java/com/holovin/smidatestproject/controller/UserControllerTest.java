@@ -48,7 +48,7 @@ public class UserControllerTest {
     @Test
     void shouldReturnOkForNotSecuredEndpoint() throws Exception {
         // Given
-        String endpoint = "/auth/not_secured";
+        String endpoint = "/auth/not-secured";
 
         // When-Then
         mockMvc.perform(get(endpoint))
