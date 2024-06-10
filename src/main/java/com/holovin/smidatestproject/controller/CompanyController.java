@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static com.holovin.smidatestproject.controller.mapper.CompanyMapper.toCompanyResponseDto;
-import static com.holovin.smidatestproject.controller.mapper.CompanyMapper.toCompanyResponseDtoList;
+import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.toCompanyResponseDto;
+import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.toCompanyResponseDtoList;
 
 @RestController
 @AllArgsConstructor

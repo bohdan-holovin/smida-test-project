@@ -1,5 +1,6 @@
 package com.holovin.smidatestproject.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+@Data
 @Getter
 @Setter
 public class FullReport {

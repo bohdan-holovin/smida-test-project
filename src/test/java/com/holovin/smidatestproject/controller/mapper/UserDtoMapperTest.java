@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserMapperTest {
+public class UserDtoMapperTest {
 
     @Test
     public void shouldReturnUserWhenMappingFromRegisterUserRequestDto() {
@@ -18,7 +18,7 @@ public class UserMapperTest {
         dto.setRoles(roles);
 
         // When
-        User actualUser = UserMapper.toUser(dto);
+        User actualUser = UserDtoMapper.toUser(dto);
 
         // Then
         assertThat(actualUser).isNotNull();

@@ -70,7 +70,9 @@ public class ReportService {
                     it.setReportDate(report.getReportDate());
                     it.setTotalRevenue(report.getTotalRevenue());
                     return it;
-                }).orElseThrow(() -> new ReportNotFoundException(report.getId()));
+                })
+                .map(reportRepository::save)
+                .orElseThrow(() -> new ReportNotFoundException(report.getId()));
     }
 
     public ReportDetails updateReportDetails(ReportDetails reportDetails) {
@@ -80,7 +82,9 @@ public class ReportService {
                     it.setComments(reportDetails.getComments());
                     it.setFinancialData(reportDetails.getComments());
                     return it;
-                }).orElseThrow(() -> new ReportDetailsNotFoundException(reportDetails.getReportId()));
+                })
+                .map(reportDetailsRepository::save)
+                .orElseThrow(() -> new ReportDetailsNotFoundException(reportDetails.getReportId()));
     }
 
     public FullReport updateFullreport(FullReport fullReport) {

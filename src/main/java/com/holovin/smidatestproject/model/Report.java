@@ -1,6 +1,7 @@
 package com.holovin.smidatestproject.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,10 +9,11 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Entity
-@Table(name = "reports")
+@Data
 @Getter
 @Setter
+@Entity
+@Table(name = "reports")
 public class Report {
 
     @Id

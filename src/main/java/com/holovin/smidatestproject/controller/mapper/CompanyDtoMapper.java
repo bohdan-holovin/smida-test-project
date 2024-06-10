@@ -6,7 +6,7 @@ import com.holovin.smidatestproject.model.Company;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CompanyMapper {
+public class CompanyDtoMapper {
 
 
     public static CompanyResponseDto toCompanyResponseDto(Company company) {
@@ -21,7 +21,7 @@ public class CompanyMapper {
 
     public static List<CompanyResponseDto> toCompanyResponseDtoList(List<Company> companies) {
         return companies.stream()
-                .map(CompanyMapper::toCompanyResponseDto)
+                .map(CompanyDtoMapper::toCompanyResponseDto)
                 .collect(Collectors.toList());
     }
 }

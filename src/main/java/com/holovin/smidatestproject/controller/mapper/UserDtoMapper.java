@@ -3,7 +3,7 @@ package com.holovin.smidatestproject.controller.mapper;
 import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.model.User;
 
-public class UserMapper {
+public class UserDtoMapper {
 
     public static User toUser(UserRegisterRequestDto userRegisterRequestDto) {
         User user = new User();
