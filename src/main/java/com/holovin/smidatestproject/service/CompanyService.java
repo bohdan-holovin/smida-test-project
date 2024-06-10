@@ -27,16 +27,17 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public Company updateCompany(UUID id, Company updatedCompany) {
-        return companyRepository.findById(id).map(company -> {
+    public Company updateCompany(Company updatedCompany) {
+        return companyRepository.findById(updatedCompany.getId()).map(company -> {
             company.setName(updatedCompany.getName());
             company.setRegistrationNumber(updatedCompany.getRegistrationNumber());
             company.setAddress(updatedCompany.getAddress());
             return companyRepository.save(company);
-        }).orElseThrow(() -> new CompanyNotFoundException(id));
+        }).orElseThrow(() -> new CompanyNotFoundException(updatedCompany.getId()));
     }
 
     public void deleteById(UUID id) {
+        findById(id);
         companyRepository.deleteById(id);
     }
 }

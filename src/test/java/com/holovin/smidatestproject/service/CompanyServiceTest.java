@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class CompanyServiceTest {
@@ -97,7 +97,7 @@ class CompanyServiceTest {
         when(companyRepository.save(any(Company.class))).thenReturn(updatedCompany);
 
         // When
-        Company actualCompany = companyService.updateCompany(id, updatedCompany);
+        Company actualCompany = companyService.updateCompany(updatedCompany);
 
         // Then
         assertThat(actualCompany.getName()).isEqualTo(updatedCompany.getName());
@@ -115,7 +115,7 @@ class CompanyServiceTest {
         when(companyRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(CompanyNotFoundException.class, () -> companyService.updateCompany(id, updatedCompany));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.updateCompany(updatedCompany));
         verify(companyRepository, times(1)).findById(id);
     }
 

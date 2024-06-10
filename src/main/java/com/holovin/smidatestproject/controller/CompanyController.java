@@ -1,5 +1,6 @@
 package com.holovin.smidatestproject.controller;
 
+import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.service.CompanyService;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static com.holovin.smidatestproject.controller.mapper.CompanyMapper.toCompanyResponseDto;
+import static com.holovin.smidatestproject.controller.mapper.CompanyMapper.toCompanyResponseDtoList;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/companies")
@@ -20,28 +24,26 @@ public class CompanyController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<List<Company>> getAllCompanies() {
-        return ResponseEntity.ok(companyService.findAll());
+    public ResponseEntity<List<CompanyResponseDto>> getAllCompanies() {
+        return ResponseEntity.ok(toCompanyResponseDtoList(companyService.findAll()));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<Company> getCompanyById(@PathVariable UUID id) {
-        Company company = companyService.findById(id);
-        return ResponseEntity.ok(company);
+    public ResponseEntity<CompanyResponseDto> getCompanyById(@PathVariable UUID id) {
+        return ResponseEntity.ok(toCompanyResponseDto(companyService.findById(id)));
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Company createCompany(@RequestBody Company company) {
-        return companyService.create(company);
+    public ResponseEntity<CompanyResponseDto> createCompany(@RequestBody Company company) {
+        return ResponseEntity.ok(toCompanyResponseDto(companyService.create(company)));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Company> updateCompany(@PathVariable UUID id, @RequestBody Company updatedCompany) {
-        Company company = companyService.updateCompany(id, updatedCompany);
-        return ResponseEntity.ok(company);
+    public ResponseEntity<CompanyResponseDto> updateCompany(@RequestBody Company updatedCompany) {
+        return ResponseEntity.ok(toCompanyResponseDto(companyService.updateCompany(updatedCompany)));
     }
 
     @DeleteMapping("/{id}")

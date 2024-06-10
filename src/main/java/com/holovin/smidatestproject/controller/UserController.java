@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.controller;
 
 import com.holovin.smidatestproject.config.jwt.JwtService;
-import com.holovin.smidatestproject.controller.dto.AuthRequestDto;
-import com.holovin.smidatestproject.controller.dto.RegisterUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.AuthRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.RegisterUserRequestDto;
 import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.service.UserDetailsService;
@@ -14,7 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static com.holovin.smidatestproject.controller.mapper.Mapper.mapToUser;
+import static com.holovin.smidatestproject.controller.mapper.UserMapper.ToUser;
 
 @RestController
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterUserRequestDto registerUserRequestDto) {
-        User user = userDetailsService.registerUser(mapToUser(registerUserRequestDto));
+        User user = userDetailsService.registerUser(ToUser(registerUserRequestDto));
         return ResponseEntity.ok("User register successfully with username: " + user.getUsername());
     }
 

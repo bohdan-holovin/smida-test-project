@@ -1,15 +1,15 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.RegisterUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.RegisterUserRequestDto;
 import com.holovin.smidatestproject.model.User;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MapperTest {
+public class UserMapperTest {
 
     @Test
-    public void givenRegisterUserRequestDto_whenMapToUser_thenReturnUser() {
+    public void shouldMapUserWhenFromRegisterUserRequestDto() {
         // Given
         RegisterUserRequestDto dto = new RegisterUserRequestDto();
         dto.setUsername("testUser");
@@ -18,7 +18,7 @@ public class MapperTest {
         dto.setRoles(roles);
 
         // When
-        User user = Mapper.mapToUser(dto);
+        User user = UserMapper.ToUser(dto);
 
         // Then
         assertThat(user).isNotNull();
