@@ -11,9 +11,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class UserDetailsTest {
+class UserDetailsImplTest {
 
-    private UserDetails userDetails;
+    private UserDetailsImpl userDetailsImpl;
 
     @BeforeEach
     void setUp() {
@@ -22,44 +22,44 @@ class UserDetailsTest {
         user.setPassword("testPassword");
         user.setRoles("USER ADMIN");
 
-        userDetails = new UserDetails(user);
+        userDetailsImpl = new UserDetailsImpl(user);
     }
 
     @Test
     void shouldReturnCorrectMapAuthorities() {
-        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-        assertThat(authorities.size()).isEqualTo(2);
-        assertTrue(authorities.contains(new SimpleGrantedAuthority("USER")));
-        assertTrue(authorities.contains(new SimpleGrantedAuthority("ADMIN")));
+        Collection<? extends GrantedAuthority> actualAuthorities = userDetailsImpl.getAuthorities();
+        assertThat(actualAuthorities.size()).isEqualTo(2);
+        assertTrue(actualAuthorities.contains(new SimpleGrantedAuthority("USER")));
+        assertTrue(actualAuthorities.contains(new SimpleGrantedAuthority("ADMIN")));
     }
 
     @Test
     void shouldReturnCorrectMapPassword() {
-        assertEquals("testPassword", userDetails.getPassword());
+        assertEquals("testPassword", userDetailsImpl.getPassword());
     }
 
     @Test
     void shouldReturnCorrectMapUserName() {
-        assertEquals("testUser", userDetails.getUsername());
+        assertEquals("testUser", userDetailsImpl.getUsername());
     }
 
     @Test
     void isAccountNonExpired() {
-        assertTrue(userDetails.isAccountNonExpired());
+        assertTrue(userDetailsImpl.isAccountNonExpired());
     }
 
     @Test
     void isAccountNonLocked() {
-        assertTrue(userDetails.isAccountNonLocked());
+        assertTrue(userDetailsImpl.isAccountNonLocked());
     }
 
     @Test
     void isCredentialsNonExpired() {
-        assertTrue(userDetails.isCredentialsNonExpired());
+        assertTrue(userDetailsImpl.isCredentialsNonExpired());
     }
 
     @Test
     void isEnabled() {
-        assertTrue(userDetails.isEnabled());
+        assertTrue(userDetailsImpl.isEnabled());
     }
 }

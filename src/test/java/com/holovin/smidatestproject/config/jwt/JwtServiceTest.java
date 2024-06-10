@@ -46,14 +46,14 @@ public class JwtServiceTest {
     @Test
     public void shouldReturnValidUsernameWhenCallExtractUsername() {
         // Given
-        String userName = "testUser";
-        String token = jwtService.generateToken(userName);
+        String expected = "testUser";
+        String token = jwtService.generateToken(expected);
 
         // When
-        String extractedUsername = jwtService.extractUsername(token);
+        String actual = jwtService.extractUsername(token);
 
         // Then
-        assertEquals(userName, extractedUsername);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

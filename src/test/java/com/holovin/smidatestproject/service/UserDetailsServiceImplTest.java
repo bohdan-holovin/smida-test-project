@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -45,13 +46,12 @@ class UserDetailsServiceImplTest {
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
 
         // When
-        org.springframework.security.core.userdetails.UserDetails result =
-                userDetailsServiceImpl.loadUserByUsername(user.getUsername());
+        UserDetails actualUserDetails = userDetailsServiceImpl.loadUserByUsername(user.getUsername());
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getUsername()).isEqualTo(user.getUsername());
-        assertThat(result.getPassword()).isEqualTo(user.getPassword());
+        assertThat(actualUserDetails).isNotNull();
+        assertThat(actualUserDetails.getUsername()).isEqualTo(user.getUsername());
+        assertThat(actualUserDetails.getPassword()).isEqualTo(user.getPassword());
 
         verify(repository).findByUsername(user.getUsername());
     }
@@ -72,17 +72,17 @@ class UserDetailsServiceImplTest {
     void shouldRegisterUserSuccessfully() {
         // Given
         PasswordEncoder customEncoder = new BCryptPasswordEncoder();
-        User userDb = new User(user.getId(), user.getUsername(), customEncoder.encode(user.getPassword()), "USER");
+        User expectedUser = new User(user.getId(), user.getUsername(), customEncoder.encode(user.getPassword()), "USER");
 
         given(encoder.encode(user.getPassword())).willReturn(user.getPassword());
-        given(repository.save(user)).willReturn(userDb);
+        given(repository.save(user)).willReturn(expectedUser);
 
         // When
-        User result = userDetailsServiceImpl.registerUser(user);
+        User actualUser = userDetailsServiceImpl.registerUser(user);
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getPassword()).isEqualTo(userDb.getPassword());
+        assertThat(actualUser).isNotNull();
+        assertThat(actualUser.getPassword()).isEqualTo(expectedUser.getPassword());
 
         verify(encoder).encode(user.getPassword());
         verify(repository).save(user);

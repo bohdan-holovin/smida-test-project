@@ -2,19 +2,20 @@ package com.holovin.smidatestproject.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private final String name;
     private final String password;
     private final List<GrantedAuthority> authorities;
 
-    public UserDetails(User user) {
+    public UserDetailsImpl(User user) {
         name = user.getUsername();
         password = user.getPassword();
         authorities = Arrays.stream(user.getRoles().split(" "))

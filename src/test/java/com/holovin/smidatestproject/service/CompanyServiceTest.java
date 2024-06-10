@@ -81,10 +81,10 @@ class CompanyServiceTest {
         when(companyRepository.save(testCompany)).thenReturn(testCompany);
 
         // When
-        Company createdCompany = companyService.createUpdate(testCompany);
+        Company actualCompany = companyService.createUpdate(testCompany);
 
         // Then
-        assertThat(createdCompany).isEqualTo(testCompany);
+        assertThat(actualCompany).isEqualTo(testCompany);
         verify(companyRepository, times(1)).save(testCompany);
     }
 
@@ -92,19 +92,19 @@ class CompanyServiceTest {
     void shouldReturnUpdatedCompanyWhenCallUpdateCompany() {
         // Given
         UUID id = testCompany.getId();
-        Company updatedCompany = RandomUtils.createCompany();
-        updatedCompany.setId(id);
+        Company expectedCompany = RandomUtils.createCompany();
+        expectedCompany.setId(id);
 
         when(companyRepository.findById(id)).thenReturn(Optional.of(testCompany));
-        when(companyRepository.save(any(Company.class))).thenReturn(updatedCompany);
+        when(companyRepository.save(any(Company.class))).thenReturn(expectedCompany);
 
         // When
-        Company actualCompany = companyService.updateCompany(updatedCompany);
+        Company actualCompany = companyService.updateCompany(expectedCompany);
 
         // Then
-        assertThat(actualCompany.getName()).isEqualTo(updatedCompany.getName());
-        assertThat(actualCompany.getRegistrationNumber()).isEqualTo(updatedCompany.getRegistrationNumber());
-        assertThat(actualCompany.getAddress()).isEqualTo(updatedCompany.getAddress());
+        assertThat(actualCompany.getName()).isEqualTo(expectedCompany.getName());
+        assertThat(actualCompany.getRegistrationNumber()).isEqualTo(expectedCompany.getRegistrationNumber());
+        assertThat(actualCompany.getAddress()).isEqualTo(expectedCompany.getAddress());
 
         verify(companyRepository, times(1)).findById(id);
         verify(companyRepository, times(1)).save(any(Company.class));

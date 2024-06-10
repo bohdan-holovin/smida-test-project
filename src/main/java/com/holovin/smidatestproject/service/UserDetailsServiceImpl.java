@@ -2,7 +2,7 @@ package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.exceptions.UserNotFoundException;
 import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.model.UserDetails;
+import com.holovin.smidatestproject.model.UserDetailsImpl;
 import com.holovin.smidatestproject.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Optional<User> userDetail = repository.findByUsername(username);
 
-        return userDetail.map(UserDetails::new)
+        return userDetail.map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 

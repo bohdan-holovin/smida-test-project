@@ -27,26 +27,26 @@ public class CompanyRepositoryTest {
         companyRepository.save(company2);
 
         // When
-        List<Company> result = companyRepository.findAll();
+        List<Company> actualCompanies = companyRepository.findAll();
 
         // Then
-        assertThat(result).hasSize(2);
-        assertCompany(result.get(0), company1);
-        assertCompany(result.get(1), company2);
+        assertThat(actualCompanies).hasSize(2);
+        assertCompany(actualCompanies.get(0), company1);
+        assertCompany(actualCompanies.get(1), company2);
     }
 
     @Test
     public void shouldReturnCompanyWhenCallFindById() {
         // Given
-        Company company = RandomUtils.createCompany();
-        Company savedCompany = companyRepository.save(company);
+        Company expectedCompany = RandomUtils.createCompany();
+        companyRepository.save(expectedCompany);
 
         // When
-        Optional<Company> foundCompany = companyRepository.findById(savedCompany.getId());
+        Optional<Company> actualOptionalCompany = companyRepository.findById(expectedCompany.getId());
 
         // Then
-        assertThat(foundCompany).isPresent();
-        assertCompany(foundCompany.get(), company);
+        assertThat(actualOptionalCompany).isPresent();
+        assertCompany(actualOptionalCompany.get(), expectedCompany);
     }
 
 
@@ -54,14 +54,14 @@ public class CompanyRepositoryTest {
     public void shouldDeleteCompanyWhenCallDeleteById() {
         // Given
         Company company = RandomUtils.createCompany();
-        Company savedCompany = companyRepository.save(company);
+        companyRepository.save(company);
 
         // When
-        companyRepository.deleteById(savedCompany.getId());
-        Optional<Company> foundCompany = companyRepository.findById(savedCompany.getId());
+        companyRepository.deleteById(company.getId());
+        Optional<Company> actualOptionalCompany = companyRepository.findById(company.getId());
 
         // Then
-        assertThat(foundCompany).isNotPresent();
+        assertThat(actualOptionalCompany).isNotPresent();
     }
 
     private static void assertCompany(Company actualCompany, Company expectedCompany) {

@@ -20,29 +20,29 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUserWhenCallFindByUsername() {
         // Given
-        User user = RandomUtils.createUser();
-        userRepository.save(user);
+        User expectedUser = RandomUtils.createUser();
+        userRepository.save(expectedUser);
 
         // When
-        Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
+        Optional<User> actualUser = userRepository.findByUsername(expectedUser.getUsername());
 
         // Then
-        assertThat(foundUser).isPresent();
-        assertUser(foundUser.get(), user);
+        assertThat(actualUser).isPresent();
+        assertUser(actualUser.get(), expectedUser);
     }
 
     @Test
     public void shouldReturnUserWhenCallFindById() {
         // Given
-        User user = RandomUtils.createUser();
-        User savedUser = userRepository.save(user);
+        User expectedUser = RandomUtils.createUser();
+        userRepository.save(expectedUser);
 
         // When
-        Optional<User> foundUser = userRepository.findById(savedUser.getId());
+        Optional<User> actualUser = userRepository.findById(expectedUser.getId());
 
         // Then
-        assertThat(foundUser).isPresent();
-        assertUser(foundUser.get(), user);
+        assertThat(actualUser).isPresent();
+        assertUser(actualUser.get(), expectedUser);
     }
 
     @Test
@@ -55,26 +55,26 @@ public class UserRepositoryTest {
         userRepository.save(user2);
 
         // When
-        List<User> result = userRepository.findAll();
+        List<User> actualUsers = userRepository.findAll();
 
         // Then
-        assertThat(result).hasSize(2);
-        assertUser(result.get(0), user1);
-        assertUser(result.get(1), user2);
+        assertThat(actualUsers).hasSize(2);
+        assertUser(actualUsers.get(0), user1);
+        assertUser(actualUsers.get(1), user2);
     }
 
     @Test
     public void shouldDeleteUserWhenCallDeleteById() {
         // Given
         User user = RandomUtils.createUser();
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         // When
-        userRepository.deleteById(savedUser.getId());
-        Optional<User> foundUser = userRepository.findById(savedUser.getId());
+        userRepository.deleteById(user.getId());
+        Optional<User> actualOptionalUser = userRepository.findById(user.getId());
 
         // Then
-        assertThat(foundUser).isNotPresent();
+        assertThat(actualOptionalUser).isNotPresent();
     }
 
     private static void assertUser(User actualUser, User expectedUser) {

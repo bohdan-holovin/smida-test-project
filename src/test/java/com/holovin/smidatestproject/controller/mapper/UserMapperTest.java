@@ -18,12 +18,12 @@ public class UserMapperTest {
         dto.setRoles(roles);
 
         // When
-        User user = UserMapper.ToUser(dto);
+        User actualUser = UserMapper.ToUser(dto);
 
         // Then
-        assertThat(user).isNotNull();
-        assertThat(user.getUsername()).isEqualTo("testUser");
-        assertThat(user.getPassword()).isEqualTo("testPassword");
-        assertThat(user.getRoles()).isEqualTo(roles);
+        assertThat(actualUser).isNotNull();
+        assertThat(actualUser.getUsername()).isEqualTo(dto.getUsername());
+        assertThat(actualUser.getPassword()).isEqualTo(dto.getPassword());
+        assertThat(actualUser.getRoles()).isEqualTo(roles);
     }
 }
