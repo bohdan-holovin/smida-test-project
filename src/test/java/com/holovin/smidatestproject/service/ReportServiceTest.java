@@ -260,7 +260,7 @@ class ReportServiceTest {
         when(reportDetailsRepository.save(testReportDetails)).thenReturn(reportDetails);
 
         // When
-        FullReport actualReportDetails = reportService.updateFullreport(updatedReport.getCompany().getId(), testFullReport);
+        FullReport actualReportDetails = reportService.updateFullReport(updatedReport.getCompany().getId(), testFullReport);
 
         // Then
         assertThat(actualReportDetails).isEqualTo(expectedReportDetails);

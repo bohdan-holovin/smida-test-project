@@ -97,7 +97,7 @@ public class ReportService {
                 .orElseThrow(() -> new ReportDetailsNotFoundException(reportDetails.getReportId()));
     }
 
-    public FullReport updateFullreport(UUID companyId, FullReport fullReport) {
+    public FullReport updateFullReport(UUID companyId, FullReport fullReport) {
         Report report = updateReport(companyId, toReport(fullReport));
         ReportDetails reportDetails = updateReportDetails(toReportDetails(fullReport));
         return toFullReport(report, reportDetails);

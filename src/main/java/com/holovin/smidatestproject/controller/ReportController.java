@@ -23,7 +23,6 @@ import static com.holovin.smidatestproject.controller.mapper.ReportDtoMapper.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/reports")
-@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
 public class ReportController {
 
     private final ReportService reportService;
@@ -101,7 +100,7 @@ public class ReportController {
     @PutMapping("/full")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<FullReportResponseDto> updateFullReport(@RequestBody FullReportRequestDto fullReportRequestDto) {
-        FullReport fullReport = reportService.updateFullreport(fullReportRequestDto.getId(), toFullReport(fullReportRequestDto));
+        FullReport fullReport = reportService.updateFullReport(fullReportRequestDto.getCompanyId(), toFullReport(fullReportRequestDto));
         return ResponseEntity.ok(toFullReportResponseDto(fullReport));
     }
 
