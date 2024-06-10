@@ -14,7 +14,7 @@ public class ReportMapper {
         fullReport.setTotalRevenue(report.getTotalRevenue());
         fullReport.setNetProfit(report.getNetProfit());
         fullReport.setFinancialData(reportDetails.getFinancialData());
-        fullReport.setComments(reportDetails.getFinancialData());
+        fullReport.setComments(reportDetails.getComments());
         return fullReport;
     }
 
@@ -32,7 +32,7 @@ public class ReportMapper {
         ReportDetails reportDetails = new ReportDetails();
         reportDetails.setReportId(fullReport.getId());
         reportDetails.setFinancialData(fullReport.getFinancialData());
-        reportDetails.setComments(fullReport.getFinancialData());
+        reportDetails.setComments(fullReport.getComments());
         return reportDetails;
     }
 }

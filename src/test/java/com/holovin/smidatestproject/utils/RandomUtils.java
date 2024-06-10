@@ -1,9 +1,6 @@
 package com.holovin.smidatestproject.utils;
 
-import com.holovin.smidatestproject.model.Company;
-import com.holovin.smidatestproject.model.Report;
-import com.holovin.smidatestproject.model.ReportDetails;
-import com.holovin.smidatestproject.model.User;
+import com.holovin.smidatestproject.model.*;
 import org.jeasy.random.EasyRandom;
 
 public class RandomUtils {
@@ -28,5 +25,9 @@ public class RandomUtils {
 
     public static ReportDetails createReportDetails() {
         return generator.nextObject(ReportDetails.class);
+    }
+
+    public static FullReport createFullReport() {
+        return generator.nextObject(FullReport.class);
     }
 }
