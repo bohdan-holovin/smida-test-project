@@ -44,7 +44,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void shouldGiveValidUsernameWhenCallExtractUsername() {
+    public void shouldReturnValidUsernameWhenCallExtractUsername() {
         // Given
         String userName = "testUser";
         String token = jwtService.generateToken(userName);
@@ -57,7 +57,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void shouldGiveValidExtractExpirationWhenCallExtractExpiration() {
+    public void shouldReturnValidExtractExpirationWhenCallExtractExpiration() {
         // Given
         String userName = "testUser";
         String token = jwtService.generateToken(userName);
@@ -71,7 +71,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void shouldGiveTrueWhenTokenIsValid() {
+    public void shouldReturnTrueWhenTokenIsValid() {
         // Given
         String userName = "testUser";
         String token = jwtService.generateToken(userName);

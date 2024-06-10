@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.controller;
 
 import com.holovin.smidatestproject.config.jwt.JwtService;
-import com.holovin.smidatestproject.controller.dto.request.AuthRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.RegisterUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.UserAuthRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.service.UserDetailsService;
@@ -31,22 +31,22 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterUserRequestDto registerUserRequestDto) {
-        User user = userDetailsService.registerUser(ToUser(registerUserRequestDto));
+    public ResponseEntity<String> registerUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+        User user = userDetailsService.registerUser(ToUser(userRegisterRequestDto));
         return ResponseEntity.ok("User register successfully with username: " + user.getUsername());
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<String> authenticateAndGetToken(@RequestBody AuthRequestDto authRequestDto) {
+    public ResponseEntity<String> authenticateAndGetToken(@RequestBody UserAuthRequestDto userAuthRequestDto) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
-                        authRequestDto.getUsername(),
-                        authRequestDto.getPassword())
+                        userAuthRequestDto.getUsername(),
+                        userAuthRequestDto.getPassword())
                 );
         if (!authentication.isAuthenticated()) {
-            throw new UserIsUnauthorizedException(authRequestDto.getUsername());
+            throw new UserIsUnauthorizedException(userAuthRequestDto.getUsername());
         }
-        return ResponseEntity.ok(jwtService.generateToken(authRequestDto.getUsername()));
+        return ResponseEntity.ok(jwtService.generateToken(userAuthRequestDto.getUsername()));
     }
 
     @GetMapping("/user/profile")

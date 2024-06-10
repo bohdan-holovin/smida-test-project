@@ -17,6 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserAuthRequestDto;
+import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserRegisterRequestDto;
+import static com.holovin.smidatestproject.utils.RandomUtils.createUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -58,19 +61,17 @@ public class UserControllerTest {
     void shouldRegisterUserSuccessfully() throws Exception {
         // Given
         String endpoint = "/auth/register";
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
-        user.setRoles("USER");
+
+        User user = createUser();
 
         when(userDetailsService.registerUser(any(User.class))).thenReturn(user);
 
         // When-Then
         mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"testUser\",\"password\":\"testPassword\",\"roles\":\"USER\"}"))
+                        .content(toJsonUserRegisterRequestDto(user)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("User register successfully with username: testUser"))
+                .andExpect(content().string("User register successfully with username: " + user.getUsername()))
                 .andReturn();
     }
 
@@ -78,6 +79,8 @@ public class UserControllerTest {
     void shouldReturnJwtTokenForValidAuthRequest() throws Exception {
         // Given
         String endpoint = "/auth/login";
+
+        User user = createUser();
 
         Authentication authentication = mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -88,7 +91,7 @@ public class UserControllerTest {
         // When-Then
         mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"testUser\",\"password\":\"testPassword\"}"))
+                        .content(toJsonUserAuthRequestDto(user)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("someToken"))
                 .andReturn();
@@ -98,6 +101,9 @@ public class UserControllerTest {
     void shouldThrowUserNotFoundExceptionForInvalidAuthRequest() throws Exception {
         // Given
         String endpoint = "/auth/login";
+
+        User user = createUser();
+
         Authentication authentication = Mockito.mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
@@ -106,11 +112,10 @@ public class UserControllerTest {
         // When-Then
         mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"invalidUser\",\"password\":\"invalidPassword\"}"))
+                        .content(toJsonUserAuthRequestDto(user)))
                 .andExpect(status().isUnauthorized())
                 .andReturn();
     }
-
 
     @Test
     @WithMockUser(username = "testUser", authorities = {"USER"})
@@ -126,6 +131,18 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"USER"})
+    void shouldReturnForbiddenForUserTryingToGetAdminProfile() throws Exception {
+        // Given
+        String endpoint = "/admin/profile";
+
+        // When-Then
+        mockMvc.perform(get(endpoint))
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
     @WithMockUser(username = "adminUser", authorities = {"ADMIN"})
     void shouldReturnAdminLoggedMessageForAdminProfileEndpoint() throws Exception {
         // Given
@@ -135,6 +152,18 @@ public class UserControllerTest {
         mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
                 .andExpect(content().string("You are logged in ADMIN"))
+                .andReturn();
+    }
+
+    @Test
+    @WithMockUser(authorities = {"ADMIN"})
+    void shouldReturnForbiddenForAdminTryingToGetUserProfile() throws Exception {
+        // Given
+        String endpoint = "/user/profile";
+
+        // When-Then
+        mockMvc.perform(get(endpoint))
+                .andExpect(status().isForbidden())
                 .andReturn();
     }
 }

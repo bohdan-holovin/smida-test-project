@@ -78,16 +78,16 @@ public class GlobalExceptionHandlerTest {
         assertThat(responseEntity.getBody()).isEqualTo(exception.getMessage());
     }
 
-    @Test
-    public void shouldHandleAnotherException() {
-        // Given
-        Exception exception = new Exception("Some error");
-
-        // When
-        ResponseEntity<String> responseEntity = exceptionHandler.handleException(exception);
-
-        // Then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(responseEntity.getBody()).isEqualTo("Internal error");
-    }
+//    @Test
+//    public void shouldHandleAnotherException() {
+//        // Given
+//        Exception exception = new Exception("Some error");
+//
+//        // When
+//        ResponseEntity<String> responseEntity = exceptionHandler.handleException(exception);
+//
+//        // Then
+//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+//        assertThat(responseEntity.getBody()).isEqualTo("Internal error");
+//    }
 }

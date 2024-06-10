@@ -97,7 +97,7 @@ class JwtAuthFilterTest {
     }
 
     @Test
-    void shouldGiveAuthTokenWhenValidTokenWithUserAuthentication() throws ServletException, IOException {
+    void shouldReturnAuthTokenWhenValidTokenWithUserAuthentication() throws ServletException, IOException {
         // Given
         String validToken = "Bearer validToken";
         String username = "user";

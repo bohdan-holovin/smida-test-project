@@ -37,7 +37,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldGiveCompaniesWhenUseFindAll() {
+    void shouldReturnCompaniesWhenFindAllCompanies() {
         // Given
         List<Company> expectedCompanies = List.of(testCompany);
         when(companyRepository.findAll()).thenReturn(expectedCompanies);
@@ -51,7 +51,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldGiveCompanyWhenUseFindById() {
+    void shouldReturnCompanyWhenUseFindByCompanyId() {
         // Given
         UUID companyId = testCompany.getId();
         when(companyRepository.findById(companyId)).thenReturn(Optional.of(testCompany));
@@ -65,7 +65,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldThrowCompanyNotFoundExceptionWhenUseFindById() {
+    void shouldThrowCompanyNotFoundExceptionWhenFindByCompanyId() {
         // Given
         UUID id = UUID.randomUUID();
         when(companyRepository.findById(id)).thenReturn(Optional.empty());
@@ -76,7 +76,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldGiveCompanyWhenUseCreate() {
+    void shouldReturnCompanyWhenCreateCompany() {
         // Given
         when(companyRepository.save(testCompany)).thenReturn(testCompany);
 
@@ -89,10 +89,12 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldGiveUpdatedCompanyWhenUseUpdate() {
+    void shouldReturnUpdatedCompanyWhenUpdateCompany() {
         // Given
         UUID id = testCompany.getId();
         Company updatedCompany = RandomUtils.createCompany();
+        updatedCompany.setId(id);
+
         when(companyRepository.findById(id)).thenReturn(Optional.of(testCompany));
         when(companyRepository.save(any(Company.class))).thenReturn(updatedCompany);
 
@@ -103,15 +105,18 @@ class CompanyServiceTest {
         assertThat(actualCompany.getName()).isEqualTo(updatedCompany.getName());
         assertThat(actualCompany.getRegistrationNumber()).isEqualTo(updatedCompany.getRegistrationNumber());
         assertThat(actualCompany.getAddress()).isEqualTo(updatedCompany.getAddress());
+
         verify(companyRepository, times(1)).findById(id);
         verify(companyRepository, times(1)).save(any(Company.class));
     }
 
     @Test
-    void shouldThrowCompanyNotFoundExceptionWhenUseUpdate() {
+    void shouldThrowCompanyNotFoundExceptionWhenUpdateCompany() {
         // Given
-        UUID id = UUID.randomUUID();
+        UUID id = testCompany.getId();
         Company updatedCompany = RandomUtils.createCompany();
+        updatedCompany.setId(id);
+
         when(companyRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
@@ -120,9 +125,10 @@ class CompanyServiceTest {
     }
 
     @Test
-    void shouldUseRepositoryWhenUseDelete() {
+    void shouldDeleteCompany() {
         // Given
         UUID id = testCompany.getId();
+        when(companyRepository.findById(id)).thenReturn(Optional.ofNullable(testCompany));
         doNothing().when(companyRepository).deleteById(id);
 
         // When

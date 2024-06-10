@@ -5,6 +5,7 @@ import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.service.CompanyService;
 import com.holovin.smidatestproject.service.UserDetailsService;
+import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
-import static com.holovin.smidatestproject.utils.RandomUtils.createCompany;
+import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonCompanyCreateDto;
+import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonCompanyUpdateDto;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CompanyController.class)
@@ -50,13 +54,18 @@ public class CompanyControllerTest {
     void shouldReturnAllCompaniesForUser() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = createCompany();
-        when(companyService.findAll()).thenReturn(Collections.singletonList(company));
+        Company company = RandomUtils.createCompany();
+        List<Company> companyList = List.of(company);
+        when(companyService.findAll()).thenReturn(companyList);
 
         // When-Then
         mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":\"" + company.getId() + "\"}]"))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", equalTo(company.getId().toString())))
+                .andExpect(jsonPath("$[0].name", equalTo(company.getName())))
+                .andExpect(jsonPath("$[0].registrationNumber", equalTo(company.getRegistrationNumber())))
+                .andExpect(jsonPath("$[0].address", equalTo(company.getAddress())))
                 .andReturn();
     }
 
@@ -64,16 +73,18 @@ public class CompanyControllerTest {
     @WithMockUser(authorities = {"USER"})
     void shouldReturnCompanyByIdForUser() throws Exception {
         // Given
-        UUID id = UUID.randomUUID();
-        String endpoint = "/companies/" + id;
-        Company company = new Company();
-        company.setId(id);
-        when(companyService.findById(id)).thenReturn(company);
+        Company company = RandomUtils.createCompany();
+        String endpoint = "/companies/" + company.getId();
+
+        when(companyService.findById(company.getId())).thenReturn(company);
 
         // When-Then
         mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":\"" + id + "\"}"))
+                .andExpect(jsonPath("$.id", equalTo(company.getId().toString())))
+                .andExpect(jsonPath("$.name", equalTo(company.getName())))
+                .andExpect(jsonPath("$.registrationNumber", equalTo(company.getRegistrationNumber())))
+                .andExpect(jsonPath("$.address", equalTo(company.getAddress())))
                 .andReturn();
     }
 
@@ -82,16 +93,33 @@ public class CompanyControllerTest {
     void shouldCreateCompanyForAdmin() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = new Company();
-        company.setId(UUID.randomUUID());
+        Company company = RandomUtils.createCompany();
         when(companyService.create(any(Company.class))).thenReturn(company);
 
         // When-Then
         mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test Company\"}"))
+                        .content(toJsonCompanyCreateDto(company)))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":\"" + company.getId() + "\"}"))
+                .andExpect(jsonPath("$.id", equalTo(company.getId().toString())))
+                .andExpect(jsonPath("$.name", equalTo(company.getName())))
+                .andExpect(jsonPath("$.registrationNumber", equalTo(company.getRegistrationNumber())))
+                .andExpect(jsonPath("$.address", equalTo(company.getAddress())))
+                .andReturn();
+    }
+
+    @Test
+    @WithMockUser(authorities = {"USER"})
+    void shouldReturnForbiddenForUserTryingToCreateCompany() throws Exception {
+        // Given
+        String endpoint = "/companies";
+        Company company = RandomUtils.createCompany();
+
+        // When-Then
+        mockMvc.perform(post(endpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonCompanyCreateDto(company)))
+                .andExpect(status().isForbidden())
                 .andReturn();
     }
 
@@ -100,16 +128,33 @@ public class CompanyControllerTest {
     void shouldUpdateCompanyForAdmin() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = new Company();
-        company.setId(UUID.randomUUID());
+        Company company = RandomUtils.createCompany();
         when(companyService.updateCompany(any(Company.class))).thenReturn(company);
 
         // When-Then
         mockMvc.perform(put(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"" + company.getId() + "\", \"name\":\"Updated Company\"}"))
+                        .content(toJsonCompanyUpdateDto(company)))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":\"" + company.getId() + "\"}"))
+                .andExpect(jsonPath("$.id", equalTo(company.getId().toString())))
+                .andExpect(jsonPath("$.name", equalTo(company.getName())))
+                .andExpect(jsonPath("$.registrationNumber", equalTo(company.getRegistrationNumber())))
+                .andExpect(jsonPath("$.address", equalTo(company.getAddress())))
+                .andReturn();
+    }
+
+    @Test
+    @WithMockUser(authorities = {"USER"})
+    void shouldReturnForbiddenForUserTryingToUpdateCompany() throws Exception {
+        // Given
+        String endpoint = "/companies";
+        Company company = RandomUtils.createCompany();
+
+        // When-Then
+        mockMvc.perform(put(endpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonCompanyUpdateDto(company)))
+                .andExpect(status().isForbidden())
                 .andReturn();
     }
 
@@ -130,14 +175,14 @@ public class CompanyControllerTest {
 
     @Test
     @WithMockUser(authorities = {"USER"})
-    void shouldReturnForbiddenForUserTryingToCreateCompany() throws Exception {
+    void shouldReturnForbiddenForUserTryingToDeleteCompany() throws Exception {
         // Given
-        String endpoint = "/companies";
+        UUID id = UUID.randomUUID();
+        String endpoint = "/companies/" + id;
+        Mockito.doNothing().when(companyService).deleteById(id);
 
         // When-Then
-        mockMvc.perform(post(endpoint)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test Company\"}"))
+        mockMvc.perform(delete(endpoint))
                 .andExpect(status().isForbidden())
                 .andReturn();
     }

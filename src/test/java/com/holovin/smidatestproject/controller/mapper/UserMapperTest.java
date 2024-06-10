@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.request.RegisterUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -9,9 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserMapperTest {
 
     @Test
-    public void shouldMapUserWhenFromRegisterUserRequestDto() {
+    public void shouldReturnUserWhenMappingFromRegisterUserRequestDto() {
         // Given
-        RegisterUserRequestDto dto = new RegisterUserRequestDto();
+        UserRegisterRequestDto dto = new UserRegisterRequestDto();
         dto.setUsername("testUser");
         dto.setPassword("testPassword");
         String roles = "USER ADMIN";

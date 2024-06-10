@@ -18,7 +18,7 @@ public class CompanyRepositoryTest {
     private CompanyRepository companyRepository;
 
     @Test
-    public void shouldGiveCompaniesWhenUseFindAll() {
+    public void shouldReturnCompaniesWhenUseFindAll() {
         // Given
         Company company1 = RandomUtils.createCompany();
         Company company2 = RandomUtils.createCompany();
@@ -36,7 +36,7 @@ public class CompanyRepositoryTest {
     }
 
     @Test
-    public void shouldGiveCompanyWhenUseFindById() {
+    public void shouldReturnCompanyWhenUseFindById() {
         // Given
         Company company = RandomUtils.createCompany();
         Company savedCompany = companyRepository.save(company);

@@ -26,7 +26,7 @@ class UserDetailsTest {
     }
 
     @Test
-    void shouldCorrectMapAuthorities() {
+    void shouldReturnCorrectMapAuthorities() {
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         assertThat(authorities.size()).isEqualTo(2);
         assertTrue(authorities.contains(new SimpleGrantedAuthority("USER")));
@@ -34,12 +34,12 @@ class UserDetailsTest {
     }
 
     @Test
-    void shouldCorrectMapPassword() {
+    void shouldReturnCorrectMapPassword() {
         assertEquals("testPassword", userDetails.getPassword());
     }
 
     @Test
-    void shouldCorrectMapUserName() {
+    void shouldReturnCorrectMapUserName() {
         assertEquals("testUser", userDetails.getUsername());
     }
 

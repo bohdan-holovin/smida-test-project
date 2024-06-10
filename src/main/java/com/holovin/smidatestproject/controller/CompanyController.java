@@ -22,7 +22,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<List<CompanyResponseDto>> getAllCompanies() {
         return ResponseEntity.ok(toCompanyResponseDtoList(companyService.findAll()));

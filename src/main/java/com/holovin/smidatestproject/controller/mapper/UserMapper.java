@@ -1,15 +1,15 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.request.RegisterUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.model.User;
 
 public class UserMapper {
 
-    public static User ToUser(RegisterUserRequestDto registerUserRequestDto) {
+    public static User ToUser(UserRegisterRequestDto userRegisterRequestDto) {
         User user = new User();
-        user.setUsername(registerUserRequestDto.getUsername());
-        user.setPassword(registerUserRequestDto.getPassword());
-        user.setRoles(registerUserRequestDto.getRoles());
+        user.setUsername(userRegisterRequestDto.getUsername());
+        user.setPassword(userRegisterRequestDto.getPassword());
+        user.setRoles(userRegisterRequestDto.getRoles());
         return user;
     }
 }
