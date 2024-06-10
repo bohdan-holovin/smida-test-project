@@ -1,0 +1,97 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: bohdan-holovin
+      changes:
+        - createTable:
+            tableName: company
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: bohdan-holovin
+      changes:
+        - createTable:
+            tableName: report
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: company_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: report_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_revenue
+                  type: DECIMAL(19,2)
+              - column:
+                  name: net_profit
+                  type: DECIMAL(19,2)
+        - addForeignKeyConstraint:
+            baseColumnNames: company_id
+            baseTableName: report
+            constraintName: fk_report_company
+            referencedColumnNames: id
+            referencedTableName: company
+  - changeSet:
+      id: 3
+      author: bohdan-holovin
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: roles
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
