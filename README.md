@@ -82,7 +82,7 @@ This command will start the application and all required services defined in the
 
 By following these detailed instructions, you should be able to set up, run, and interact with the Smida Test Project successfully.
 
-### Test Coverage
+## Test Coverage
 The `smida-test-project` has been rigorously tested to ensure high code quality and reliability. The test coverage statistics are as follows:
 
 - **Overall Coverage**:
