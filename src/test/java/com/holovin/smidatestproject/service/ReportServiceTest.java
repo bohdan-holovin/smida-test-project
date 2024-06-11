@@ -46,8 +46,8 @@ class ReportServiceTest {
 
     @BeforeEach
     void setUp() {
-        testReport = RandomUtils.createReport(RandomUtils.createCompany());
-        testReportDetails = RandomUtils.createReportDetails();
+        testReport = RandomUtils.createRandomReport(RandomUtils.createCompany());
+        testReportDetails = RandomUtils.createRandomReportDetails();
         testFullReport = toFullReport(testReport, testReportDetails);
     }
 

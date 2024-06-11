@@ -37,7 +37,7 @@ class UserDetailsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = RandomUtils.createUser();
+        user = RandomUtils.createRandomUser();
     }
 
     @Test

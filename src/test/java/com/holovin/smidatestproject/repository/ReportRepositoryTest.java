@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.holovin.smidatestproject.utils.RandomUtils.createCompany;
-import static com.holovin.smidatestproject.utils.RandomUtils.createReport;
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReportBigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -35,9 +35,9 @@ public class ReportRepositoryTest {
         Company saveCompany1 = companyRepository.save(createCompany());
         Company saveCompany2 = companyRepository.save(createCompany());
 
-        Report report1 = createReport(saveCompany1);
-        Report report2 = createReport(saveCompany1);
-        Report report3 = createReport(saveCompany2);
+        Report report1 = createRandomReportBigDecimal(saveCompany1);
+        Report report2 = createRandomReportBigDecimal(saveCompany1);
+        Report report3 = createRandomReportBigDecimal(saveCompany2);
 
         reportRepository.save(report1);
         reportRepository.save(report2);
@@ -56,7 +56,7 @@ public class ReportRepositoryTest {
     public void shouldReturnReportWhenCallFindById() {
         // Given
         Company saveCompany = companyRepository.save(createCompany());
-        Report report = createReport(saveCompany);
+        Report report = createRandomReportBigDecimal(saveCompany);
         Report expectedReport = reportRepository.save(report);
 
         // When
@@ -71,7 +71,7 @@ public class ReportRepositoryTest {
     public void shouldDeleteReportWhenCallDeleteById() {
         // Given
         Company saveCompany = companyRepository.save(createCompany());
-        Report report = createReport(saveCompany);
+        Report report = createRandomReportBigDecimal(saveCompany);
         Report expectedReport = reportRepository.save(report);
 
         // When
@@ -85,7 +85,7 @@ public class ReportRepositoryTest {
     private static void assertReport(Report actualReport, Report expectedReport) {
         assertThat(actualReport.getCompany().getId()).isEqualTo(expectedReport.getCompany().getId());
         assertThat(actualReport.getReportDate()).isEqualTo(expectedReport.getReportDate());
-        assertThat(actualReport.getTotalRevenue().compareTo(expectedReport.getTotalRevenue()));
-        assertThat(actualReport.getNetProfit().compareTo(expectedReport.getNetProfit()));
+        assertThat(actualReport.getTotalRevenue()).isEqualTo(expectedReport.getTotalRevenue());
+        assertThat(actualReport.getNetProfit()).isEqualTo(expectedReport.getNetProfit());
     }
 }

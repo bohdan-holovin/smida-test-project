@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.holovin.smidatestproject.utils.RandomUtils.createReport;
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReport;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +33,7 @@ class CompanyDeleteServiceTest {
     void shouldCascadeDeleteCompany() {
         // Given
         Company company = RandomUtils.createCompany();
-        List<Report> reports = List.of(createReport(company), createReport(company));
+        List<Report> reports = List.of(createRandomReport(company), createRandomReport(company));
         List<UUID> reportIds = reports.stream().map(Report::getId).collect(Collectors.toList());
 
         when(reportService.getAllReportsByCompanyId(company.getId())).thenReturn(reports);

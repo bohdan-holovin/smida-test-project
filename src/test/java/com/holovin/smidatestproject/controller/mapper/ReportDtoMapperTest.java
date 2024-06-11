@@ -23,7 +23,7 @@ class ReportDtoMapperTest {
     @Test
     void shouldMapReportRequestDtoToReport() {
         // Given
-        Report expectedReport = RandomUtils.createReport(RandomUtils.createCompany());
+        Report expectedReport = RandomUtils.createRandomReport(RandomUtils.createCompany());
         ReportRequestDto requestDto = new ReportRequestDto();
         requestDto.setReportDate(expectedReport.getReportDate());
         requestDto.setTotalRevenue(expectedReport.getTotalRevenue());
@@ -41,7 +41,7 @@ class ReportDtoMapperTest {
     @Test
     void shouldMapReportDetailsRequestDtoToReportDetails() {
         // Given
-        ReportDetails expectedReportDetails = RandomUtils.createReportDetails();
+        ReportDetails expectedReportDetails = RandomUtils.createRandomReportDetails();
         ReportDetailsRequestDto requestDto = new ReportDetailsRequestDto();
         requestDto.setReportId(expectedReportDetails.getReportId());
         requestDto.setComments(expectedReportDetails.getComments());
@@ -59,7 +59,7 @@ class ReportDtoMapperTest {
     @Test
     void shouldMapFullReportRequestDtoToFullReport() {
         // Given
-        FullReport expectedFullReport = RandomUtils.createFullReport();
+        FullReport expectedFullReport = RandomUtils.createRandomFullReport();
         FullReportRequestDto requestDto = new FullReportRequestDto();
         requestDto.setId(expectedFullReport.getId());
         requestDto.setReportDate(expectedFullReport.getReportDate());
@@ -84,7 +84,7 @@ class ReportDtoMapperTest {
     void shouldMapReportToReportResponseDto() {
         // Given
         Company testCompany = RandomUtils.createCompany();
-        Report testReport = RandomUtils.createReport(testCompany);
+        Report testReport = RandomUtils.createRandomReport(testCompany);
         ReportResponseDto expectedDto = new ReportResponseDto();
         expectedDto.setId(testReport.getId());
         expectedDto.setCompany(CompanyDtoMapper.toCompanyResponseDto(testCompany));
@@ -103,7 +103,7 @@ class ReportDtoMapperTest {
     void shouldMapReportListToReportResponseDtoList() {
         // Given
         Company testCompany = RandomUtils.createCompany();
-        List<Report> testReports = List.of(RandomUtils.createReport(testCompany), RandomUtils.createReport(testCompany));
+        List<Report> testReports = List.of(RandomUtils.createRandomReport(testCompany), RandomUtils.createRandomReport(testCompany));
         List<ReportResponseDto> expected = testReports.stream()
                 .map(report -> {
                     ReportResponseDto dto = new ReportResponseDto();
@@ -126,7 +126,7 @@ class ReportDtoMapperTest {
     @Test
     void shouldMapReportDetailsToReportDetailsResponseDto() {
         // Given
-        ReportDetails testReportDetails = RandomUtils.createReportDetails();
+        ReportDetails testReportDetails = RandomUtils.createRandomReportDetails();
         ReportDetailsResponseDto expectedDto = new ReportDetailsResponseDto();
         expectedDto.setReportId(testReportDetails.getReportId());
         expectedDto.setFinancialData(testReportDetails.getFinancialData());
@@ -143,7 +143,7 @@ class ReportDtoMapperTest {
     void shouldMapFullReportToFullReportResponseDto() {
         // Given
         Company testCompany = RandomUtils.createCompany();
-        FullReport testFullReport = RandomUtils.createFullReport();
+        FullReport testFullReport = RandomUtils.createRandomFullReport();
         testFullReport.setCompany(testCompany);
 
         FullReportResponseDto expectedDto = new FullReportResponseDto();
