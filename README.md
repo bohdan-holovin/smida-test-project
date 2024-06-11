@@ -25,7 +25,7 @@ The project consists in the development of a RESTful service for the management 
 - **Docker**
 
 ## Architecture
-The application follows a microservice architecture with clear separation of concerns. Key components include:
+The application follows Model-View-Controller architecture with clear separation of concerns. Key components include:
 - **Controllers**: Handle HTTP requests and responses.
 - **Services**: Contain business logic.
 - **Repositories**: Interact with the database.
