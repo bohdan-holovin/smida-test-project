@@ -274,14 +274,16 @@ class ReportServiceTest {
 
 
     @Test
-    void shouldDeleteReportByReportId() {
+    void shouldCascadeDeleteReportByReportId() {
         // Given
         UUID reportId = testReport.getId();
+        when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
+        doNothing().when(reportDetailsRepository).deleteById(reportId);
         doNothing().when(reportRepository).deleteById(reportId);
 
         // When
-        reportService.deleteReportByReportId(reportId);
+        reportService.cascadeDeleteReportByReportId(reportId);
 
         // Then
         verify(reportRepository).findById(reportId);
@@ -302,25 +304,6 @@ class ReportServiceTest {
         // Then
         verify(reportRepository).findById(reportId);
         verify(reportDetailsRepository).findById(reportId);
-        verify(reportDetailsRepository).deleteById(reportId);
-    }
-
-    @Test
-    void shouldDeleteFullReportByReportId() {
-        // Given
-        UUID reportId = testReport.getId();
-        when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
-        when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
-        doNothing().when(reportRepository).deleteById(reportId);
-        doNothing().when(reportDetailsRepository).deleteById(reportId);
-
-        // When
-        reportService.deleteFullReportByReportId(reportId);
-
-        // Then
-        verify(reportRepository).findById(reportId);
-        verify(reportDetailsRepository).findById(reportId);
-        verify(reportRepository).deleteById(reportId);
         verify(reportDetailsRepository).deleteById(reportId);
     }
 }

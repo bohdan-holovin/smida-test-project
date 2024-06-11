@@ -3,6 +3,7 @@ package com.holovin.smidatestproject.controller;
 import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestDto;
 import com.holovin.smidatestproject.controller.dto.request.CompanyUpdateRequestDto;
 import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
+import com.holovin.smidatestproject.service.CompanyDeleteService;
 import com.holovin.smidatestproject.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.*;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final CompanyDeleteService companyDeleteService;
     private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
     @GetMapping
@@ -65,7 +67,7 @@ public class CompanyController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteCompany(@PathVariable UUID id) {
         logger.info("Deleting company with id {}", id);
-        companyService.deleteCompanyByCompanyId(id);
+        companyDeleteService.cascadeCompanyDelete(id);
         logger.info("Deleted company with id {}", id);
         return ResponseEntity.ok().build();
     }

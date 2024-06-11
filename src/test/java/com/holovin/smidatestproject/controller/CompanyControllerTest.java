@@ -3,6 +3,7 @@ package com.holovin.smidatestproject.controller;
 import com.holovin.smidatestproject.config.SecurityConfig;
 import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.model.Company;
+import com.holovin.smidatestproject.service.CompanyDeleteService;
 import com.holovin.smidatestproject.service.CompanyService;
 import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import com.holovin.smidatestproject.utils.RandomUtils;
@@ -39,6 +40,9 @@ public class CompanyControllerTest {
 
     @MockBean
     private CompanyService companyService;
+
+    @MockBean
+    private CompanyDeleteService companyDeleteService;
 
     @MockBean
     private UserDetailsServiceImpl userDetailsServiceImpl;
@@ -164,7 +168,7 @@ public class CompanyControllerTest {
         // Given
         UUID id = UUID.randomUUID();
         String endpoint = "/companies/" + id;
-        Mockito.doNothing().when(companyService).deleteCompanyByCompanyId(id);
+        Mockito.doNothing().when(companyDeleteService).cascadeCompanyDelete(id);
         when(companyService.getCompanyByCompanyId(id)).thenReturn(new Company());
 
         // When-Then
@@ -179,7 +183,7 @@ public class CompanyControllerTest {
         // Given
         UUID id = UUID.randomUUID();
         String endpoint = "/companies/" + id;
-        Mockito.doNothing().when(companyService).deleteCompanyByCompanyId(id);
+        Mockito.doNothing().when(companyDeleteService).cascadeCompanyDelete(id);
 
         // When-Then
         mockMvc.perform(delete(endpoint))
