@@ -3,7 +3,7 @@ package com.holovin.smidatestproject.controller;
 import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.controller.dto.auth.request.UserAuthRequestDto;
 import com.holovin.smidatestproject.controller.dto.auth.request.UserRegisterRequestDto;
-import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
+import com.holovin.smidatestproject.exception.UserIsUnauthorizedException;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.controller.handler;
 
-import com.holovin.smidatestproject.exceptions.*;
+import com.holovin.smidatestproject.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

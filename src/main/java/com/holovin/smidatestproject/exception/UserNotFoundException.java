@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.exceptions;
+package com.holovin.smidatestproject.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String username) {

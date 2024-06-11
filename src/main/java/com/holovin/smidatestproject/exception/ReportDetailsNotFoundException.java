@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.exceptions;
+package com.holovin.smidatestproject.exception;
 
 import java.util.UUID;
 

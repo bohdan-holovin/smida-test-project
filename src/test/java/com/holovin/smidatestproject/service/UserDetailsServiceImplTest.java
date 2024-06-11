@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.service;
 
-import com.holovin.smidatestproject.exceptions.UserNotFoundException;
+import com.holovin.smidatestproject.exception.UserNotFoundException;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.repository.UserRepository;
 import com.holovin.smidatestproject.utils.RandomUtils;

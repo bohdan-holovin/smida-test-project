@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.controller.handler;
 
-import com.holovin.smidatestproject.exceptions.*;
+import com.holovin.smidatestproject.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

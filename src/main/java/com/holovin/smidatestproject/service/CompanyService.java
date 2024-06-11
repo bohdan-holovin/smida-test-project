@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.service;
 
-import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
+import com.holovin.smidatestproject.exception.CompanyNotFoundException;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.repository.CompanyRepository;
 import lombok.AllArgsConstructor;

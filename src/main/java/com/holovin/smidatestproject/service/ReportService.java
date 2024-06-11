@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.service;
 
-import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
-import com.holovin.smidatestproject.exceptions.ReportDetailsNotFoundException;
-import com.holovin.smidatestproject.exceptions.ReportNotFoundException;
+import com.holovin.smidatestproject.exception.CompanyNotFoundException;
+import com.holovin.smidatestproject.exception.ReportDetailsNotFoundException;
+import com.holovin.smidatestproject.exception.ReportNotFoundException;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
