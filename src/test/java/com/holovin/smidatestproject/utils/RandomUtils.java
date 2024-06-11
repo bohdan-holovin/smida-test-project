@@ -37,6 +37,12 @@ public class RandomUtils {
         return generator.nextObject(ReportDetails.class);
     }
 
+    public static ReportDetails createRandomReportDetails(Report report) {
+        ReportDetails reportDetails = generator.nextObject(ReportDetails.class);
+        reportDetails.setReportId(report.getId());
+        return reportDetails;
+    }
+
     public static FullReport createRandomFullReport() {
         return generator.nextObject(FullReport.class);
     }

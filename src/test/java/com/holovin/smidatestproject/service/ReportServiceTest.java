@@ -3,13 +3,12 @@ package com.holovin.smidatestproject.service;
 import com.holovin.smidatestproject.AbstractUnitTest;
 import com.holovin.smidatestproject.exception.ReportDetailsNotFoundException;
 import com.holovin.smidatestproject.exception.ReportNotFoundException;
+import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;
 import com.holovin.smidatestproject.repository.ReportDetailsRepository;
 import com.holovin.smidatestproject.repository.ReportRepository;
-import com.holovin.smidatestproject.utils.RandomUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.holovin.smidatestproject.service.mapper.ReportMapper.*;
+import static com.holovin.smidatestproject.utils.RandomUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,21 +38,12 @@ class ReportServiceTest extends AbstractUnitTest {
     @InjectMocks
     private ReportService reportService;
 
-    private Report testReport;
-    private ReportDetails testReportDetails;
-    private FullReport testFullReport;
-
-    @BeforeEach
-    void setUp() {
-        testReport = RandomUtils.createRandomReport(RandomUtils.createRandomCompany());
-        testReportDetails = RandomUtils.createRandomReportDetails();
-        testFullReport = toFullReport(testReport, testReportDetails);
-    }
-
     @Test
     void shouldReturnAllReports() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
         List<Report> expectedReports = List.of(testReport);
+
         when(reportRepository.findAll()).thenReturn(expectedReports);
 
         // When
@@ -66,8 +57,11 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldReturnReportsByCompanyId() {
         // Given
+        Company company = createRandomCompany();
+        UUID companyId = company.getId();
+        Report testReport = createRandomReport(company);
         List<Report> expectedReports = List.of(testReport);
-        UUID companyId = testReport.getCompany().getId();
+
         when(companyService.getCompanyByCompanyId(companyId)).thenReturn(testReport.getCompany());
         when(reportRepository.findAllByCompanyId(companyId)).thenReturn(expectedReports);
 
@@ -83,7 +77,9 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldReturnReportByReportId() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
         UUID reportId = testReport.getId();
+
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
 
         // When
@@ -108,7 +104,9 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldReturnReportDetailsByReportId() {
         // Given
+        ReportDetails testReportDetails = createRandomReportDetails();
         UUID reportId = testReportDetails.getReportId();
+
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
 
         // When
@@ -125,7 +123,7 @@ class ReportServiceTest extends AbstractUnitTest {
         UUID reportId = UUID.randomUUID();
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.empty());
 
-        // When & Then
+        // When-Then
         assertThrows(ReportDetailsNotFoundException.class, () -> reportService.getReportDetailByReportId(reportId));
         verify(reportDetailsRepository).findById(reportId);
     }
@@ -133,8 +131,11 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldReturnFullReportByReportId() {
         // Given
+        Company company = createRandomCompany();
+        Report testReport = createRandomReport(company);
+        ReportDetails testReportDetails = createRandomReportDetails(testReport);
         UUID reportId = testReport.getId();
-        testReportDetails.setReportId(testReport.getId());
+
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
 
@@ -150,6 +151,9 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldCreateReport() {
         // Given
+        Company company = createRandomCompany();
+        Report testReport = createRandomReport(company);
+
         when(companyService.getCompanyByCompanyId(testReport.getId())).thenReturn(testReport.getCompany());
         when(reportRepository.save(testReport)).thenReturn(testReport);
 
@@ -165,8 +169,11 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldCreateReportDetails() {
         // Given
+        Company company = createRandomCompany();
+        Report testReport = createRandomReport(company);
+        ReportDetails testReportDetails = createRandomReportDetails(testReport);
         UUID reportId = testReport.getId();
-        testReportDetails.setReportId(testReport.getId());
+
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
         when(reportDetailsRepository.save(testReportDetails)).thenReturn(testReportDetails);
 
@@ -182,13 +189,15 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldCreateFullReport() {
         // Given
-        testReportDetails.setReportId(testReport.getId());
+        Company company = createRandomCompany();
+        Report testReport = createRandomReport(company);
+        ReportDetails testReportDetails = createRandomReportDetails(testReport);
+        FullReport expectedFullReport = toFullReport(testReport, testReportDetails);
 
         when(companyService.getCompanyByCompanyId(testReport.getCompany().getId())).thenReturn(testReport.getCompany());
         when(reportRepository.save(any(Report.class))).thenReturn(testReport);
         when(reportRepository.findById(testReport.getId())).thenReturn(Optional.of(testReport));
         when(reportDetailsRepository.save(any(ReportDetails.class))).thenReturn(testReportDetails);
-        FullReport expectedFullReport = toFullReport(testReport, testReportDetails);
 
         // When
         FullReport actualFullReport = reportService.createFullReport(testReport.getCompany().getId(), expectedFullReport);
@@ -204,6 +213,10 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldUpdateReport() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
+        ReportDetails testReportDetails = createRandomReportDetails(testReport);
+        FullReport testFullReport = toFullReport(testReport, testReportDetails);
+
         UUID reportId = testReport.getId();
         Report expectedReport = toReport(testFullReport);
         expectedReport.setId(reportId);
@@ -225,6 +238,10 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldUpdateReportDetails() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
+        ReportDetails testReportDetails = createRandomReportDetails(testReport);
+        FullReport testFullReport = toFullReport(testReport, testReportDetails);
+
         UUID reportId = testReportDetails.getReportId();
         ReportDetails expectedReportDetails = toReportDetails(testFullReport);
         expectedReportDetails.setReportId(reportId);
@@ -246,6 +263,10 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldUpdateFullReport() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
+        ReportDetails testReportDetails = createRandomReportDetails();
+        FullReport testFullReport = toFullReport(testReport, testReportDetails);
+
         UUID reportId = testFullReport.getId();
         Report updatedReport = toReport(testFullReport);
         ReportDetails reportDetails = toReportDetails(testFullReport);
@@ -273,6 +294,9 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldCascadeDeleteReportByReportId() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
+        ReportDetails testReportDetails = createRandomReportDetails();
+
         UUID reportId = testReport.getId();
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
@@ -292,6 +316,9 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldDeleteReportDetailsByReportId() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
+        ReportDetails testReportDetails = createRandomReportDetails();
+
         UUID reportId = testReportDetails.getReportId();
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
@@ -309,6 +336,9 @@ class ReportServiceTest extends AbstractUnitTest {
     @Test
     void shouldCascadeDeleteAllReportByReportId() {
         // Given
+        Report testReport = createRandomReport(createRandomCompany());
+        ReportDetails testReportDetails = createRandomReportDetails();
+
         UUID reportId = testReport.getId();
         UUID reportId2 = UUID.randomUUID();
         List<UUID> reportIdList = List.of(reportId, reportId2);
