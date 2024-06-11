@@ -41,7 +41,7 @@ public class CompanyService {
                 .orElseThrow(() -> new CompanyNotFoundException(updatedCompany.getId()));
     }
 
-    public void deleteCompanyByCompanyId(UUID id) {
+    void deleteCompanyByCompanyId(UUID id) {
         getCompanyByCompanyId(id);
         companyRepository.deleteById(id);
     }

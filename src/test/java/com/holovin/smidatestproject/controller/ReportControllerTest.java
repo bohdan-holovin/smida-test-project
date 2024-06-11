@@ -296,7 +296,7 @@ public class ReportControllerTest {
         // Given
         UUID reportId = UUID.randomUUID();
         String endpoint = "/reports/" + reportId;
-        doNothing().when(reportService).deleteReportByReportId(reportId);
+        doNothing().when(reportService).cascadeDeleteReportByReportId(reportId);
 
         // When-Then
         mockMvc.perform(delete(endpoint))
@@ -324,7 +324,7 @@ public class ReportControllerTest {
         // Given
         UUID reportId = UUID.randomUUID();
         String endpoint = "/reports/" + reportId + "/full";
-        Mockito.doNothing().when(reportService).deleteFullReportByReportId(reportId);
+        Mockito.doNothing().when(reportService).cascadeDeleteReportByReportId(reportId);
 
         // When-Then
         mockMvc.perform(delete(endpoint))

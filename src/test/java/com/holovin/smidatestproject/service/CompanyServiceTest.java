@@ -47,7 +47,7 @@ class CompanyServiceTest {
 
         // Then
         assertThat(actualCompanies).isEqualTo(expectedCompanies);
-        verify(companyRepository, times(1)).findAll();
+        verify(companyRepository).findAll();
     }
 
     @Test
@@ -61,7 +61,7 @@ class CompanyServiceTest {
 
         // Then
         assertThat(actualCompany).isEqualTo(testCompany);
-        verify(companyRepository, times(1)).findById(companyId);
+        verify(companyRepository).findById(companyId);
     }
 
     @Test
@@ -72,7 +72,7 @@ class CompanyServiceTest {
 
         // When & Then
         assertThrows(CompanyNotFoundException.class, () -> companyService.getCompanyByCompanyId(id));
-        verify(companyRepository, times(1)).findById(id);
+        verify(companyRepository).findById(id);
     }
 
     @Test
@@ -85,7 +85,7 @@ class CompanyServiceTest {
 
         // Then
         assertThat(actualCompany).isEqualTo(testCompany);
-        verify(companyRepository, times(1)).save(testCompany);
+        verify(companyRepository).save(testCompany);
     }
 
     @Test
@@ -121,7 +121,7 @@ class CompanyServiceTest {
 
         // When & Then
         assertThrows(CompanyNotFoundException.class, () -> companyService.updateCompany(updatedCompany));
-        verify(companyRepository, times(1)).findById(id);
+        verify(companyRepository).findById(id);
     }
 
     @Test
@@ -135,6 +135,6 @@ class CompanyServiceTest {
         companyService.deleteCompanyByCompanyId(id);
 
         // Then
-        verify(companyRepository, times(1)).deleteById(id);
+        verify(companyRepository).deleteById(id);
     }
 }

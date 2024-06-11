@@ -140,7 +140,7 @@ public class ReportController {
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<Void> deleteReportByReportId(@PathVariable UUID reportId) {
         logger.info("Deleting report with id {}", reportId);
-        reportService.deleteReportByReportId(reportId);
+        reportService.cascadeDeleteReportByReportId(reportId);
         logger.info("Deleted report with id {}", reportId);
         return ResponseEntity.ok().build();
     }
@@ -158,7 +158,7 @@ public class ReportController {
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<Void> deleteFullReportByReportId(@PathVariable UUID reportId) {
         logger.info("Deleting full report with id {}", reportId);
-        reportService.deleteFullReportByReportId(reportId);
+        reportService.cascadeDeleteReportByReportId(reportId);
         logger.info("Deleted full report with id {}", reportId);
         return ResponseEntity.ok().build();
     }

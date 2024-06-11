@@ -272,20 +272,23 @@ class ReportServiceTest {
         verify(reportDetailsRepository).save(any(ReportDetails.class));
     }
 
-
     @Test
-    void shouldDeleteReportByReportId() {
+    void shouldCascadeDeleteReportByReportId() {
         // Given
         UUID reportId = testReport.getId();
+        when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
         when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
+        doNothing().when(reportDetailsRepository).deleteById(reportId);
         doNothing().when(reportRepository).deleteById(reportId);
 
         // When
-        reportService.deleteReportByReportId(reportId);
+        reportService.cascadeDeleteReportByReportId(reportId);
 
         // Then
         verify(reportRepository).findById(reportId);
+        verify(reportDetailsRepository).findById(reportId);
         verify(reportRepository).deleteById(reportId);
+        verify(reportDetailsRepository).deleteById(reportId);
     }
 
     @Test
@@ -306,21 +309,22 @@ class ReportServiceTest {
     }
 
     @Test
-    void shouldDeleteFullReportByReportId() {
+    void shouldCascadeDeleteAllReportByReportId() {
         // Given
         UUID reportId = testReport.getId();
-        when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
-        when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
-        doNothing().when(reportRepository).deleteById(reportId);
-        doNothing().when(reportDetailsRepository).deleteById(reportId);
+        UUID reportId2 = UUID.randomUUID();
+        List<UUID> reportIdList = List.of(reportId, reportId2);
+
+        testReportDetails.setReportId(reportId);
+
+        doNothing().when(reportDetailsRepository).deleteAllById(reportIdList);
+        doNothing().when(reportRepository).deleteAllById(reportIdList);
 
         // When
-        reportService.deleteFullReportByReportId(reportId);
+        reportService.cascadeDeleteAllReportByReportId(reportIdList);
 
         // Then
-        verify(reportRepository).findById(reportId);
-        verify(reportDetailsRepository).findById(reportId);
-        verify(reportRepository).deleteById(reportId);
-        verify(reportDetailsRepository).deleteById(reportId);
+        verify(reportRepository).deleteAllById(reportIdList);
+        verify(reportDetailsRepository).deleteAllById(reportIdList);
     }
 }

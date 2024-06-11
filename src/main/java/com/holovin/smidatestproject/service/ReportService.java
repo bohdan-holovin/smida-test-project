@@ -109,21 +109,21 @@ public class ReportService {
         return toFullReport(report, reportDetails);
     }
 
-    public void deleteReportByReportId(UUID reportId) {
+    public void cascadeDeleteReportByReportId(UUID reportId) {
         getReportByReportId(reportId);
+        getReportDetailByReportId(reportId);
+        reportDetailsRepository.deleteById(reportId);
         reportRepository.deleteById(reportId);
+    }
+
+    public void cascadeDeleteAllReportByReportId(List<UUID> reportList) {
+        reportDetailsRepository.deleteAllById(reportList);
+        reportRepository.deleteAllById(reportList);
     }
 
     public void deleteReportDetailsByReportId(UUID reportId) {
         getReportByReportId(reportId);
         getReportDetailByReportId(reportId);
         reportDetailsRepository.deleteById(reportId);
-    }
-
-    public void deleteFullReportByReportId(UUID reportId) {
-        getReportByReportId(reportId);
-        getReportDetailByReportId(reportId);
-        reportDetailsRepository.deleteById(reportId);
-        reportRepository.deleteById(reportId);
     }
 }
