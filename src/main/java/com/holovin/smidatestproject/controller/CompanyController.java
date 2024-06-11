@@ -4,6 +4,7 @@ import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestD
 import com.holovin.smidatestproject.controller.dto.request.CompanyUpdateRequestDto;
 import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
 import com.holovin.smidatestproject.service.CompanyService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class CompanyController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CompanyResponseDto> createCompany(@RequestBody CompanyCreateRequestDto company) {
+    public ResponseEntity<CompanyResponseDto> createCompany(@Valid @RequestBody CompanyCreateRequestDto company) {
         logger.info("Creating company request: {}", company);
         CompanyResponseDto createdCompany = toCompanyResponseDto(companyService.createUpdate(toCompany(company)));
         logger.info("Created company response: {}", createdCompany);
@@ -53,7 +54,7 @@ public class CompanyController {
 
     @PutMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CompanyResponseDto> updateCompany(@RequestBody CompanyUpdateRequestDto company) {
+    public ResponseEntity<CompanyResponseDto> updateCompany(@Valid @RequestBody CompanyUpdateRequestDto company) {
         logger.info("Updating company request: {}", company);
         CompanyResponseDto updatedCompany = toCompanyResponseDto(companyService.updateCompany(toCompany(company)));
         logger.info("Updated company response: {}", updatedCompany);

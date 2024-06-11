@@ -6,6 +6,7 @@ import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDt
 import com.holovin.smidatestproject.exceptions.UserIsUnauthorizedException;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegisterRequestDto userRegisterRequestDto) {
         logger.info("Registering user with username request: {}", userRegisterRequestDto.getUsername());
         User user = userDetailsServiceImpl.registerUser(toUser(userRegisterRequestDto));
         logger.info("User registered successfully with username: {}", user.getUsername());
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<String> authenticateAndGetToken(@RequestBody UserAuthRequestDto userAuthRequestDto) {
+    public ResponseEntity<String> authenticateAndGetToken(@Valid @RequestBody UserAuthRequestDto userAuthRequestDto) {
         logger.info("Attempting to authenticate user with username: {}", userAuthRequestDto.getUsername());
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
