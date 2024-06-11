@@ -44,7 +44,7 @@ class ReportServiceTest extends AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        testReport = RandomUtils.createRandomReport(RandomUtils.createCompany());
+        testReport = RandomUtils.createRandomReport(RandomUtils.createRandomCompany());
         testReportDetails = RandomUtils.createRandomReportDetails();
         testFullReport = toFullReport(testReport, testReportDetails);
     }
@@ -186,7 +186,7 @@ class ReportServiceTest extends AbstractUnitTest {
 
         when(companyService.getCompanyByCompanyId(testReport.getCompany().getId())).thenReturn(testReport.getCompany());
         when(reportRepository.save(any(Report.class))).thenReturn(testReport);
-        when(reportRepository.findById(testReport.getId())).thenReturn(Optional.ofNullable(testReport));
+        when(reportRepository.findById(testReport.getId())).thenReturn(Optional.of(testReport));
         when(reportDetailsRepository.save(any(ReportDetails.class))).thenReturn(testReportDetails);
         FullReport expectedFullReport = toFullReport(testReport, testReportDetails);
 
@@ -229,7 +229,7 @@ class ReportServiceTest extends AbstractUnitTest {
         ReportDetails expectedReportDetails = toReportDetails(testFullReport);
         expectedReportDetails.setReportId(reportId);
 
-        when(reportRepository.findById(reportId)).thenReturn(Optional.ofNullable(testReport));
+        when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
         when(reportDetailsRepository.save(testReportDetails)).thenReturn(expectedReportDetails);
 
@@ -253,7 +253,7 @@ class ReportServiceTest extends AbstractUnitTest {
         FullReport expectedReportDetails = toFullReport(testReport, testReportDetails);
 
         when(companyService.getCompanyByCompanyId(testReport.getCompany().getId())).thenReturn(testReport.getCompany());
-        when(reportRepository.findById(reportId)).thenReturn(Optional.ofNullable(testReport));
+        when(reportRepository.findById(reportId)).thenReturn(Optional.of(testReport));
         when(reportRepository.save(testReport)).thenReturn(updatedReport);
         when(reportDetailsRepository.findById(reportId)).thenReturn(Optional.of(testReportDetails));
         when(reportDetailsRepository.save(testReportDetails)).thenReturn(reportDetails);

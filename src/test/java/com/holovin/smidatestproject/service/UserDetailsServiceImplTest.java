@@ -59,7 +59,7 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
         // Given
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.empty());
 
-        // When / Then
+        // When-Then
         assertThatThrownBy(() -> userDetailsServiceImpl.loadUserByUsername(user.getUsername()))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(user.getUsername());

@@ -30,8 +30,8 @@ public class CompanyRepositoryTest {
     @Test
     public void shouldReturnCompaniesWhenCallFindAll() {
         // Given
-        Company company1 = RandomUtils.createCompany();
-        Company company2 = RandomUtils.createCompany();
+        Company company1 = RandomUtils.createRandomCompany();
+        Company company2 = RandomUtils.createRandomCompany();
 
         companyRepository.save(company1);
         companyRepository.save(company2);
@@ -48,7 +48,7 @@ public class CompanyRepositoryTest {
     @Test
     public void shouldReturnCompanyWhenCallFindById() {
         // Given
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         Company expectedCompany = companyRepository.save(company);
 
         // When
@@ -63,7 +63,7 @@ public class CompanyRepositoryTest {
     @Test
     public void shouldDeleteCompanyWhenCallDeleteById() {
         // Given
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         companyRepository.save(company);
 
         // When

@@ -21,7 +21,6 @@ class UserDetailsImplTest {
         user.setUsername("testUser");
         user.setPassword("testPassword");
         user.setRoles("USER ADMIN");
-
         userDetailsImpl = new UserDetailsImpl(user);
     }
 

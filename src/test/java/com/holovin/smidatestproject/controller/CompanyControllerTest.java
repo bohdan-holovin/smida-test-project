@@ -58,7 +58,7 @@ public class CompanyControllerTest {
     void shouldReturnAllCompaniesForUser() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         List<Company> companyList = List.of(company);
         when(companyService.getAllCompanies()).thenReturn(companyList);
 
@@ -77,7 +77,7 @@ public class CompanyControllerTest {
     @WithMockUser(authorities = {"USER"})
     void shouldReturnCompanyByIdForUser() throws Exception {
         // Given
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         String endpoint = "/companies/" + company.getId();
 
         when(companyService.getCompanyByCompanyId(company.getId())).thenReturn(company);
@@ -97,7 +97,7 @@ public class CompanyControllerTest {
     void shouldCreateCompanyForAdmin() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         when(companyService.createUpdate(any(Company.class))).thenReturn(company);
 
         // When-Then
@@ -117,7 +117,7 @@ public class CompanyControllerTest {
     void shouldReturnForbiddenForUserTryingToCreateCompany() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
 
         // When-Then
         mockMvc.perform(post(endpoint)
@@ -132,7 +132,7 @@ public class CompanyControllerTest {
     void shouldUpdateCompanyForAdmin() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         when(companyService.updateCompany(any(Company.class))).thenReturn(company);
 
         // When-Then
@@ -152,7 +152,7 @@ public class CompanyControllerTest {
     void shouldReturnForbiddenForUserTryingToUpdateCompany() throws Exception {
         // Given
         String endpoint = "/companies";
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
 
         // When-Then
         mockMvc.perform(put(endpoint)

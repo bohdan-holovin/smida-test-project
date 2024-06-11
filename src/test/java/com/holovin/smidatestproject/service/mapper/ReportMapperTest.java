@@ -14,7 +14,7 @@ class ReportMapperTest {
     @Test
     void shouldMapReportAndReportDetailsToFullReport() {
         // Given
-        Company company = createCompany();
+        Company company = createRandomCompany();
 
         Report report = createRandomReport(company);
         ReportDetails reportDetails = createRandomReportDetails();

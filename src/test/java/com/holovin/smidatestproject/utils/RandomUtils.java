@@ -9,7 +9,7 @@ public class RandomUtils {
 
     static EasyRandom generator = new EasyRandom();
 
-    public static Company createCompany() {
+    public static Company createRandomCompany() {
         return generator.nextObject(Company.class);
     }
 
