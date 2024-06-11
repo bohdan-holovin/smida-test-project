@@ -9,7 +9,7 @@ public class RandomUtils {
 
     static EasyRandom generator = new EasyRandom();
 
-    public static Company createCompany() {
+    public static Company createRandomCompany() {
         return generator.nextObject(Company.class);
     }
 
@@ -35,6 +35,12 @@ public class RandomUtils {
 
     public static ReportDetails createRandomReportDetails() {
         return generator.nextObject(ReportDetails.class);
+    }
+
+    public static ReportDetails createRandomReportDetails(Report report) {
+        ReportDetails reportDetails = generator.nextObject(ReportDetails.class);
+        reportDetails.setReportId(report.getId());
+        return reportDetails;
     }
 
     public static FullReport createRandomFullReport() {

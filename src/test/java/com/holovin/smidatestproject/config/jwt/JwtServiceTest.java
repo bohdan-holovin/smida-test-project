@@ -4,6 +4,7 @@ import com.holovin.smidatestproject.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +22,17 @@ public class JwtServiceTest extends AbstractUnitTest {
     @Mock
     private UserDetails userDetails;
 
+    JwtService jwtService;
+
+    @BeforeEach
+    void setUp() {
+        jwtService = new JwtService();
+    }
+
     @Test
     public void shouldGenerateTokenWhenCallGenerateToken() {
         // Given
         String userName = "testUser";
-        JwtService jwtService = new JwtService();
 
         // When
         String token = jwtService.generateToken(userName);
@@ -39,7 +46,6 @@ public class JwtServiceTest extends AbstractUnitTest {
     public void shouldReturnValidUsernameWhenCallExtractUsername() {
         // Given
         String expected = "testUser";
-        JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(expected);
 
         // When
@@ -53,7 +59,6 @@ public class JwtServiceTest extends AbstractUnitTest {
     public void shouldReturnValidExtractExpirationWhenCallExtractExpiration() {
         // Given
         String userName = "testUser";
-        JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(userName);
 
         // When
@@ -68,7 +73,6 @@ public class JwtServiceTest extends AbstractUnitTest {
     public void shouldReturnTrueWhenTokenIsValid() {
         // Given
         String userName = "testUser";
-        JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(userName);
         when(userDetails.getUsername()).thenReturn(userName);
 
@@ -83,7 +87,6 @@ public class JwtServiceTest extends AbstractUnitTest {
     public void shouldThrowExpiredJwtExceptionWhenTokenInvalid() {
         // Given
         String userName = "testUser";
-        JwtService jwtService = new JwtService();
         Map<String, Object> claims = new HashMap<>();
         String token = Jwts.builder()
                 .setClaims(claims)

@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static com.holovin.smidatestproject.utils.RandomUtils.createCompany;
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomCompany;
 import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReportBigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,8 +32,8 @@ public class ReportRepositoryTest {
     @Test
     public void shouldReturnReportsWhenCallFindAllByCompanyId() {
         // Given
-        Company saveCompany1 = companyRepository.save(createCompany());
-        Company saveCompany2 = companyRepository.save(createCompany());
+        Company saveCompany1 = companyRepository.save(createRandomCompany());
+        Company saveCompany2 = companyRepository.save(createRandomCompany());
 
         Report report1 = createRandomReportBigDecimal(saveCompany1);
         Report report2 = createRandomReportBigDecimal(saveCompany1);
@@ -55,7 +55,7 @@ public class ReportRepositoryTest {
     @Test
     public void shouldReturnReportWhenCallFindById() {
         // Given
-        Company saveCompany = companyRepository.save(createCompany());
+        Company saveCompany = companyRepository.save(createRandomCompany());
         Report report = createRandomReportBigDecimal(saveCompany);
         Report expectedReport = reportRepository.save(report);
 
@@ -70,7 +70,7 @@ public class ReportRepositoryTest {
     @Test
     public void shouldDeleteReportWhenCallDeleteById() {
         // Given
-        Company saveCompany = companyRepository.save(createCompany());
+        Company saveCompany = companyRepository.save(createRandomCompany());
         Report report = createRandomReportBigDecimal(saveCompany);
         Report expectedReport = reportRepository.save(report);
 

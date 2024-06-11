@@ -30,7 +30,7 @@ class CompanyDeleteServiceTest extends AbstractUnitTest {
     @Test
     void shouldCascadeDeleteCompany() {
         // Given
-        Company company = RandomUtils.createCompany();
+        Company company = RandomUtils.createRandomCompany();
         List<Report> reports = List.of(createRandomReport(company), createRandomReport(company));
         List<UUID> reportIds = reports.stream().map(Report::getId).collect(Collectors.toList());
 

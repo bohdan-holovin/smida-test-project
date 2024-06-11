@@ -64,7 +64,7 @@ public class ReportControllerTest {
     void shouldReturnAllReportsForAdmin() throws Exception {
         // Given
         String endpoint = "/reports";
-        Report report = createRandomReportBigDecimal(createCompany());
+        Report report = createRandomReportBigDecimal(createRandomCompany());
 
         List<Report> reportList = List.of(report);
         when(reportService.getAllReports()).thenReturn(reportList);
@@ -83,7 +83,7 @@ public class ReportControllerTest {
     @WithMockUser(authorities = {"USER"})
     void shouldReturnAllReportsByCompanyIdForUser() throws Exception {
         // Given
-        Company company = createCompany();
+        Company company = createRandomCompany();
         UUID companyId = company.getId();
 
         String endpoint = "/reports/company/" + companyId;
@@ -108,7 +108,7 @@ public class ReportControllerTest {
         // Given
         UUID reportId = UUID.randomUUID();
         String endpoint = "/reports/" + reportId;
-        Report report = createRandomReportBigDecimal(createCompany());
+        Report report = createRandomReportBigDecimal(createRandomCompany());
         when(reportService.getReportByReportId(reportId)).thenReturn(report);
 
         // When-Then
@@ -163,7 +163,7 @@ public class ReportControllerTest {
     void shouldCreateReportForUser() throws Exception {
         // Given
         String endpoint = "/reports";
-        Company company = createCompany();
+        Company company = createRandomCompany();
         Report report = createRandomReportBigDecimal(company);
         String jsonReportRequestDto = toJsonReportRequestDto(report);
 
@@ -230,7 +230,7 @@ public class ReportControllerTest {
     void shouldUpdateReportForUser() throws Exception {
         // Given
         String endpoint = "/reports";
-        Report report = createRandomReportBigDecimal(createCompany());
+        Report report = createRandomReportBigDecimal(createRandomCompany());
         String jsonFullReportRequestDto = toJsonReportRequestDto(report);
         when(reportService.updateReport(eq(report.getCompany().getId()), any(Report.class))).thenReturn(report);
 

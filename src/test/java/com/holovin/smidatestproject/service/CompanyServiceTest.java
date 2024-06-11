@@ -31,7 +31,7 @@ class CompanyServiceTest extends AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        testCompany = RandomUtils.createCompany();
+        testCompany = RandomUtils.createRandomCompany();
     }
 
     @Test
@@ -90,19 +90,17 @@ class CompanyServiceTest extends AbstractUnitTest {
     void shouldReturnUpdatedCompanyWhenCallUpdateCompany() {
         // Given
         UUID id = testCompany.getId();
-        Company expectedCompany = RandomUtils.createCompany();
-        expectedCompany.setId(id);
 
         when(companyRepository.findById(id)).thenReturn(Optional.of(testCompany));
-        when(companyRepository.save(any(Company.class))).thenReturn(expectedCompany);
+        when(companyRepository.save(any(Company.class))).thenReturn(testCompany);
 
         // When
-        Company actualCompany = companyService.updateCompany(expectedCompany);
+        Company actualCompany = companyService.updateCompany(testCompany);
 
         // Then
-        assertThat(actualCompany.getName()).isEqualTo(expectedCompany.getName());
-        assertThat(actualCompany.getRegistrationNumber()).isEqualTo(expectedCompany.getRegistrationNumber());
-        assertThat(actualCompany.getAddress()).isEqualTo(expectedCompany.getAddress());
+        assertThat(actualCompany.getName()).isEqualTo(testCompany.getName());
+        assertThat(actualCompany.getRegistrationNumber()).isEqualTo(testCompany.getRegistrationNumber());
+        assertThat(actualCompany.getAddress()).isEqualTo(testCompany.getAddress());
 
         verify(companyRepository).findById(id);
         verify(companyRepository).save(any(Company.class));
@@ -112,13 +110,11 @@ class CompanyServiceTest extends AbstractUnitTest {
     void shouldThrowCompanyNotFoundExceptionWhenCallUpdateCompany() {
         // Given
         UUID id = testCompany.getId();
-        Company updatedCompany = RandomUtils.createCompany();
-        updatedCompany.setId(id);
 
         when(companyRepository.findById(id)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(CompanyNotFoundException.class, () -> companyService.updateCompany(updatedCompany));
+        assertThrows(CompanyNotFoundException.class, () -> companyService.updateCompany(testCompany));
         verify(companyRepository).findById(id);
     }
 
@@ -126,7 +122,7 @@ class CompanyServiceTest extends AbstractUnitTest {
     void shouldDeleteCompany() {
         // Given
         UUID id = testCompany.getId();
-        when(companyRepository.findById(id)).thenReturn(Optional.ofNullable(testCompany));
+        when(companyRepository.findById(id)).thenReturn(Optional.of(testCompany));
         doNothing().when(companyRepository).deleteById(id);
 
         // When

@@ -17,7 +17,7 @@ class CompanyDtoMapperTest {
     @Test
     void shouldMapCompanyToCompanyResponseDto() {
         // Given
-        Company testCompany = RandomUtils.createCompany();
+        Company testCompany = RandomUtils.createRandomCompany();
         CompanyResponseDto expectedDto = new CompanyResponseDto(
                 testCompany.getId(),
                 testCompany.getName(),
@@ -36,7 +36,7 @@ class CompanyDtoMapperTest {
     @Test
     void shouldMapCompanyListToCompanyResponseDtoList() {
         // Given
-        List<Company> testCompanies = List.of(RandomUtils.createCompany(), RandomUtils.createCompany());
+        List<Company> testCompanies = List.of(RandomUtils.createRandomCompany(), RandomUtils.createRandomCompany());
         List<CompanyResponseDto> expected = testCompanies.stream()
                 .map(company -> new CompanyResponseDto(
                         company.getId(),
@@ -57,12 +57,11 @@ class CompanyDtoMapperTest {
     @Test
     void shouldMapCompanyCreateRequestDtoToCompany() {
         // Given
-        Company expectedCompany = RandomUtils.createCompany();
+        Company expectedCompany = RandomUtils.createRandomCompany();
         CompanyCreateRequestDto requestDto = new CompanyCreateRequestDto();
         requestDto.setName(expectedCompany.getName());
         requestDto.setRegistrationNumber(expectedCompany.getRegistrationNumber());
         requestDto.setAddress(expectedCompany.getAddress());
-
 
         // When
         Company actualCompany = CompanyDtoMapper.toCompany(requestDto);
@@ -76,7 +75,7 @@ class CompanyDtoMapperTest {
     @Test
     void shouldMapCompanyUpdateRequestDtoToCompany() {
         // Given
-        Company expectedCompany = RandomUtils.createCompany();
+        Company expectedCompany = RandomUtils.createRandomCompany();
         CompanyUpdateRequestDto requestDto = new CompanyUpdateRequestDto();
         requestDto.setId(expectedCompany.getId());
         requestDto.setName(expectedCompany.getName());
