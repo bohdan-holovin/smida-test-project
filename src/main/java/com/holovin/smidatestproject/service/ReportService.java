@@ -116,6 +116,11 @@ public class ReportService {
         reportRepository.deleteById(reportId);
     }
 
+    public void cascadeDeleteAllReportByReportId(List<UUID> reportList) {
+        reportDetailsRepository.deleteAllById(reportList);
+        reportRepository.deleteAllById(reportList);
+    }
+
     public void deleteReportDetailsByReportId(UUID reportId) {
         getReportByReportId(reportId);
         getReportDetailByReportId(reportId);

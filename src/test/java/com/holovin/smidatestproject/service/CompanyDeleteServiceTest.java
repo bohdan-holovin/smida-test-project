@@ -9,9 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static com.holovin.smidatestproject.utils.RandomUtils.createReport;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,22 +30,20 @@ class CompanyDeleteServiceTest {
     private CompanyDeleteService companyDeleteService;
 
     @Test
-    void testCascadeCompanyDelete() {
+    void shouldCascadeDeleteCompany() {
         // Given
         Company company = RandomUtils.createCompany();
-        UUID companyId = company.getId();
-        Report report1 = RandomUtils.createReport(company);
-        Report report2 = RandomUtils.createReport(company);
+        List<Report> reports = List.of(createReport(company), createReport(company));
+        List<UUID> reportIds = reports.stream().map(Report::getId).collect(Collectors.toList());
 
-        when(reportService.getAllReportsByCompanyId(companyId)).thenReturn(Arrays.asList(report1, report2));
+        when(reportService.getAllReportsByCompanyId(company.getId())).thenReturn(reports);
 
         // When
-        companyDeleteService.cascadeCompanyDelete(companyId);
+        companyDeleteService.cascadeCompanyDelete(company.getId());
 
         // Then
-        verify(reportService).getAllReportsByCompanyId(companyId);
-        verify(reportService).cascadeDeleteReportByReportId(report1.getId());
-        verify(reportService).cascadeDeleteReportByReportId(report2.getId());
-        verify(companyService).deleteCompanyByCompanyId(companyId);
+        verify(reportService).getAllReportsByCompanyId(company.getId());
+        verify(reportService).cascadeDeleteAllReportByReportId(reportIds);
+        verify(companyService).deleteCompanyByCompanyId(company.getId());
     }
 }

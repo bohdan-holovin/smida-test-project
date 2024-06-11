@@ -272,7 +272,6 @@ class ReportServiceTest {
         verify(reportDetailsRepository).save(any(ReportDetails.class));
     }
 
-
     @Test
     void shouldCascadeDeleteReportByReportId() {
         // Given
@@ -287,7 +286,9 @@ class ReportServiceTest {
 
         // Then
         verify(reportRepository).findById(reportId);
+        verify(reportDetailsRepository).findById(reportId);
         verify(reportRepository).deleteById(reportId);
+        verify(reportDetailsRepository).deleteById(reportId);
     }
 
     @Test
@@ -305,5 +306,25 @@ class ReportServiceTest {
         verify(reportRepository).findById(reportId);
         verify(reportDetailsRepository).findById(reportId);
         verify(reportDetailsRepository).deleteById(reportId);
+    }
+
+    @Test
+    void shouldCascadeDeleteAllReportByReportId() {
+        // Given
+        UUID reportId = testReport.getId();
+        UUID reportId2 = UUID.randomUUID();
+        List<UUID> reportIdList = List.of(reportId, reportId2);
+
+        testReportDetails.setReportId(reportId);
+
+        doNothing().when(reportDetailsRepository).deleteAllById(reportIdList);
+        doNothing().when(reportRepository).deleteAllById(reportIdList);
+
+        // When
+        reportService.cascadeDeleteAllReportByReportId(reportIdList);
+
+        // Then
+        verify(reportRepository).deleteAllById(reportIdList);
+        verify(reportDetailsRepository).deleteAllById(reportIdList);
     }
 }
