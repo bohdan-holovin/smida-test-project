@@ -1,11 +1,11 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.request.FullReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.ReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.ReportDetailsRequestDto;
-import com.holovin.smidatestproject.controller.dto.response.FullReportResponseDto;
-import com.holovin.smidatestproject.controller.dto.response.ReportDetailsResponseDto;
-import com.holovin.smidatestproject.controller.dto.response.ReportResponseDto;
+import com.holovin.smidatestproject.controller.dto.report.request.FullReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.ReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.ReportDetailsRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.response.FullReportResponseDto;
+import com.holovin.smidatestproject.controller.dto.report.response.ReportDetailsResponseDto;
+import com.holovin.smidatestproject.controller.dto.report.response.ReportResponseDto;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;

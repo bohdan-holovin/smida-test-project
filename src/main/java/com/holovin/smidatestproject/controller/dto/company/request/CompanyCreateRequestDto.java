@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.controller.dto.request;
+package com.holovin.smidatestproject.controller.dto.company.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -7,15 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyUpdateRequestDto {
-
-    @NotNull(message = "ID cannot be null")
-    private UUID id;
+public class CompanyCreateRequestDto {
 
     @NotNull(message = "Name cannot be null")
     @NotEmpty(message = "Name cannot be empty")

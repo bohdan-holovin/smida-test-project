@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.CompanyUpdateRequestDto;
-import com.holovin.smidatestproject.controller.dto.response.CompanyResponseDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CompanyCreateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CompanyUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.response.CompanyResponseDto;
 import com.holovin.smidatestproject.model.Company;
 
 import java.util.List;
