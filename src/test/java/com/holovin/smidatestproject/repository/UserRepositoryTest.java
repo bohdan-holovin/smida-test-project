@@ -26,7 +26,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUserWhenCallFindByUsername() {
         // Given
-        User expectedUser = RandomUtils.createUser();
+        User expectedUser = RandomUtils.createRandomUser();
         userRepository.save(expectedUser);
 
         // When
@@ -40,7 +40,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUserWhenCallFindById() {
         // Given
-        User user = RandomUtils.createUser();
+        User user = RandomUtils.createRandomUser();
         User expectedUser = userRepository.save(user);
 
         // When
@@ -54,8 +54,8 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUsersWhenCallFindAll() {
         // Given
-        User user1 = RandomUtils.createUser();
-        User user2 = RandomUtils.createUser();
+        User user1 = RandomUtils.createRandomUser();
+        User user2 = RandomUtils.createRandomUser();
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -72,7 +72,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldDeleteUserWhenCallDeleteById() {
         // Given
-        User user = RandomUtils.createUser();
+        User user = RandomUtils.createRandomUser();
         userRepository.save(user);
 
         // When

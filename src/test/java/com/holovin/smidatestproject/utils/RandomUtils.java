@@ -13,19 +13,19 @@ public class RandomUtils {
         return generator.nextObject(Company.class);
     }
 
-    public static User createUser() {
+    public static User createRandomUser() {
         User user = generator.nextObject(User.class);
         user.setRoles("USER");
         return user;
     }
 
-    public static Report createReport(Company company) {
+    public static Report createRandomReport(Company company) {
         Report report = generator.nextObject(Report.class);
         report.setCompany(company);
         return report;
     }
 
-    public static Report createReportBigDecimal(Company company) {
+    public static Report createRandomReportBigDecimal(Company company) {
         Report report = generator.nextObject(Report.class);
         report.setCompany(company);
         report.setTotalRevenue(BigDecimal.ONE);
@@ -33,14 +33,15 @@ public class RandomUtils {
         return report;
     }
 
-    public static ReportDetails createReportDetails() {
+    public static ReportDetails createRandomReportDetails() {
         return generator.nextObject(ReportDetails.class);
     }
 
-    public static FullReport createFullReport() {
+    public static FullReport createRandomFullReport() {
         return generator.nextObject(FullReport.class);
     }
-    public static FullReport createFullReportBigDecimal() {
+
+    public static FullReport createRandomFullReportBigDecimal() {
         FullReport fullReport = generator.nextObject(FullReport.class);
         fullReport.setTotalRevenue(BigDecimal.ONE);
         fullReport.setNetProfit(BigDecimal.ONE);

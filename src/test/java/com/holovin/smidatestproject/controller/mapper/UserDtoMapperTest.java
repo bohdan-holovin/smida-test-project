@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
+import com.holovin.smidatestproject.controller.dto.auth.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.model.User;
 import org.junit.jupiter.api.Test;
 

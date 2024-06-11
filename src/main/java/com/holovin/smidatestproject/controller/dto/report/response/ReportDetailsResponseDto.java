@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.controller.dto.response;
+package com.holovin.smidatestproject.controller.dto.report.response;
 
 import lombok.Data;
 import lombok.Getter;

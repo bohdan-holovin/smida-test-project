@@ -1,15 +1,14 @@
 package com.holovin.smidatestproject.service;
 
-import com.holovin.smidatestproject.exceptions.CompanyNotFoundException;
+import com.holovin.smidatestproject.AbstractUnitTest;
+import com.holovin.smidatestproject.exception.CompanyNotFoundException;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.repository.CompanyRepository;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class CompanyServiceTest {
+class CompanyServiceTest extends AbstractUnitTest {
 
     @Mock
     private CompanyRepository companyRepository;
@@ -106,8 +104,8 @@ class CompanyServiceTest {
         assertThat(actualCompany.getRegistrationNumber()).isEqualTo(expectedCompany.getRegistrationNumber());
         assertThat(actualCompany.getAddress()).isEqualTo(expectedCompany.getAddress());
 
-        verify(companyRepository, times(1)).findById(id);
-        verify(companyRepository, times(1)).save(any(Company.class));
+        verify(companyRepository).findById(id);
+        verify(companyRepository).save(any(Company.class));
     }
 
     @Test

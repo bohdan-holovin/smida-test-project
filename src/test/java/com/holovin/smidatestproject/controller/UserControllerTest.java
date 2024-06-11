@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserAuthRequestDto;
 import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserRegisterRequestDto;
-import static com.holovin.smidatestproject.utils.RandomUtils.createUser;
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -62,7 +62,7 @@ public class UserControllerTest {
         // Given
         String endpoint = "/auth/register";
 
-        User user = createUser();
+        User user = createRandomUser();
 
         when(userDetailsServiceImpl.registerUser(any(User.class))).thenReturn(user);
 
@@ -80,7 +80,7 @@ public class UserControllerTest {
         // Given
         String endpoint = "/auth/login";
 
-        User user = createUser();
+        User user = createRandomUser();
 
         Authentication authentication = mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -102,7 +102,7 @@ public class UserControllerTest {
         // Given
         String endpoint = "/auth/login";
 
-        User user = createUser();
+        User user = createRandomUser();
 
         Authentication authentication = Mockito.mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))

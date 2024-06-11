@@ -1,5 +1,6 @@
 package com.holovin.smidatestproject.config.jwt;
 
+import com.holovin.smidatestproject.AbstractUnitTest;
 import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class JwtAuthFilterTest {
+class JwtAuthFilterTest extends AbstractUnitTest {
 
     @Mock
     private JwtService jwtService;
@@ -46,7 +46,6 @@ class JwtAuthFilterTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         SecurityContextHolder.clearContext();
     }
 

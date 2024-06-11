@@ -2,8 +2,8 @@ package com.holovin.smidatestproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.holovin.smidatestproject.controller.dto.request.UserAuthRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.UserRegisterRequestDto;
+import com.holovin.smidatestproject.controller.dto.auth.request.UserAuthRequestDto;
+import com.holovin.smidatestproject.controller.dto.auth.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.model.User;
 
 public class JsonUserMapperUtils {

@@ -16,8 +16,8 @@ class ReportMapperTest {
         // Given
         Company company = createCompany();
 
-        Report report = createReport(company);
-        ReportDetails reportDetails = createReportDetails();
+        Report report = createRandomReport(company);
+        ReportDetails reportDetails = createRandomReportDetails();
 
         FullReport expectedFullReport = new FullReport();
         expectedFullReport.setId(report.getId());
@@ -38,7 +38,7 @@ class ReportMapperTest {
     @Test
     void shouldMapFullReportToReport() {
         // Given
-        FullReport fullReport = createFullReport();
+        FullReport fullReport = createRandomFullReport();
 
         Report expectedReport = new Report();
         expectedReport.setId(fullReport.getId());
@@ -57,7 +57,7 @@ class ReportMapperTest {
     @Test
     void shouldMapFullReportToReportDetails() {
         // Given
-        FullReport fullReport = createFullReport();
+        FullReport fullReport = createRandomFullReport();
 
         ReportDetails expectedReportDetails = new ReportDetails();
         expectedReportDetails.setReportId(fullReport.getId());

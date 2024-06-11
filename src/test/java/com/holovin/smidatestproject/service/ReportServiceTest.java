@@ -1,7 +1,8 @@
 package com.holovin.smidatestproject.service;
 
-import com.holovin.smidatestproject.exceptions.ReportDetailsNotFoundException;
-import com.holovin.smidatestproject.exceptions.ReportNotFoundException;
+import com.holovin.smidatestproject.AbstractUnitTest;
+import com.holovin.smidatestproject.exception.ReportDetailsNotFoundException;
+import com.holovin.smidatestproject.exception.ReportNotFoundException;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;
@@ -10,10 +11,8 @@ import com.holovin.smidatestproject.repository.ReportRepository;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class ReportServiceTest {
+class ReportServiceTest extends AbstractUnitTest {
 
     @Mock
     private CompanyService companyService;
@@ -46,8 +44,8 @@ class ReportServiceTest {
 
     @BeforeEach
     void setUp() {
-        testReport = RandomUtils.createReport(RandomUtils.createCompany());
-        testReportDetails = RandomUtils.createReportDetails();
+        testReport = RandomUtils.createRandomReport(RandomUtils.createCompany());
+        testReportDetails = RandomUtils.createRandomReportDetails();
         testFullReport = toFullReport(testReport, testReportDetails);
     }
 

@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static com.holovin.smidatestproject.utils.RandomUtils.createReportDetails;
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReportDetails;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -26,8 +26,8 @@ public class ReportDetailsRepositoryTest {
     @Test
     public void shouldReturnReportDetailsWhenCallFindAll() {
         // Given
-        ReportDetails reportDetails1 = createReportDetails();
-        ReportDetails reportDetails2 = createReportDetails();
+        ReportDetails reportDetails1 = createRandomReportDetails();
+        ReportDetails reportDetails2 = createRandomReportDetails();
 
         reportDetailsRepository.save(reportDetails1);
         reportDetailsRepository.save(reportDetails2);
@@ -44,7 +44,7 @@ public class ReportDetailsRepositoryTest {
     @Test
     public void shouldReturnReportDetailsWhenCallFindById() {
         // Given
-        ReportDetails expectedReportDetails = createReportDetails();
+        ReportDetails expectedReportDetails = createRandomReportDetails();
         reportDetailsRepository.save(expectedReportDetails);
 
         // When
@@ -59,7 +59,7 @@ public class ReportDetailsRepositoryTest {
     @Test
     public void shouldDeleteReportDetailsWhenCallDeleteById() {
         // Given
-        ReportDetails reportDetails = createReportDetails();
+        ReportDetails reportDetails = createRandomReportDetails();
         reportDetailsRepository.save(reportDetails);
 
         // When

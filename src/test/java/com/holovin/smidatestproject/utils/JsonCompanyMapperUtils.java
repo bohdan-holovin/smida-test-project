@@ -2,7 +2,7 @@ package com.holovin.smidatestproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.holovin.smidatestproject.controller.dto.request.CompanyCreateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CompanyCreateRequestDto;
 import com.holovin.smidatestproject.model.Company;
 
 public class JsonCompanyMapperUtils {

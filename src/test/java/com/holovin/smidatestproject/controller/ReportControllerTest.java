@@ -64,7 +64,7 @@ public class ReportControllerTest {
     void shouldReturnAllReportsForAdmin() throws Exception {
         // Given
         String endpoint = "/reports";
-        Report report = createReportBigDecimal(createCompany());
+        Report report = createRandomReportBigDecimal(createCompany());
 
         List<Report> reportList = List.of(report);
         when(reportService.getAllReports()).thenReturn(reportList);
@@ -88,7 +88,7 @@ public class ReportControllerTest {
 
         String endpoint = "/reports/company/" + companyId;
 
-        Report report = createReportBigDecimal(company);
+        Report report = createRandomReportBigDecimal(company);
         List<Report> reportList = List.of(report);
         when(reportService.getAllReportsByCompanyId(companyId)).thenReturn(reportList);
 
@@ -108,7 +108,7 @@ public class ReportControllerTest {
         // Given
         UUID reportId = UUID.randomUUID();
         String endpoint = "/reports/" + reportId;
-        Report report = createReportBigDecimal(createCompany());
+        Report report = createRandomReportBigDecimal(createCompany());
         when(reportService.getReportByReportId(reportId)).thenReturn(report);
 
         // When-Then
@@ -126,7 +126,7 @@ public class ReportControllerTest {
         // Given
         UUID reportId = UUID.randomUUID();
         String endpoint = "/reports/" + reportId + "/details";
-        ReportDetails reportDetails = RandomUtils.createReportDetails();
+        ReportDetails reportDetails = RandomUtils.createRandomReportDetails();
         when(reportService.getReportDetailByReportId(reportId)).thenReturn(reportDetails);
 
         // When-Then
@@ -144,7 +144,7 @@ public class ReportControllerTest {
         // Given
         UUID reportId = UUID.randomUUID();
         String endpoint = "/reports/" + reportId + "/full";
-        FullReport fullReport = createFullReportBigDecimal();
+        FullReport fullReport = createRandomFullReportBigDecimal();
         when(reportService.getFullReportByReportId(reportId)).thenReturn(fullReport);
 
         // When-Then
@@ -164,7 +164,7 @@ public class ReportControllerTest {
         // Given
         String endpoint = "/reports";
         Company company = createCompany();
-        Report report = createReportBigDecimal(company);
+        Report report = createRandomReportBigDecimal(company);
         String jsonReportRequestDto = toJsonReportRequestDto(report);
 
         when(reportService.createReport(eq(company.getId()), any(Report.class))).thenReturn(report);
@@ -186,7 +186,7 @@ public class ReportControllerTest {
     void shouldCreateReportDetailsForUser() throws Exception {
         // Given
         String endpoint = "/reports/details";
-        ReportDetails reportDetails = createReportDetails();
+        ReportDetails reportDetails = createRandomReportDetails();
         String jsonReportDetailsRequestDto = toJsonReportDetailsRequestDto(reportDetails);
 
         when(reportService.createReportDetails(any(ReportDetails.class))).thenReturn(reportDetails);
@@ -207,7 +207,7 @@ public class ReportControllerTest {
     void shouldCreateFullReportForUser() throws Exception {
         // Given
         String endpoint = "/reports/full";
-        FullReport fullReport = createFullReportBigDecimal();
+        FullReport fullReport = createRandomFullReportBigDecimal();
         String jsonReportDetailsRequestDto = toJsonFullReportRequestDto(fullReport);
 
         when(reportService.createFullReport(eq(fullReport.getId()), any(FullReport.class))).thenReturn(fullReport);
@@ -230,7 +230,7 @@ public class ReportControllerTest {
     void shouldUpdateReportForUser() throws Exception {
         // Given
         String endpoint = "/reports";
-        Report report = createReportBigDecimal(createCompany());
+        Report report = createRandomReportBigDecimal(createCompany());
         String jsonFullReportRequestDto = toJsonReportRequestDto(report);
         when(reportService.updateReport(eq(report.getCompany().getId()), any(Report.class))).thenReturn(report);
 
@@ -250,7 +250,7 @@ public class ReportControllerTest {
     void shouldUpdateReportDetailsForUser() throws Exception {
         // Given
         String endpoint = "/reports/details";
-        ReportDetails reportDetails = createReportDetails();
+        ReportDetails reportDetails = createRandomReportDetails();
         String jsonReportDetailsRequestDto = toJsonReportDetailsRequestDto(reportDetails);
 
         when(reportService.updateReportDetails(any(ReportDetails.class))).thenReturn(reportDetails);
@@ -271,7 +271,7 @@ public class ReportControllerTest {
     void shouldUpdateFullReportForUser() throws Exception {
         // Given
         String endpoint = "/reports/full";
-        FullReport fullReport = createFullReportBigDecimal();
+        FullReport fullReport = createRandomFullReportBigDecimal();
         String jsonReportDetailsRequestDto = toJsonFullReportRequestDto(fullReport);
 
         when(reportService.updateFullReport(eq(fullReport.getCompany().getId()), any(FullReport.class)))

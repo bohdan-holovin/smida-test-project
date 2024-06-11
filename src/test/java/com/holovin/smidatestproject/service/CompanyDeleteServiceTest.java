@@ -1,24 +1,22 @@
 package com.holovin.smidatestproject.service;
 
+import com.holovin.smidatestproject.AbstractUnitTest;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.holovin.smidatestproject.utils.RandomUtils.createReport;
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReport;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class CompanyDeleteServiceTest {
+class CompanyDeleteServiceTest extends AbstractUnitTest {
 
     @Mock
     private ReportService reportService;
@@ -33,7 +31,7 @@ class CompanyDeleteServiceTest {
     void shouldCascadeDeleteCompany() {
         // Given
         Company company = RandomUtils.createCompany();
-        List<Report> reports = List.of(createReport(company), createReport(company));
+        List<Report> reports = List.of(createRandomReport(company), createRandomReport(company));
         List<UUID> reportIds = reports.stream().map(Report::getId).collect(Collectors.toList());
 
         when(reportService.getAllReportsByCompanyId(company.getId())).thenReturn(reports);

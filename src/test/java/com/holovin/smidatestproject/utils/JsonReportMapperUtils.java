@@ -2,9 +2,9 @@ package com.holovin.smidatestproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.holovin.smidatestproject.controller.dto.request.FullReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.ReportDetailsRequestDto;
-import com.holovin.smidatestproject.controller.dto.request.ReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.FullReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.ReportDetailsRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.ReportRequestDto;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;
