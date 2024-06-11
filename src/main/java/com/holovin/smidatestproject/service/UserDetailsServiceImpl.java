@@ -5,12 +5,11 @@ import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.model.UserDetailsImpl;
 import com.holovin.smidatestproject.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,12 +19,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private PasswordEncoder encoder;
 
     @Override
-    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username)
+    public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
-        Optional<User> userDetail = repository.findByUsername(username);
-
-        return userDetail.map(UserDetailsImpl::new)
+        return repository.findByUsername(username)
+                .map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 

@@ -70,6 +70,7 @@ class ReportServiceTest {
         // Given
         List<Report> expectedReports = List.of(testReport);
         UUID companyId = testReport.getCompany().getId();
+        when(companyService.getCompanyByCompanyId(companyId)).thenReturn(testReport.getCompany());
         when(reportRepository.findAllByCompanyId(companyId)).thenReturn(expectedReports);
 
         // When

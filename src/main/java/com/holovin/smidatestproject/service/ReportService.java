@@ -31,12 +31,14 @@ public class ReportService {
     }
 
     public List<Report> getAllReportsByCompanyId(UUID companyId) {
-        companyService.getCompanyByCompanyId(companyId);
-        return reportRepository.findAllByCompanyId(companyId);
+        return Optional.of(companyService.getCompanyByCompanyId(companyId))
+                .map(it -> reportRepository.findAllByCompanyId(companyId))
+                .orElseThrow(() -> new CompanyNotFoundException(companyId));
     }
 
     public Report getReportByReportId(UUID reportId) {
-        return reportRepository.findById(reportId).orElseThrow(() -> new ReportNotFoundException(reportId));
+        return reportRepository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
     }
 
     public ReportDetails getReportDetailByReportId(UUID reportId) {
@@ -45,9 +47,12 @@ public class ReportService {
     }
 
     public FullReport getFullReportByReportId(UUID reportId) {
-        Report report = getReportByReportId(reportId);
-        ReportDetails reportDetails = getReportDetailByReportId(reportId);
-        return toFullReport(report, reportDetails);
+        return Optional.of(getReportByReportId(reportId))
+                .map(report -> {
+                    ReportDetails reportDetails = getReportDetailByReportId(reportId);
+                    return toFullReport(report, reportDetails);
+                })
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
     }
 
     public Report createReport(UUID companyId, Report report) {
@@ -61,14 +66,15 @@ public class ReportService {
     }
 
     public ReportDetails createReportDetails(ReportDetails report) {
-        getReportByReportId(report.getReportId());
-        return reportDetailsRepository.save(report);
+        return Optional.of(getReportByReportId(report.getReportId()))
+                .map(it -> reportDetailsRepository.save(report))
+                .orElseThrow(() -> new ReportNotFoundException(report.getReportId()));
     }
 
     public FullReport createFullReport(UUID companyId, FullReport fullReport) {
-        createReport(companyId, toReport(fullReport));
-        createReportDetails(toReportDetails(fullReport));
-        return fullReport;
+        Report report = createReport(companyId, toReport(fullReport));
+        ReportDetails reportDetails = createReportDetails(toReportDetails(fullReport));
+        return toFullReport(report, reportDetails);
     }
 
     public Report updateReport(UUID companyId, Report report) {

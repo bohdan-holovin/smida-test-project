@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,7 +21,8 @@ public class CompanyService {
     }
 
     public Company getCompanyByCompanyId(UUID id) {
-        return companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException(id));
+        return companyRepository.findById(id)
+                .orElseThrow(() -> new CompanyNotFoundException(id));
     }
 
     public Company createUpdate(Company company) {
@@ -28,7 +30,7 @@ public class CompanyService {
     }
 
     public Company updateCompany(Company updatedCompany) {
-        return companyRepository.findById(updatedCompany.getId())
+        return Optional.of(getCompanyByCompanyId(updatedCompany.getId()))
                 .map(company -> {
                     company.setName(updatedCompany.getName());
                     company.setRegistrationNumber(updatedCompany.getRegistrationNumber());
