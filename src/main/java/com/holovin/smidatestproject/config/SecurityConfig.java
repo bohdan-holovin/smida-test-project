@@ -36,7 +36,7 @@ public class SecurityConfig {
                                                    UserDetailsService userDetailsService,
                                                    JwtAuthFilter jwtAuthFilter) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/swagger-ui/**").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/user/**", "/admin/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/companies/**", "/reports/**").authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

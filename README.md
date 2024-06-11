@@ -1,142 +1,94 @@
-Here's a draft for your `README.md`:
-
-```markdown
 # Smida Test Project
 
-## Overview
+## Table of Contents
+- [Introduction](#introduction)
+- [Technologies](#technologies)
+- [Getting Started](#getting-started)
+- [Architecture](#architecture)
+- [Test Coverage](#test-coverage)
 
-The Smida Test Project is a comprehensive application designed to manage company data efficiently. The project leverages Spring Boot for its backend development, ensuring robust and scalable performance. This repository includes the essential features such as JWT authentication, CRUD operations for company entities, and thorough testing using JUnit.
+## Introduction
+The project consists in the development of a RESTful service for the management of company data and their reporting for the Agency for the Development of the Infrastructure of the Stock Market of Ukraine (SMIDA). The project includes CRUD operations for companies and their reports, authentication and authorization, database migrations, unit and integration tests, docker compose for deployment, startup instructions.  This project includes features like JWT-based authentication, user and company management, and API documentation using Swagger.
 
-## Features
-
-- **JWT Authentication:** Secure the application endpoints using JSON Web Tokens.
-- **Company Management:** Create, read, update, and delete company information.
-- **User and Admin Roles:** Different access levels for user and admin roles.
-- **API Documentation:** Swagger configuration for easy API documentation.
-- **Testing:** Comprehensive unit and integration tests using JUnit.
-
-## Technologies Used
-
+## Technologies
 - **Java 17**
 - **Spring Boot**
 - **Spring Security**
-- **JWT**
-- **JUnit**
-- **Swagger**
+- **JWT(JSON Web Tokens)**
+- **PostgreSQL** 
 - **MongoDB**
+- **Hibernate**
+- **Liquibase**
+- **Swagger**
+- **JUnit**
+- **Maven**
 - **Docker**
 
-## Project Structure
-
-```
-smida-test-project
-│   README.md
-│   pom.xml
-└───src
-    └───main
-    │   └───java
-    │   │   └───com
-    │   │       └───example
-    │   │           └───smida
-    │   │               └───controller
-    │   │               └───model
-    │   │               └───repository
-    │   │               └───service
-    │   │               └───util
-    │   └───resources
-    │       └───application.properties
-    └───test
-        └───java
-            └───com
-                └───example
-                    └───smida
-                        └───controller
-                        └───service
-                        └───util
-```
+## Architecture
+The application follows a microservice architecture with clear separation of concerns. Key components include:
+- **Controllers**: Handle HTTP requests and responses.
+- **Services**: Contain business logic.
+- **Repositories**: Interact with the database.
+- **Security**: Configure authentication and authorization.
 
 ## Getting Started
 
-### Prerequisites
-
-- Java 17
-- Docker
-- MongoDB
-
-### Installation
-
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/bohdan-holovin/smida-test-project.git
-    cd smida-test-project
-    ```
-
-2. Build the project:
-    ```sh
-    ./mvnw clean install
-    ```
-
-3. Run the project:
-    ```sh
-    ./mvnw spring-boot:run
-    ```
-
-### Running Tests
-
-To run the tests, use the following command:
-```sh
-./mvnw test
+### Clone the Repository
+```bash
+git clone https://github.com/bohdan-holovin/smida-test-project.git
+cd smida-test-project
 ```
 
-## API Endpoints
-
-### CompanyController
-
-- **Get All Companies**
-  - `GET /api/companies`
-  - **Roles:** `USER`, `ADMIN`
-
-- **Get Company by ID**
-  - `GET /api/companies/{id}`
-  - **Roles:** `USER`, `ADMIN`
-
-- **Create Company**
-  - `POST /api/companies`
-  - **Roles:** `ADMIN`
-
-- **Update Company**
-  - `PUT /api/companies/{id}`
-  - **Roles:** `ADMIN`
-
-- **Delete Company**
-  - `DELETE /api/companies/{id}`
-  - **Roles:** `ADMIN`
-
-## Configuration
-
-### JWT Configuration
-
-Ensure you have the correct properties set in your `application.properties`:
-```properties
-jwt.secret=<your_jwt_secret>
-jwt.expiration=<jwt_expiration_time>
+### Build the Project
+To build the project, run the following command:
+```bash
+mvn clean install
 ```
 
-### CORS Configuration
+### Run the Application
+You can run the application locally using Maven or Docker Compose.
 
-The `CorsConfig` class is configured to allow cross-origin requests from specific origins.
-
-## Contribution
-
-Contributions are welcome! Please fork the repository and submit a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any inquiries, please contact [Bohdan Holovin](mailto:your-email@example.com).
+#### Using Maven
+```bash
+mvn spring-boot:run
 ```
 
-Feel free to adjust any sections as necessary for your project specifics.
+#### Using Docker Compose
+Ensure Docker is installed and running on your machine. Then, run the following command:
+```bash
+docker-compose up
+```
+
+This command will start the application and all required services defined in the `docker-compose.yml` file.
+
+#### API documentation
+   Open your browser and navigate to `http://localhost:8080/swagger-ui.html`.
+
+#### Using JWT Authentication
+1. **Register a new user:**
+    ```bash
+    curl -X POST "http://localhost:8080/users" -H "Content-Type: application/json" -d '{"username":"testuser", "password":"password"}'
+    ```
+2. **Authenticate the user to receive a JWT token:**
+    ```bash
+    curl -X POST "http://localhost:8080/authenticate" -H "Content-Type: application/json" -d '{"username":"testuser", "password":"password"}'
+    ```
+   You will receive a JWT token in the response.
+
+3. **Access secured endpoints using the JWT token:**
+    ```bash
+    curl -X GET "http://localhost:8080/companies" -H "Authorization: Bearer your_jwt_token"
+    ```
+
+By following these detailed instructions, you should be able to set up, run, and interact with the Smida Test Project successfully.
+
+### Test Coverage
+The `smida-test-project` has been rigorously tested to ensure high code quality and reliability. The test coverage statistics are as follows:
+
+- **Overall Coverage**:
+   - **Classes**: 97%
+   - **Methods**: 98%
+   - **Lines**: 98%
+
+![img.png](img.png)
+
