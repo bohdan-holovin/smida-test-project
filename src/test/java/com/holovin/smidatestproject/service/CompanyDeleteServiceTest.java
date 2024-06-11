@@ -1,13 +1,12 @@
 package com.holovin.smidatestproject.service;
 
+import com.holovin.smidatestproject.AbstractUnitTest;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +16,7 @@ import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReport;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class CompanyDeleteServiceTest {
+class CompanyDeleteServiceTest extends AbstractUnitTest {
 
     @Mock
     private ReportService reportService;

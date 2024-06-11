@@ -1,12 +1,11 @@
 package com.holovin.smidatestproject.config.jwt;
 
+import com.holovin.smidatestproject.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
@@ -17,23 +16,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class JwtServiceTest {
-
-    private JwtService jwtService;
+public class JwtServiceTest extends AbstractUnitTest {
 
     @Mock
     private UserDetails userDetails;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        jwtService = new JwtService();
-    }
 
     @Test
     public void shouldGenerateTokenWhenCallGenerateToken() {
         // Given
         String userName = "testUser";
+        JwtService jwtService = new JwtService();
 
         // When
         String token = jwtService.generateToken(userName);
@@ -47,6 +39,7 @@ public class JwtServiceTest {
     public void shouldReturnValidUsernameWhenCallExtractUsername() {
         // Given
         String expected = "testUser";
+        JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(expected);
 
         // When
@@ -60,6 +53,7 @@ public class JwtServiceTest {
     public void shouldReturnValidExtractExpirationWhenCallExtractExpiration() {
         // Given
         String userName = "testUser";
+        JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(userName);
 
         // When
@@ -74,6 +68,7 @@ public class JwtServiceTest {
     public void shouldReturnTrueWhenTokenIsValid() {
         // Given
         String userName = "testUser";
+        JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(userName);
         when(userDetails.getUsername()).thenReturn(userName);
 
@@ -88,6 +83,7 @@ public class JwtServiceTest {
     public void shouldThrowExpiredJwtExceptionWhenTokenInvalid() {
         // Given
         String userName = "testUser";
+        JwtService jwtService = new JwtService();
         Map<String, Object> claims = new HashMap<>();
         String token = Jwts.builder()
                 .setClaims(claims)

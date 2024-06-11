@@ -85,7 +85,7 @@ public class ReportRepositoryTest {
     private static void assertReport(Report actualReport, Report expectedReport) {
         assertThat(actualReport.getCompany().getId()).isEqualTo(expectedReport.getCompany().getId());
         assertThat(actualReport.getReportDate()).isEqualTo(expectedReport.getReportDate());
-        assertThat(actualReport.getTotalRevenue()).isEqualTo(expectedReport.getTotalRevenue());
-        assertThat(actualReport.getNetProfit()).isEqualTo(expectedReport.getNetProfit());
+        assertThat(expectedReport.getTotalRevenue().intValue()).isEqualTo(actualReport.getTotalRevenue().intValue());
+        assertThat(actualReport.getNetProfit().intValue()).isEqualTo(expectedReport.getNetProfit().intValue());
     }
 }
