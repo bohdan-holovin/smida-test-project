@@ -69,6 +69,15 @@ databaseChangeLog:
       id: 3
       author: bohdan-holovin
       changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: |
+              CREATE TYPE role AS ENUM ('USER', 'ADMIN');
+  - changeSet:
+      id: 4
+      author: bohdan-holovin
+      changes:
         - createTable:
             tableName: users
             columns:
@@ -92,6 +101,6 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: roles
-                  type: VARCHAR(255)
+                  type: role[]
                   constraints:
                     nullable: false

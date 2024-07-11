@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +26,10 @@ public class UserRegisterRequestDto {
 
     @NotNull(message = "Roles cannot be null")
     @NotEmpty(message = "Roles cannot be empty")
-    private String roles;
+    private Set<Role> roles;
+
+    public enum Role {
+        USER,
+        ADMIN
+    }
 }

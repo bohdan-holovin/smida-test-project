@@ -4,6 +4,7 @@ import com.holovin.smidatestproject.model.*;
 import org.jeasy.random.EasyRandom;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 public class RandomUtils {
 
@@ -15,7 +16,7 @@ public class RandomUtils {
 
     public static User createRandomUser() {
         User user = generator.nextObject(User.class);
-        user.setRoles("USER");
+        user.setRoles(Set.of(Role.USER));
         return user;
     }
 

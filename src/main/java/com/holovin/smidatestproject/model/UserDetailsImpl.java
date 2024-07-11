@@ -18,7 +18,8 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(User user) {
         name = user.getUsername();
         password = user.getPassword();
-        authorities = Arrays.stream(user.getRoles().split(" "))
+        authorities = user.getRoles().stream()
+                .map(Enum::name)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

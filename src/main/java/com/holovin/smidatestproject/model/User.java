@@ -1,9 +1,12 @@
 package com.holovin.smidatestproject.model;
 
+import com.holovin.smidatestproject.repository.mapper.RoleSetMapper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -17,5 +20,7 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private String roles;
+
+    @Convert(converter = RoleSetMapper.class)
+    private Set<Role> roles;
 }

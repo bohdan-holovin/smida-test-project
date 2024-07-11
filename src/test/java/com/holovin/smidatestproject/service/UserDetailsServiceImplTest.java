@@ -2,6 +2,7 @@ package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.AbstractUnitTest;
 import com.holovin.smidatestproject.exception.UserNotFoundException;
+import com.holovin.smidatestproject.model.Role;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.repository.UserRepository;
 import com.holovin.smidatestproject.utils.RandomUtils;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -70,7 +72,12 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
     void shouldRegisterUserSuccessfully() {
         // Given
         PasswordEncoder customEncoder = new BCryptPasswordEncoder();
-        User expectedUser = new User(user.getId(), user.getUsername(), customEncoder.encode(user.getPassword()), "USER");
+        User expectedUser = new User(
+                user.getId(),
+                user.getUsername(),
+                customEncoder.encode(user.getPassword()),
+                Set.of(Role.USER)
+        );
 
         given(encoder.encode(user.getPassword())).willReturn(user.getPassword());
         given(repository.save(user)).willReturn(expectedUser);

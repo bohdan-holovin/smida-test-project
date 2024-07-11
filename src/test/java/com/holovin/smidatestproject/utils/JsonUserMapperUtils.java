@@ -6,6 +6,8 @@ import com.holovin.smidatestproject.controller.dto.auth.request.UserAuthRequestD
 import com.holovin.smidatestproject.controller.dto.auth.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.model.User;
 
+import java.util.stream.Collectors;
+
 public class JsonUserMapperUtils {
 
     static ObjectMapper objectMapper = new ObjectMapper();
@@ -13,7 +15,9 @@ public class JsonUserMapperUtils {
     public static String toJsonUserRegisterRequestDto(User user) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new UserRegisterRequestDto(user.getUsername(), user.getPassword(), user.getRoles())
+                new UserRegisterRequestDto(user.getUsername(), user.getPassword(), user.getRoles().stream()
+                        .map(it -> UserRegisterRequestDto.Role.valueOf(it.name()))
+                        .collect(Collectors.toSet()))
         );
     }
 
