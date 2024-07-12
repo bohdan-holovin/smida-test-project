@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-class UserDetailsServiceImplTest extends AbstractUnitTest {
+class UserAuthServiceTest extends AbstractUnitTest {
 
     @Mock
     private UserRepository repository;
@@ -31,7 +31,7 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
     private PasswordEncoder encoder;
 
     @InjectMocks
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private UserAuthService userAuthService;
 
     private User user;
 
@@ -46,7 +46,7 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
 
         // When
-        UserDetails actualUserDetails = userDetailsServiceImpl.loadUserByUsername(user.getUsername());
+        UserDetails actualUserDetails = userAuthService.loadUserByUsername(user.getUsername());
 
         // Then
         assertThat(actualUserDetails).isNotNull();
@@ -62,7 +62,7 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.empty());
 
         // When-Then
-        assertThatThrownBy(() -> userDetailsServiceImpl.loadUserByUsername(user.getUsername()))
+        assertThatThrownBy(() -> userAuthService.loadUserByUsername(user.getUsername()))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(user.getUsername());
         verify(repository).findByUsername(user.getUsername());
@@ -76,6 +76,11 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
                 user.getId(),
                 user.getUsername(),
                 customEncoder.encode(user.getPassword()),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress(),
                 Set.of(Role.USER)
         );
 
@@ -83,7 +88,7 @@ class UserDetailsServiceImplTest extends AbstractUnitTest {
         given(repository.save(user)).willReturn(expectedUser);
 
         // When
-        User actualUser = userDetailsServiceImpl.registerUser(user);
+        User actualUser = userAuthService.registerUser(user);
 
         // Then
         assertThat(actualUser).isNotNull();

@@ -3,30 +3,29 @@ package com.holovin.smidatestproject.controller;
 import com.holovin.smidatestproject.config.SecurityConfig;
 import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
+import com.holovin.smidatestproject.service.UserAuthService;
+import com.holovin.smidatestproject.service.UserService;
+import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserAuthRequestDto;
-import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserRegisterRequestDto;
-import static com.holovin.smidatestproject.utils.RandomUtils.createRandomUser;
+import java.util.List;
+
+import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUserUpdateRequestDto;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
@@ -37,7 +36,10 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private UserAuthService userAuthService;
+
+    @MockBean
+    private UserService userService;
 
     @MockBean
     private JwtService jwtService;
@@ -46,124 +48,99 @@ public class UserControllerTest {
     private AuthenticationManager authenticationManager;
 
     @Test
-    void shouldReturnOkForNotSecuredEndpoint() throws Exception {
+    @WithMockUser(authorities = {"USER"})
+    void shouldReturnAllUsersForUser() throws Exception {
         // Given
-        String endpoint = "/auth/not-secured";
+        String endpoint = "/users";
+        User user = RandomUtils.createRandomUser();
+        when(userService.getAllUsers()).thenReturn(List.of(user));
 
         // When-Then
         mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
-                .andExpect(content().string("This endpoint is not secure"))
-                .andReturn();
-    }
-
-    @Test
-    void shouldRegisterUserSuccessfully() throws Exception {
-        // Given
-        String endpoint = "/auth/register";
-
-        User user = createRandomUser();
-
-        when(userDetailsServiceImpl.registerUser(any(User.class))).thenReturn(user);
-
-        // When-Then
-        mockMvc.perform(post(endpoint)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonUserRegisterRequestDto(user)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("User register successfully with username: " + user.getUsername()))
-                .andReturn();
-    }
-
-    @Test
-    void shouldReturnJwtTokenForValidAuthRequest() throws Exception {
-        // Given
-        String endpoint = "/auth/login";
-
-        User user = createRandomUser();
-
-        Authentication authentication = mock(Authentication.class);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(true);
-        when(jwtService.generateToken(anyString())).thenReturn("someToken");
-
-        // When-Then
-        mockMvc.perform(post(endpoint)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonUserAuthRequestDto(user)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("someToken"))
-                .andReturn();
-    }
-
-    @Test
-    void shouldThrowUserNotFoundExceptionForInvalidAuthRequest() throws Exception {
-        // Given
-        String endpoint = "/auth/login";
-
-        User user = createRandomUser();
-
-        Authentication authentication = Mockito.mock(Authentication.class);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(false);
-
-        // When-Then
-        mockMvc.perform(post(endpoint)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonUserAuthRequestDto(user)))
-                .andExpect(status().isUnauthorized())
-                .andReturn();
-    }
-
-    @Test
-    @WithMockUser(username = "testUser", authorities = {"USER"})
-    void shouldReturnUserLoggedMessageForUserProfileEndpoint() throws Exception {
-        // Given
-        String endpoint = "/user/profile";
-
-        // When-Then
-        mockMvc.perform(get(endpoint))
-                .andExpect(status().isOk())
-                .andExpect(content().string("You are logged in USER"))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", equalTo(user.getId())))
+                .andExpect(jsonPath("$[0].username", equalTo(user.getUsername())))
+                .andExpect(jsonPath("$[0].firstName", equalTo(user.getFirstName())))
+                .andExpect(jsonPath("$[0].lastName", equalTo(user.getLastName())))
+                .andExpect(jsonPath("$[0].email", equalTo(user.getEmail())))
+                .andExpect(jsonPath("$[0].address", equalTo(user.getAddress())))
                 .andReturn();
     }
 
     @Test
     @WithMockUser(authorities = {"USER"})
-    void shouldReturnForbiddenForUserTryingToGetAdminProfile() throws Exception {
+    void shouldReturnUserByIdForUser() throws Exception {
         // Given
-        String endpoint = "/admin/profile";
-
-        // When-Then
-        mockMvc.perform(get(endpoint))
-                .andExpect(status().isForbidden())
-                .andReturn();
-    }
-
-    @Test
-    @WithMockUser(username = "adminUser", authorities = {"ADMIN"})
-    void shouldReturnAdminLoggedMessageForAdminProfileEndpoint() throws Exception {
-        // Given
-        String endpoint = "/admin/profile";
+        User user = RandomUtils.createRandomUser();
+        String endpoint = "/users/id/" + user.getId();
+        when(userService.getUserById(user.getId())).thenReturn(user);
 
         // When-Then
         mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
-                .andExpect(content().string("You are logged in ADMIN"))
+                .andExpect(jsonPath("$.id", equalTo(user.getId())))
+                .andExpect(jsonPath("$.username", equalTo(user.getUsername())))
+                .andExpect(jsonPath("$.firstName", equalTo(user.getFirstName())))
+                .andExpect(jsonPath("$.lastName", equalTo(user.getLastName())))
+                .andExpect(jsonPath("$.email", equalTo(user.getEmail())))
+                .andExpect(jsonPath("$.address", equalTo(user.getAddress())))
                 .andReturn();
     }
 
     @Test
-    @WithMockUser(authorities = {"ADMIN"})
-    void shouldReturnForbiddenForAdminTryingToGetUserProfile() throws Exception {
+    @WithMockUser(authorities = {"USER"})
+    void shouldReturnUserByUsernameForUser() throws Exception {
         // Given
-        String endpoint = "/user/profile";
+        User user = RandomUtils.createRandomUser();
+        String endpoint = "/users/" + user.getUsername();
+        when(userService.getUserByUsername(user.getUsername())).thenReturn(user);
 
         // When-Then
         mockMvc.perform(get(endpoint))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(user.getId())))
+                .andExpect(jsonPath("$.username", equalTo(user.getUsername())))
+                .andExpect(jsonPath("$.firstName", equalTo(user.getFirstName())))
+                .andExpect(jsonPath("$.lastName", equalTo(user.getLastName())))
+                .andExpect(jsonPath("$.email", equalTo(user.getEmail())))
+                .andExpect(jsonPath("$.address", equalTo(user.getAddress())))
+                .andReturn();
+    }
+
+    @Test
+    @WithMockUser(authorities = {"USER"})
+    void shouldUpdateUserForUser() throws Exception {
+        // Given
+        String endpoint = "/users";
+        User user = RandomUtils.createRandomUser();
+        when(userService.updateUser(any(User.class))).thenReturn(user);
+
+        // When-Then
+        mockMvc.perform(put(endpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonUserUpdateRequestDto(user)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(user.getId())))
+                .andExpect(jsonPath("$.username", equalTo(user.getUsername())))
+                .andExpect(jsonPath("$.firstName", equalTo(user.getFirstName())))
+                .andExpect(jsonPath("$.lastName", equalTo(user.getLastName())))
+                .andExpect(jsonPath("$.email", equalTo(user.getEmail())))
+                .andExpect(jsonPath("$.address", equalTo(user.getAddress())))
+                .andReturn();
+    }
+
+    @Test
+    @WithMockUser(authorities = {"USER"})
+    void shouldDeleteUserForUser() throws Exception {
+        // Given
+        User user = RandomUtils.createRandomUser();
+        String endpoint = "/users/" + user.getId();
+        doNothing().when(userService).deleteUserById(user.getId());
+
+        // When-Then
+        mockMvc.perform(delete(endpoint))
+                .andExpect(status().isOk())
                 .andReturn();
     }
 }

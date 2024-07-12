@@ -8,7 +8,7 @@ import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;
 import com.holovin.smidatestproject.service.CompanyService;
 import com.holovin.smidatestproject.service.ReportService;
-import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
+import com.holovin.smidatestproject.service.UserAuthService;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -51,7 +51,7 @@ public class ReportControllerTest {
     private ReportService reportService;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private UserAuthService userAuthService;
 
     @MockBean
     private JwtService jwtService;
