@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.controller.dto.auth.request;
+package com.holovin.smidatestproject.controller.dto.user.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

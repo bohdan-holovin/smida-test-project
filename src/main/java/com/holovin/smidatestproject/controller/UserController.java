@@ -1,77 +1,76 @@
 package com.holovin.smidatestproject.controller;
 
-import com.holovin.smidatestproject.config.jwt.JwtService;
-import com.holovin.smidatestproject.controller.dto.auth.request.UserAuthRequestDto;
-import com.holovin.smidatestproject.controller.dto.auth.request.UserRegisterRequestDto;
-import com.holovin.smidatestproject.exception.UserIsUnauthorizedException;
-import com.holovin.smidatestproject.model.User;
-import com.holovin.smidatestproject.service.UserDetailsServiceImpl;
+import com.holovin.smidatestproject.controller.dto.user.request.UserUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.user.response.UserResponseDto;
+import com.holovin.smidatestproject.controller.mapper.UserDtoMapper;
+import com.holovin.smidatestproject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.holovin.smidatestproject.controller.mapper.UserDtoMapper.toUser;
+import static com.holovin.smidatestproject.controller.mapper.UserDtoMapper.toUserResponseDto;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping()
+@RequestMapping("/users")
 public class UserController {
-
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/auth/not-secured")
-    public ResponseEntity<String> notSecured() {
-        logger.info("Accessing non-secured endpoint");
-        return ResponseEntity.ok("This endpoint is not secure");
+    private final UserService userService;
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        logger.info("Fetching all users");
+        List<UserResponseDto> users = userService.getAllUsers().stream()
+                .map(UserDtoMapper::toUserResponseDto)
+                .collect(Collectors.toList());
+        logger.info("Found {} users", users.size());
+        return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/auth/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        logger.info("Registering user with username request: {}", userRegisterRequestDto.getUsername());
-        User user = userDetailsServiceImpl.registerUser(toUser(userRegisterRequestDto));
-        logger.info("User registered successfully with username: {}", user.getUsername());
-        return ResponseEntity.ok("User register successfully with username: " + user.getUsername());
+    @GetMapping("/id/{id}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable int id) {
+        logger.info("Fetching user with id {}", id);
+        UserResponseDto user = toUserResponseDto(userService.getUserById(id));
+        logger.info("Found user response: {}", user);
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<String> authenticateAndGetToken(@Valid @RequestBody UserAuthRequestDto userAuthRequestDto) {
-        logger.info("Attempting to authenticate user with username: {}", userAuthRequestDto.getUsername());
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        userAuthRequestDto.getUsername(),
-                        userAuthRequestDto.getPassword())
-                );
-        if (!authentication.isAuthenticated()) {
-            logger.info("Authentication failed for user: {}", userAuthRequestDto.getUsername());
-            throw new UserIsUnauthorizedException(userAuthRequestDto.getUsername());
-        }
-        String generatedToken = jwtService.generateToken(userAuthRequestDto.getUsername());
-        logger.info("Authentication successful for user: {}", userAuthRequestDto.getUsername());
-        return ResponseEntity.ok(generatedToken);
+    @GetMapping("/{username}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ResponseEntity<UserResponseDto> getUserByUsername(@PathVariable String username) {
+        logger.info("Fetching user with username {}", username);
+        UserResponseDto user = toUserResponseDto(userService.getUserByUsername(username));
+        logger.info("Found user response: {}", user);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user/profile")
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<String> userProfile() {
-        logger.info("Accessing user profile endpoint");
-        return ResponseEntity.ok("You are logged in USER");
+    @PutMapping
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+        logger.info("Updating user request: {}", userUpdateRequestDto);
+        UserResponseDto updatedUser = toUserResponseDto(userService.updateUser(toUser(userUpdateRequestDto)));
+        logger.info("Updated user response: {}", updatedUser);
+        return ResponseEntity.ok(updatedUser);
     }
 
-    @GetMapping("/admin/profile")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> adminProfile() {
-        logger.info("Accessing admin profile endpoint");
-        return ResponseEntity.ok("You are logged in ADMIN");
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+        logger.info("Deleting user with id {}", id);
+        userService.deleteUserById(id);
+        logger.info("Deleted user with id {}", id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +21,7 @@ class UserDetailsImplTest {
         User user = new User();
         user.setUsername("testUser");
         user.setPassword("testPassword");
-        user.setRoles("USER ADMIN");
+        user.setRoles(Set.of(Role.values()));
         userDetailsImpl = new UserDetailsImpl(user);
     }
 

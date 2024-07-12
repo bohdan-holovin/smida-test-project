@@ -13,14 +13,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserAuthService implements UserDetailsService {
 
     private UserRepository repository;
     private PasswordEncoder encoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         return repository.findByUsername(username)
                 .map(UserDetailsImpl::new)
