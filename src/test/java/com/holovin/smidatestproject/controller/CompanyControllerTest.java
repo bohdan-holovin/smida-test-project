@@ -1,21 +1,16 @@
 package com.holovin.smidatestproject.controller;
 
 import com.holovin.smidatestproject.AbstractIntegratedTest;
-import com.holovin.smidatestproject.config.SecurityConfig;
-import com.holovin.smidatestproject.config.jwt.JwtService;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.service.CompanyDeleteService;
 import com.holovin.smidatestproject.service.CompanyService;
-import com.holovin.smidatestproject.service.UserAuthService;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -33,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CompanyController.class)
-@ComponentScan(basePackageClasses = {SecurityConfig.class})
 public class CompanyControllerTest extends AbstractIntegratedTest {
 
     @Autowired
@@ -44,15 +38,6 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
 
     @MockBean
     private CompanyDeleteService companyDeleteService;
-
-    @MockBean
-    private UserAuthService userAuthService;
-
-    @MockBean
-    private JwtService jwtService;
-
-    @MockBean
-    private AuthenticationManager authenticationManager;
 
     @Test
     @WithMockUser(authorities = {"USER"})
