@@ -7,8 +7,6 @@ import com.holovin.smidatestproject.controller.dto.user.request.UserRegisterRequ
 import com.holovin.smidatestproject.controller.dto.user.request.UserUpdateRequestDto;
 import com.holovin.smidatestproject.model.User;
 
-import java.util.stream.Collectors;
-
 public class JsonUserMapperUtils {
 
     static ObjectMapper objectMapper = new ObjectMapper();
@@ -23,10 +21,8 @@ public class JsonUserMapperUtils {
                         user.getLastName(),
                         user.getEmail(),
                         user.getPhone(),
-                        user.getAddress(),
-                        user.getRoles().stream()
-                                .map(it -> UserRegisterRequestDto.Role.valueOf(it.name()))
-                                .collect(Collectors.toSet()))
+                        user.getAddress()
+                )
         );
     }
 

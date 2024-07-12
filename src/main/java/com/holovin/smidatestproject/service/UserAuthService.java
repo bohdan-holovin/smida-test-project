@@ -1,6 +1,7 @@
 package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.exception.UserNotFoundException;
+import com.holovin.smidatestproject.model.Role;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.model.UserDetailsImpl;
 import com.holovin.smidatestproject.repository.UserRepository;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +31,7 @@ public class UserAuthService implements UserDetailsService {
 
     public User registerUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRoles(Set.of(Role.USER));
         return repository.save(user);
     }
 }

@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,13 +40,4 @@ public class UserRegisterRequestDto {
 
     @Size(max = 100, message = "Address must be less than 100 characters")
     private String address;
-
-    @NotNull(message = "Roles cannot be null")
-    @NotEmpty(message = "Roles cannot be empty")
-    private Set<Role> roles;
-
-    public enum Role {
-        USER,
-        ADMIN
-    }
 }

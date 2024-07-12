@@ -3,10 +3,7 @@ package com.holovin.smidatestproject.controller.mapper;
 import com.holovin.smidatestproject.controller.dto.user.request.UserRegisterRequestDto;
 import com.holovin.smidatestproject.controller.dto.user.request.UserUpdateRequestDto;
 import com.holovin.smidatestproject.controller.dto.user.response.UserResponseDto;
-import com.holovin.smidatestproject.model.Role;
 import com.holovin.smidatestproject.model.User;
-
-import java.util.stream.Collectors;
 
 public class UserDtoMapper {
 
@@ -44,9 +41,6 @@ public class UserDtoMapper {
         user.setEmail(userRegisterRequestDto.getEmail());
         user.setPhone(userRegisterRequestDto.getPhone());
         user.setAddress(userRegisterRequestDto.getAddress());
-        user.setRoles(userRegisterRequestDto.getRoles().stream()
-                .map(it -> Role.valueOf(it.name()))
-                .collect(Collectors.toSet()));
         return user;
     }
 }
