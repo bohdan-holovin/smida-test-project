@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyCreateRequestDto {
+public class CreateCompanyRequestDto {
 
     @NotNull(message = "Name cannot be null")
     @NotEmpty(message = "Name cannot be empty")

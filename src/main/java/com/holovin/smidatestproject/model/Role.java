@@ -1,6 +1,8 @@
 package com.holovin.smidatestproject.model;
 
 public enum Role {
+    ADMIN,
     USER,
-    ADMIN
+    COMPANY_OWNER,
+    ACCOUNTANT
 }

@@ -28,9 +28,11 @@ class UserDetailsImplTest {
     @Test
     void shouldReturnCorrectMapAuthorities() {
         Collection<? extends GrantedAuthority> actualAuthorities = userDetailsImpl.getAuthorities();
-        assertThat(actualAuthorities.size()).isEqualTo(2);
+        assertThat(actualAuthorities.size()).isEqualTo(4);
         assertTrue(actualAuthorities.contains(new SimpleGrantedAuthority("USER")));
         assertTrue(actualAuthorities.contains(new SimpleGrantedAuthority("ADMIN")));
+        assertTrue(actualAuthorities.contains(new SimpleGrantedAuthority("COMPANY_OWNER")));
+        assertTrue(actualAuthorities.contains(new SimpleGrantedAuthority("ACCOUNTANT")));
     }
 
     @Test

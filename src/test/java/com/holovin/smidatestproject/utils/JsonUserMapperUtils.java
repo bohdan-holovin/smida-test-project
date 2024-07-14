@@ -2,47 +2,58 @@ package com.holovin.smidatestproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.holovin.smidatestproject.controller.dto.user.request.UserAuthRequestDto;
-import com.holovin.smidatestproject.controller.dto.user.request.UserRegisterRequestDto;
-import com.holovin.smidatestproject.controller.dto.user.request.UserUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.user.request.AuthUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.user.request.RegisterUserRequestDto;
+import com.holovin.smidatestproject.controller.dto.user.request.UpdateUserPasswordRequestDto;
+import com.holovin.smidatestproject.controller.dto.user.request.UpdateUserPersonalDataRequestDto;
 import com.holovin.smidatestproject.model.User;
 
 public class JsonUserMapperUtils {
 
     static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String toJsonUserRegisterRequestDto(User user) throws JsonProcessingException {
+    public static String toJsonRegisterUserRequestDto(User user) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new UserRegisterRequestDto(
+                new RegisterUserRequestDto(
                         user.getUsername(),
                         user.getPassword(),
                         user.getFirstName(),
                         user.getLastName(),
                         user.getEmail(),
                         user.getPhone(),
-                        user.getAddress()
+                        user.getAddress(),
+                        user.getDateOfBirth()
                 )
         );
     }
 
-    public static String toJsonUserAuthRequestDto(User user) throws JsonProcessingException {
+    public static String toJsonAuthUserRequestDto(User user) throws JsonProcessingException {
 
-        return objectMapper.writeValueAsString(new UserAuthRequestDto(user.getUsername(), user.getPassword()));
+        return objectMapper.writeValueAsString(new AuthUserRequestDto(user.getUsername(), user.getPassword()));
     }
 
-    public static String toJsonUserUpdateRequestDto(User user) throws JsonProcessingException {
+    public static String toJsonUpdateUserPersonalDataRequestDto(User user) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new UserUpdateRequestDto(
-                        user.getId(),
+                new UpdateUserPersonalDataRequestDto(
                         user.getUsername(),
-                        user.getPassword(),
                         user.getFirstName(),
                         user.getLastName(),
                         user.getEmail(),
                         user.getPhone(),
-                        user.getAddress()
+                        user.getAddress(),
+                        user.getDateOfBirth()
+                )
+        );
+    }
+
+    public static String toJsonUpdateUserPasswordRequestDto(User user) throws JsonProcessingException {
+
+        return objectMapper.writeValueAsString(
+                new UpdateUserPasswordRequestDto(
+                        user.getUsername(),
+                        user.getPassword()
                 )
         );
     }

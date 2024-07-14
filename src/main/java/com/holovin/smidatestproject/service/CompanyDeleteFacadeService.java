@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CompanyDeleteService {
+public class CompanyDeleteFacadeService {
 
     private ReportService reportService;
     private CompanyService companyService;

@@ -1,7 +1,7 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyCreateRequestDto;
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CreateCompanyRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.UpdateCompanyRequestDto;
 import com.holovin.smidatestproject.controller.dto.company.response.CompanyResponseDto;
 import com.holovin.smidatestproject.model.Company;
 
@@ -26,7 +26,7 @@ public class CompanyDtoMapper {
                 .collect(Collectors.toList());
     }
 
-    public static Company toCompany(CompanyCreateRequestDto createRequestDto) {
+    public static Company toCompany(CreateCompanyRequestDto createRequestDto) {
         Company company = new Company();
         company.setName(createRequestDto.getName());
         company.setAddress(createRequestDto.getAddress());
@@ -34,7 +34,7 @@ public class CompanyDtoMapper {
         return company;
     }
 
-    public static Company toCompany(CompanyUpdateRequestDto updateRequestDto) {
+    public static Company toCompany(UpdateCompanyRequestDto updateRequestDto) {
         Company company = new Company();
         company.setId(updateRequestDto.getId());
         company.setName(updateRequestDto.getName());

@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.controller;
 
-import com.holovin.smidatestproject.controller.dto.user.request.UserUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.user.request.UpdateUserPersonalDataRequestDto;
 import com.holovin.smidatestproject.controller.dto.user.response.UserResponseDto;
 import com.holovin.smidatestproject.controller.mapper.UserDtoMapper;
 import com.holovin.smidatestproject.service.UserService;
@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.holovin.smidatestproject.controller.mapper.UserDtoMapper.toUser;
@@ -28,7 +29,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         logger.info("Fetching all users");
         List<UserResponseDto> users = userService.getAllUsers().stream()
@@ -39,8 +40,8 @@ public class UserController {
     }
 
     @GetMapping("/id/{id}")
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable int id) {
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable UUID id) {
         logger.info("Fetching user with id {}", id);
         UserResponseDto user = toUserResponseDto(userService.getUserById(id));
         logger.info("Found user response: {}", user);
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'COMPANY_OWNER', 'ACCOUNTANT','ADMIN')")
     public ResponseEntity<UserResponseDto> getUserByUsername(@PathVariable String username) {
         logger.info("Fetching user with username {}", username);
         UserResponseDto user = toUserResponseDto(userService.getUserByUsername(username));
@@ -58,19 +59,21 @@ public class UserController {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
-        logger.info("Updating user request: {}", userUpdateRequestDto);
-        UserResponseDto updatedUser = toUserResponseDto(userService.updateUser(toUser(userUpdateRequestDto)));
-        logger.info("Updated user response: {}", updatedUser);
+    public ResponseEntity<UserResponseDto> updateUserPersonalData(
+            @Valid @RequestBody UpdateUserPersonalDataRequestDto updateUserPersonalDataRequestDto
+    ) {
+        logger.info("Updating user personal data request: {}", updateUserPersonalDataRequestDto);
+        UserResponseDto updatedUser = toUserResponseDto(userService.updateUserPersonalData(toUser(updateUserPersonalDataRequestDto)));
+        logger.info("Updated user personal data response: {}", updatedUser);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{username}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
-        logger.info("Deleting user with id {}", id);
-        userService.deleteUserById(id);
-        logger.info("Deleted user with id {}", id);
+    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+        logger.info("Deleting user with username {}", username);
+        userService.deleteUserByUsername(username);
+        logger.info("Deleted user with username {}", username);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.controller;
 
-import com.holovin.smidatestproject.controller.dto.report.request.FullReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportDetailsRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetFullReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportDetailsRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportRequestDto;
 import com.holovin.smidatestproject.controller.dto.report.response.FullReportResponseDto;
 import com.holovin.smidatestproject.controller.dto.report.response.ReportDetailsResponseDto;
 import com.holovin.smidatestproject.controller.dto.report.response.ReportResponseDto;
@@ -78,9 +78,9 @@ public class ReportController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<ReportResponseDto> createReport(@Valid @RequestBody ReportRequestDto reportRequestDto) {
-        logger.info("Creating report request: {}", reportRequestDto);
-        Report report = reportService.createReport(reportRequestDto.getCompanyId(), toReportDetails(reportRequestDto));
+    public ResponseEntity<ReportResponseDto> createReport(@Valid @RequestBody GetReportRequestDto getReportRequestDto) {
+        logger.info("Creating report request: {}", getReportRequestDto);
+        Report report = reportService.createReport(getReportRequestDto.getCompanyId(), toReportDetails(getReportRequestDto));
         ReportResponseDto reportResponseDto = toReportResponseDto(report);
         logger.info("Created report response: {}", reportResponseDto);
         return ResponseEntity.ok(reportResponseDto);
@@ -88,9 +88,9 @@ public class ReportController {
 
     @PostMapping("/details")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<ReportDetailsResponseDto> createReportDetails(@Valid @RequestBody ReportDetailsRequestDto reportDetailsRequestDto) {
-        logger.info("Creating report details request: {}", reportDetailsRequestDto);
-        ReportDetails reportDetails = reportService.createReportDetails(toReportDetails(reportDetailsRequestDto));
+    public ResponseEntity<ReportDetailsResponseDto> createReportDetails(@Valid @RequestBody GetReportDetailsRequestDto getReportDetailsRequestDto) {
+        logger.info("Creating report details request: {}", getReportDetailsRequestDto);
+        ReportDetails reportDetails = reportService.createReportDetails(toReportDetails(getReportDetailsRequestDto));
         ReportDetailsResponseDto reportDetailsResponseDto = toReportDetailsResponseDto(reportDetails);
         logger.info("Created report details response: {}", reportDetailsResponseDto);
         return ResponseEntity.ok(reportDetailsResponseDto);
@@ -98,9 +98,9 @@ public class ReportController {
 
     @PostMapping("/full")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<FullReportResponseDto> createFullReport(@Valid @RequestBody FullReportRequestDto fullReportRequestDto) {
-        logger.info("Creating full report request: {}", fullReportRequestDto);
-        FullReport fullReport = reportService.createFullReport(fullReportRequestDto.getId(), toFullReport(fullReportRequestDto));
+    public ResponseEntity<FullReportResponseDto> createFullReport(@Valid @RequestBody GetFullReportRequestDto getFullReportRequestDto) {
+        logger.info("Creating full report request: {}", getFullReportRequestDto);
+        FullReport fullReport = reportService.createFullReport(getFullReportRequestDto.getId(), toFullReport(getFullReportRequestDto));
         FullReportResponseDto fullReportResponseDto = toFullReportResponseDto(fullReport);
         logger.info("Created full report response: {}", fullReportResponseDto);
         return ResponseEntity.ok(fullReportResponseDto);
@@ -108,9 +108,9 @@ public class ReportController {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<ReportResponseDto> updateReport(@Valid @RequestBody ReportRequestDto reportRequestDto) {
-        logger.info("Updating report request: {}", reportRequestDto);
-        Report report = reportService.updateReport(reportRequestDto.getCompanyId(), toReportDetails(reportRequestDto));
+    public ResponseEntity<ReportResponseDto> updateReport(@Valid @RequestBody GetReportRequestDto getReportRequestDto) {
+        logger.info("Updating report request: {}", getReportRequestDto);
+        Report report = reportService.updateReport(getReportRequestDto.getCompanyId(), toReportDetails(getReportRequestDto));
         ReportResponseDto reportResponseDto = toReportResponseDto(report);
         logger.info("Updated report response: {}", reportResponseDto);
         return ResponseEntity.ok(reportResponseDto);
@@ -118,9 +118,9 @@ public class ReportController {
 
     @PutMapping("/details")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<ReportDetailsResponseDto> updateReportDetails(@Valid @RequestBody ReportDetailsRequestDto reportDetailsRequestDto) {
-        logger.info("Updating report details request: {}", reportDetailsRequestDto);
-        ReportDetails reportDetails = reportService.updateReportDetails(toReportDetails(reportDetailsRequestDto));
+    public ResponseEntity<ReportDetailsResponseDto> updateReportDetails(@Valid @RequestBody GetReportDetailsRequestDto getReportDetailsRequestDto) {
+        logger.info("Updating report details request: {}", getReportDetailsRequestDto);
+        ReportDetails reportDetails = reportService.updateReportDetails(toReportDetails(getReportDetailsRequestDto));
         ReportDetailsResponseDto reportDetailsResponseDto = toReportDetailsResponseDto(reportDetails);
         logger.info("Updated report details response: {}", reportDetailsResponseDto);
         return ResponseEntity.ok(reportDetailsResponseDto);
@@ -128,9 +128,9 @@ public class ReportController {
 
     @PutMapping("/full")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<FullReportResponseDto> updateFullReport(@Valid @RequestBody FullReportRequestDto fullReportRequestDto) {
-        logger.info("Updating full report request: {}", fullReportRequestDto);
-        FullReport fullReport = reportService.updateFullReport(fullReportRequestDto.getCompanyId(), toFullReport(fullReportRequestDto));
+    public ResponseEntity<FullReportResponseDto> updateFullReport(@Valid @RequestBody GetFullReportRequestDto getFullReportRequestDto) {
+        logger.info("Updating full report request: {}", getFullReportRequestDto);
+        FullReport fullReport = reportService.updateFullReport(getFullReportRequestDto.getCompanyId(), toFullReport(getFullReportRequestDto));
         FullReportResponseDto fullReportResponseDto = toFullReportResponseDto(fullReport);
         logger.info("Updated full report response: {}", fullReportResponseDto);
         return ResponseEntity.ok(fullReportResponseDto);

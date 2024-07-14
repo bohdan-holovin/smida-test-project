@@ -1,30 +1,31 @@
 package com.holovin.smidatestproject.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.holovin.smidatestproject.AbstractIntegratedTest;
+import com.holovin.smidatestproject.controller.dto.company.response.CompanyResponseDto;
+import com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper;
 import com.holovin.smidatestproject.model.Company;
-import com.holovin.smidatestproject.service.CompanyDeleteService;
+import com.holovin.smidatestproject.service.CompanyDeleteFacadeService;
 import com.holovin.smidatestproject.service.CompanyService;
 import com.holovin.smidatestproject.utils.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonCompanyCreateDto;
-import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonCompanyUpdateDto;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonCreateCompanyRequestDto;
+import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonUpdateCompanyRequestDto;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CompanyController.class)
@@ -37,105 +38,141 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
     private CompanyService companyService;
 
     @MockBean
-    private CompanyDeleteService companyDeleteService;
+    private CompanyDeleteFacadeService companyDeleteFacadeService;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @WithMockUser(authorities = {"USER"})
-    void shouldReturnAllCompaniesForUser() throws Exception {
+    @WithMockUser(authorities = {"ADMIN"})
+    void shouldReturnAllCompaniesForAdmin() throws Exception {
         // Given
         String endpoint = "/companies";
         Company company = RandomUtils.createRandomCompany();
         List<Company> companyList = List.of(company);
+        CompanyResponseDto expectedDto = CompanyDtoMapper.toCompanyResponseDto(company);
         when(companyService.getAllCompanies()).thenReturn(companyList);
 
         // When-Then
-        mockMvc.perform(get(endpoint))
+        MvcResult result = mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", equalTo(company.getId().toString())))
-                .andExpect(jsonPath("$[0].name", equalTo(company.getName())))
-                .andExpect(jsonPath("$[0].registrationNumber", equalTo(company.getRegistrationNumber())))
-                .andExpect(jsonPath("$[0].address", equalTo(company.getAddress())))
                 .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        CompanyResponseDto[] actualDtoList = objectMapper.readValue(json, CompanyResponseDto[].class);
+        assertThat(actualDtoList.length).isEqualTo(1);
+        assertThat(actualDtoList[0]).isEqualTo(expectedDto);
     }
 
     @Test
-    @WithMockUser(authorities = {"USER"})
-    void shouldReturnCompanyByIdForUser() throws Exception {
+    @WithMockUser(authorities = {"USER", "ACCOUNTANT", "COMPANY_OWNER", "ADMIN"})
+    void shouldReturnCompanyByIdForAuthorizedRoles() throws Exception {
         // Given
+        UUID companyId = UUID.randomUUID();
+        String endpoint = "/companies/" + companyId;
         Company company = RandomUtils.createRandomCompany();
-        String endpoint = "/companies/" + company.getId();
-
-        when(companyService.getCompanyByCompanyId(company.getId())).thenReturn(company);
+        CompanyResponseDto expectedDto = CompanyDtoMapper.toCompanyResponseDto(company);
+        when(companyService.getCompanyByCompanyId(companyId)).thenReturn(company);
 
         // When-Then
-        mockMvc.perform(get(endpoint))
+        MvcResult result = mockMvc.perform(get(endpoint))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(company.getId().toString())))
-                .andExpect(jsonPath("$.name", equalTo(company.getName())))
-                .andExpect(jsonPath("$.registrationNumber", equalTo(company.getRegistrationNumber())))
-                .andExpect(jsonPath("$.address", equalTo(company.getAddress())))
                 .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        CompanyResponseDto actualDto = objectMapper.readValue(json, CompanyResponseDto.class);
+        assertThat(actualDto).isEqualTo(expectedDto);
     }
 
     @Test
-    @WithMockUser(authorities = {"ADMIN"})
-    void shouldCreateCompanyForAdmin() throws Exception {
+    @WithMockUser(authorities = {"USER", "ACCOUNTANT", "COMPANY_OWNER", "ADMIN"})
+    void shouldCreateCompanyForAuthorizedRoles() throws Exception {
         // Given
         String endpoint = "/companies";
         Company company = RandomUtils.createRandomCompany();
+        CompanyResponseDto expectedDto = CompanyDtoMapper.toCompanyResponseDto(company);
         when(companyService.createUpdate(any(Company.class))).thenReturn(company);
 
         // When-Then
-        mockMvc.perform(post(endpoint)
+        MvcResult result = mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonCompanyCreateDto(company)))
+                        .content(toJsonCreateCompanyRequestDto(company)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(company.getId().toString())))
-                .andExpect(jsonPath("$.name", equalTo(company.getName())))
-                .andExpect(jsonPath("$.registrationNumber", equalTo(company.getRegistrationNumber())))
-                .andExpect(jsonPath("$.address", equalTo(company.getAddress())))
                 .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        CompanyResponseDto actualDto = objectMapper.readValue(json, CompanyResponseDto.class);
+        assertThat(actualDto).isEqualTo(expectedDto);
     }
 
     @Test
-    @WithMockUser(authorities = {"USER"})
-    void shouldReturnForbiddenForUserTryingToCreateCompany() throws Exception {
+    @WithMockUser(authorities = {"COMPANY_OWNER", "ADMIN"})
+    void shouldUpdateCompanyForAuthorizedRoles() throws Exception {
         // Given
         String endpoint = "/companies";
         Company company = RandomUtils.createRandomCompany();
-
-        // When-Then
-        mockMvc.perform(post(endpoint)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonCompanyCreateDto(company)))
-                .andExpect(status().isForbidden())
-                .andReturn();
-    }
-
-    @Test
-    @WithMockUser(authorities = {"ADMIN"})
-    void shouldUpdateCompanyForAdmin() throws Exception {
-        // Given
-        String endpoint = "/companies";
-        Company company = RandomUtils.createRandomCompany();
+        CompanyResponseDto expectedDto = CompanyDtoMapper.toCompanyResponseDto(company);
         when(companyService.updateCompany(any(Company.class))).thenReturn(company);
 
         // When-Then
-        mockMvc.perform(put(endpoint)
+        MvcResult result = mockMvc.perform(put(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonCompanyUpdateDto(company)))
+                        .content(toJsonUpdateCompanyRequestDto(company)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", equalTo(company.getId().toString())))
-                .andExpect(jsonPath("$.name", equalTo(company.getName())))
-                .andExpect(jsonPath("$.registrationNumber", equalTo(company.getRegistrationNumber())))
-                .andExpect(jsonPath("$.address", equalTo(company.getAddress())))
                 .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        CompanyResponseDto actualDto = objectMapper.readValue(json, CompanyResponseDto.class);
+        assertThat(actualDto).isEqualTo(expectedDto);
     }
 
     @Test
-    @WithMockUser(authorities = {"USER"})
-    void shouldReturnForbiddenForUserTryingToUpdateCompany() throws Exception {
+    @WithMockUser(authorities = {"COMPANY_OWNER", "ADMIN"})
+    void shouldDeleteCompanyForAuthorizedRoles() throws Exception {
+        // Given
+        UUID companyId = UUID.randomUUID();
+        String endpoint = "/companies/" + companyId;
+
+        // When-Then
+        mockMvc.perform(delete(endpoint))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnForbiddenForUnauthorizedUserOnGetAllCompanies() throws Exception {
+        // Given
+        String endpoint = "/companies";
+
+        // When-Then
+        mockMvc.perform(get(endpoint))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldReturnForbiddenForUnauthorizedUserOnGetCompanyById() throws Exception {
+        // Given
+        UUID companyId = UUID.randomUUID();
+        String endpoint = "/companies/" + companyId;
+
+        // When-Then
+        mockMvc.perform(get(endpoint))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldReturnForbiddenForUnauthorizedUserOnCreateCompany() throws Exception {
+        // Given
+        String endpoint = "/companies";
+        Company company = RandomUtils.createRandomCompany();
+
+        // When-Then
+        mockMvc.perform(post(endpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonCreateCompanyRequestDto(company)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldReturnForbiddenForUnauthorizedUserOnUpdateCompany() throws Exception {
         // Given
         String endpoint = "/companies";
         Company company = RandomUtils.createRandomCompany();
@@ -143,37 +180,18 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
         // When-Then
         mockMvc.perform(put(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJsonCompanyUpdateDto(company)))
-                .andExpect(status().isForbidden())
-                .andReturn();
+                        .content(toJsonUpdateCompanyRequestDto(company)))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(authorities = {"ADMIN"})
-    void shouldDeleteCompanyForAdmin() throws Exception {
+    void shouldReturnForbiddenForUnauthorizedUserOnDeleteCompany() throws Exception {
         // Given
-        UUID id = UUID.randomUUID();
-        String endpoint = "/companies/" + id;
-        Mockito.doNothing().when(companyDeleteService).cascadeCompanyDelete(id);
-        when(companyService.getCompanyByCompanyId(id)).thenReturn(new Company());
+        UUID companyId = UUID.randomUUID();
+        String endpoint = "/companies/" + companyId;
 
         // When-Then
         mockMvc.perform(delete(endpoint))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
-
-    @Test
-    @WithMockUser(authorities = {"USER"})
-    void shouldReturnForbiddenForUserTryingToDeleteCompany() throws Exception {
-        // Given
-        UUID id = UUID.randomUUID();
-        String endpoint = "/companies/" + id;
-        Mockito.doNothing().when(companyDeleteService).cascadeCompanyDelete(id);
-
-        // When-Then
-        mockMvc.perform(delete(endpoint))
-                .andExpect(status().isForbidden())
-                .andReturn();
+                .andExpect(status().isForbidden());
     }
 }

@@ -2,9 +2,9 @@ package com.holovin.smidatestproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.holovin.smidatestproject.controller.dto.report.request.FullReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportDetailsRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetFullReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportDetailsRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportRequestDto;
 import com.holovin.smidatestproject.model.FullReport;
 import com.holovin.smidatestproject.model.Report;
 import com.holovin.smidatestproject.model.ReportDetails;
@@ -16,7 +16,7 @@ public class JsonReportMapperUtils {
     public static String toJsonReportRequestDto(Report report) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new ReportRequestDto(
+                new GetReportRequestDto(
                         report.getCompany().getId(),
                         report.getReportDate(),
                         report.getTotalRevenue(),
@@ -28,7 +28,7 @@ public class JsonReportMapperUtils {
     public static String toJsonReportDetailsRequestDto(ReportDetails reportDetails) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new ReportDetailsRequestDto(
+                new GetReportDetailsRequestDto(
                         reportDetails.getReportId(),
                         reportDetails.getFinancialData(),
                         reportDetails.getComments()
@@ -39,7 +39,7 @@ public class JsonReportMapperUtils {
     public static String toJsonFullReportRequestDto(FullReport fullReport) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new FullReportRequestDto(
+                new GetFullReportRequestDto(
                         fullReport.getId(),
                         fullReport.getCompany().getId(),
                         fullReport.getReportDate(),
