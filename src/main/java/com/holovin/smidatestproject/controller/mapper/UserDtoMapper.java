@@ -43,7 +43,7 @@ public class UserDtoMapper {
     public static UserResponseDto toUserResponseDto(User user) {
         UserResponseDto dto = new UserResponseDto();
         dto.setId(user.getId());
-        dto.setCompany_id(user.getCompany().getId());
+        dto.setCompanyId(user.getCompany().getId());
         dto.setUsername(user.getUsername());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());

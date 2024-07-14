@@ -1,7 +1,7 @@
 package com.holovin.smidatestproject.repository;
 
 import com.holovin.smidatestproject.model.ReportDetails;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,7 @@ public class ReportDetailsRepositoryTest {
     @Autowired
     private ReportDetailsRepository reportDetailsRepository;
 
-    @BeforeEach
+    @AfterEach
     public void setUp() {
         reportDetailsRepository.deleteAll();
     }

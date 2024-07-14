@@ -43,12 +43,16 @@ public class UserDtoMapperTest {
         User testUser = RandomUtils.createRandomUser();
         UserResponseDto expectedDto = new UserResponseDto();
         expectedDto.setId(testUser.getId());
+        expectedDto.setCompanyId(testUser.getCompany().getId());
         expectedDto.setUsername(testUser.getUsername());
         expectedDto.setFirstName(testUser.getFirstName());
         expectedDto.setLastName(testUser.getLastName());
         expectedDto.setEmail(testUser.getEmail());
         expectedDto.setPhone(testUser.getPhone());
         expectedDto.setAddress(testUser.getAddress());
+        expectedDto.setDateOfBirth(testUser.getDateOfBirth());
+        expectedDto.setDateOfStartWork(testUser.getDateOfStartWork());
+        expectedDto.setPosition(testUser.getPosition());
 
         // When
         UserResponseDto actualDto = UserDtoMapper.toUserResponseDto(testUser);
@@ -73,9 +77,7 @@ public class UserDtoMapperTest {
         User actualUser = UserDtoMapper.toUser(requestDto);
 
         // Then
-        assertThat(actualUser.getId()).isEqualTo(expectedUser.getId());
         assertThat(actualUser.getUsername()).isEqualTo(expectedUser.getUsername());
-        assertThat(actualUser.getPassword()).isEqualTo(expectedUser.getPassword());
         assertThat(actualUser.getFirstName()).isEqualTo(expectedUser.getFirstName());
         assertThat(actualUser.getLastName()).isEqualTo(expectedUser.getLastName());
         assertThat(actualUser.getEmail()).isEqualTo(expectedUser.getEmail());

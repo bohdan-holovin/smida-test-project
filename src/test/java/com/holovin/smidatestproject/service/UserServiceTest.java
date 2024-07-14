@@ -68,7 +68,7 @@ class UserServiceTest extends AbstractUnitTest {
         UUID userId = testUser.getId();
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // When & Then
+        // When-Then
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId));
         verify(userRepository).findById(userId);
     }
@@ -93,7 +93,7 @@ class UserServiceTest extends AbstractUnitTest {
         String username = testUser.getUsername();
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        // When & Then
+        // When-Then
         assertThrows(UserNotFoundException.class, () -> userService.getUserByUsername(username));
         verify(userRepository).findByUsername(username);
     }
@@ -101,15 +101,15 @@ class UserServiceTest extends AbstractUnitTest {
     @Test
     void shouldReturnUpdatedUserWhenCallUpdateUserPersonalData() {
         // Given
-        UUID userId = testUser.getId();
-        when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
+        String username = testUser.getUsername();
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(testUser));
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
         // When
         User actualUser = userService.updateUserPersonalData(testUser);
 
         // Then
-        assertThat(actualUser.getUsername()).isEqualTo(testUser.getUsername());
+        assertThat(actualUser.getUsername()).isEqualTo(username);
         assertThat(actualUser.getPassword()).isEqualTo(testUser.getPassword());
         assertThat(actualUser.getFirstName()).isEqualTo(testUser.getFirstName());
         assertThat(actualUser.getLastName()).isEqualTo(testUser.getLastName());
@@ -117,19 +117,19 @@ class UserServiceTest extends AbstractUnitTest {
         assertThat(actualUser.getPhone()).isEqualTo(testUser.getPhone());
         assertThat(actualUser.getAddress()).isEqualTo(testUser.getAddress());
 
-        verify(userRepository).findById(userId);
+        verify(userRepository).findByUsername(username);
         verify(userRepository).save(any(User.class));
     }
 
     @Test
     void shouldThrowUserNotFoundExceptionWhenCallUpdateUserPersonalData() {
         // Given
-        UUID userId = testUser.getId();
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        String username = testUser.getUsername();
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        // When & Then
+        // When-Then
         assertThrows(UserNotFoundException.class, () -> userService.updateUserPersonalData(testUser));
-        verify(userRepository).findById(userId);
+        verify(userRepository).findByUsername(username);
     }
 
     @Test
