@@ -22,6 +22,7 @@ import java.util.UUID;
 import static com.holovin.smidatestproject.utils.JsonUserMapperUtils.toJsonUpdateUserPersonalDataRequestDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,6 +57,8 @@ public class UserControllerTest extends AbstractIntegratedTest {
         UserResponseDto[] actualDtoList = objectMapper.readValue(json, UserResponseDto[].class);
         assertThat(actualDtoList.length).isEqualTo(1);
         assertThat(actualDtoList[0]).isEqualTo(expectedDto);
+
+        verify(userService).getAllUsers();
     }
 
     @Test
@@ -76,6 +79,8 @@ public class UserControllerTest extends AbstractIntegratedTest {
         String json = result.getResponse().getContentAsString();
         UserResponseDto actualDto = objectMapper.readValue(json, UserResponseDto.class);
         assertThat(actualDto).isEqualTo(expectedDto);
+
+        verify(userService).getUserById(userId);
     }
 
     @Test
@@ -96,6 +101,8 @@ public class UserControllerTest extends AbstractIntegratedTest {
         String json = result.getResponse().getContentAsString();
         UserResponseDto actualDto = objectMapper.readValue(json, UserResponseDto.class);
         assertThat(actualDto).isEqualTo(expectedDto);
+
+        verify(userService).getUserByUsername(username);
     }
 
     @Test
@@ -117,6 +124,8 @@ public class UserControllerTest extends AbstractIntegratedTest {
         String json = result.getResponse().getContentAsString();
         UserResponseDto actualDto = objectMapper.readValue(json, UserResponseDto.class);
         assertThat(actualDto).isEqualTo(expectedDto);
+
+        verify(userService).updateUserPersonalData(any(User.class));
     }
 
     @Test
@@ -129,6 +138,8 @@ public class UserControllerTest extends AbstractIntegratedTest {
         // When-Then
         mockMvc.perform(delete(endpoint))
                 .andExpect(status().isOk());
+
+        verify(userService).deleteUserByUsername(username);
     }
 
     @Test

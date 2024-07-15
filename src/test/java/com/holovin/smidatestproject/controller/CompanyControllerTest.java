@@ -24,6 +24,7 @@ import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonCr
 import static com.holovin.smidatestproject.utils.JsonCompanyMapperUtils.toJsonUpdateCompanyRequestDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,6 +62,8 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
         CompanyResponseDto[] actualDtoList = objectMapper.readValue(json, CompanyResponseDto[].class);
         assertThat(actualDtoList.length).isEqualTo(1);
         assertThat(actualDtoList[0]).isEqualTo(expectedDto);
+
+        verify(companyService).getAllCompanies();
     }
 
     @Test
@@ -81,6 +84,8 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
         String json = result.getResponse().getContentAsString();
         CompanyResponseDto actualDto = objectMapper.readValue(json, CompanyResponseDto.class);
         assertThat(actualDto).isEqualTo(expectedDto);
+
+        verify(companyService).getCompanyByCompanyId(companyId);
     }
 
     @Test
@@ -102,6 +107,8 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
         String json = result.getResponse().getContentAsString();
         CompanyResponseDto actualDto = objectMapper.readValue(json, CompanyResponseDto.class);
         assertThat(actualDto).isEqualTo(expectedDto);
+
+        verify(companyService).createUpdate(any(Company.class));
     }
 
     @Test
@@ -123,6 +130,8 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
         String json = result.getResponse().getContentAsString();
         CompanyResponseDto actualDto = objectMapper.readValue(json, CompanyResponseDto.class);
         assertThat(actualDto).isEqualTo(expectedDto);
+
+        verify(companyService).updateCompany(any(Company.class));
     }
 
     @Test
@@ -135,6 +144,8 @@ public class CompanyControllerTest extends AbstractIntegratedTest {
         // When-Then
         mockMvc.perform(delete(endpoint))
                 .andExpect(status().isOk());
+
+        verify(companyDeleteFacadeService).cascadeDeleteCompany(companyId);
     }
 
     @Test

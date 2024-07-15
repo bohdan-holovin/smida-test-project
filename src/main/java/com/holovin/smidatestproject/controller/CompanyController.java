@@ -67,7 +67,7 @@ public class CompanyController {
     @PreAuthorize("hasAnyAuthority('COMPANY_OWNER', 'ADMIN')")
     public ResponseEntity<Void> deleteCompany(@PathVariable UUID id) {
         logger.info("Deleting company with id {}", id);
-        companyDeleteFacadeService.cascadeCompanyDelete(id);
+        companyDeleteFacadeService.cascadeDeleteCompany(id);
         logger.info("Deleted company with id {}", id);
         return ResponseEntity.ok().build();
     }

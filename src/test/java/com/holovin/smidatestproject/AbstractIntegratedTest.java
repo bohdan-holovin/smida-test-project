@@ -1,7 +1,7 @@
 package com.holovin.smidatestproject;
 
 import com.holovin.smidatestproject.config.SecurityConfig;
-import com.holovin.smidatestproject.config.jwt.JwtService;
+import com.holovin.smidatestproject.service.JwtService;
 import com.holovin.smidatestproject.service.UserSecurityService;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;

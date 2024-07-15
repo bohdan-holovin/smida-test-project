@@ -1,7 +1,7 @@
 package com.holovin.smidatestproject.controller;
 
 import com.holovin.smidatestproject.config.SecurityConfig;
-import com.holovin.smidatestproject.config.jwt.JwtService;
+import com.holovin.smidatestproject.service.JwtService;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.service.UserSecurityService;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,6 +74,8 @@ public class UserSecurityControllerTest {
 
         String response = result.getResponse().getContentAsString();
         assertThat(response).contains("User register successfully with username");
+
+        verify(userSecurityService).registerUser(any(User.class));
     }
 
     @Test
@@ -96,6 +99,10 @@ public class UserSecurityControllerTest {
 
         String response = result.getResponse().getContentAsString();
         assertThat(response).isEqualTo("token");
+
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(authentication).isAuthenticated();
+        verify(jwtService).generateToken(anyString());
     }
 
     @Test
@@ -114,6 +121,9 @@ public class UserSecurityControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJsonAuthUserRequestDto(user)))
                 .andExpect(status().isUnauthorized());
+
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(authentication).isAuthenticated();
     }
 
     @Test
@@ -133,6 +143,8 @@ public class UserSecurityControllerTest {
 
         String response = result.getResponse().getContentAsString();
         assertThat(response).contains("username");
+
+        verify(userSecurityService).updateUserPassword(any());
     }
 
     @Test

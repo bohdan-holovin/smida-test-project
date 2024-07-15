@@ -37,7 +37,7 @@ class CompanyDeleteFacadeServiceTest extends AbstractUnitTest {
         when(reportService.getAllReportsByCompanyId(company.getId())).thenReturn(reports);
 
         // When
-        companyDeleteFacadeService.cascadeCompanyDelete(company.getId());
+        companyDeleteFacadeService.cascadeDeleteCompany(company.getId());
 
         // Then
         verify(reportService).getAllReportsByCompanyId(company.getId());

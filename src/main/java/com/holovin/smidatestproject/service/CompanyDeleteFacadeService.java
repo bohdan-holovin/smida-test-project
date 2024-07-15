@@ -15,7 +15,7 @@ public class CompanyDeleteFacadeService {
     private ReportService reportService;
     private CompanyService companyService;
 
-    public void cascadeCompanyDelete(UUID companyId) {
+    public void cascadeDeleteCompany(UUID companyId) {
         List<UUID> allReportsByCompanyId = reportService.getAllReportsByCompanyId(companyId)
                 .stream().map(Report::getId)
                 .collect(Collectors.toList());

@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.controller;
 
-import com.holovin.smidatestproject.config.jwt.JwtService;
+import com.holovin.smidatestproject.service.JwtService;
 import com.holovin.smidatestproject.controller.dto.user.request.AuthUserRequestDto;
 import com.holovin.smidatestproject.controller.dto.user.request.RegisterUserRequestDto;
 import com.holovin.smidatestproject.controller.dto.user.request.UpdateUserPasswordRequestDto;
