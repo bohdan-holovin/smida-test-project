@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject;
 
 import com.holovin.smidatestproject.config.SecurityConfig;
-import com.holovin.smidatestproject.config.jwt.JwtService;
-import com.holovin.smidatestproject.service.UserAuthService;
+import com.holovin.smidatestproject.service.JwtService;
+import com.holovin.smidatestproject.service.UserSecurityService;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 public class AbstractIntegratedTest {
 
     @MockBean
-    private UserAuthService userAuthService;
+    private UserSecurityService userSecurityService;
 
     @MockBean
     private JwtService jwtService;

@@ -1,4 +1,4 @@
-package com.holovin.smidatestproject.config.jwt;
+package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.AbstractUnitTest;
 import io.jsonwebtoken.ExpiredJwtException;

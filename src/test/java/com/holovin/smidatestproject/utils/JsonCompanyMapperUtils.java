@@ -2,17 +2,17 @@ package com.holovin.smidatestproject.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyCreateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CreateCompanyRequestDto;
 import com.holovin.smidatestproject.model.Company;
 
 public class JsonCompanyMapperUtils {
 
     static ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String toJsonCompanyCreateDto(Company company) throws JsonProcessingException {
+    public static String toJsonCreateCompanyRequestDto(Company company) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new CompanyCreateRequestDto(
+                new CreateCompanyRequestDto(
                         company.getName(),
                         company.getRegistrationNumber(),
                         company.getAddress()
@@ -20,10 +20,10 @@ public class JsonCompanyMapperUtils {
         );
     }
 
-    public static String toJsonCompanyUpdateDto(Company company) throws JsonProcessingException {
+    public static String toJsonUpdateCompanyRequestDto(Company company) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(
-                new CompanyCreateRequestDto(
+                new CreateCompanyRequestDto(
                         company.getName(),
                         company.getRegistrationNumber(),
                         company.getAddress()

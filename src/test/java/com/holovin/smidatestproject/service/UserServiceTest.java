@@ -12,6 +12,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +51,7 @@ class UserServiceTest extends AbstractUnitTest {
     @Test
     void shouldReturnUserWhenCallFindByUserId() {
         // Given
-        int userId = testUser.getId();
+        UUID userId = testUser.getId();
         when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
 
         // When
@@ -64,10 +65,10 @@ class UserServiceTest extends AbstractUnitTest {
     @Test
     void shouldThrowUserNotFoundExceptionWhenCallFindByUserId() {
         // Given
-        int userId = testUser.getId();
+        UUID userId = testUser.getId();
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // When & Then
+        // When-Then
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId));
         verify(userRepository).findById(userId);
     }
@@ -92,23 +93,23 @@ class UserServiceTest extends AbstractUnitTest {
         String username = testUser.getUsername();
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        // When & Then
+        // When-Then
         assertThrows(UserNotFoundException.class, () -> userService.getUserByUsername(username));
         verify(userRepository).findByUsername(username);
     }
 
     @Test
-    void shouldReturnUpdatedUserWhenCallUpdateUser() {
+    void shouldReturnUpdatedUserWhenCallUpdateUserPersonalData() {
         // Given
-        int userId = testUser.getId();
-        when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
+        String username = testUser.getUsername();
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(testUser));
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
         // When
-        User actualUser = userService.updateUser(testUser);
+        User actualUser = userService.updateUserPersonalData(testUser);
 
         // Then
-        assertThat(actualUser.getUsername()).isEqualTo(testUser.getUsername());
+        assertThat(actualUser.getUsername()).isEqualTo(username);
         assertThat(actualUser.getPassword()).isEqualTo(testUser.getPassword());
         assertThat(actualUser.getFirstName()).isEqualTo(testUser.getFirstName());
         assertThat(actualUser.getLastName()).isEqualTo(testUser.getLastName());
@@ -116,32 +117,32 @@ class UserServiceTest extends AbstractUnitTest {
         assertThat(actualUser.getPhone()).isEqualTo(testUser.getPhone());
         assertThat(actualUser.getAddress()).isEqualTo(testUser.getAddress());
 
-        verify(userRepository).findById(userId);
+        verify(userRepository).findByUsername(username);
         verify(userRepository).save(any(User.class));
     }
 
     @Test
-    void shouldThrowUserNotFoundExceptionWhenCallUpdateUser() {
+    void shouldThrowUserNotFoundExceptionWhenCallUpdateUserPersonalData() {
         // Given
-        int userId = testUser.getId();
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        String username = testUser.getUsername();
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        // When & Then
-        assertThrows(UserNotFoundException.class, () -> userService.updateUser(testUser));
-        verify(userRepository).findById(userId);
+        // When-Then
+        assertThrows(UserNotFoundException.class, () -> userService.updateUserPersonalData(testUser));
+        verify(userRepository).findByUsername(username);
     }
 
     @Test
     void shouldDeleteUser() {
         // Given
-        int userId = testUser.getId();
-        when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
-        doNothing().when(userRepository).deleteById(userId);
+        String username = testUser.getUsername();
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(testUser));
+        doNothing().when(userRepository).deleteUserByUsername(username);
 
         // When
-        userService.deleteUserById(userId);
+        userService.deleteUserByUsername(username);
 
         // Then
-        verify(userRepository).deleteById(userId);
+        verify(userRepository).deleteUserByUsername(username);
     }
 }

@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.report.request.FullReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportDetailsRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetFullReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportDetailsRequestDto;
 import com.holovin.smidatestproject.controller.dto.report.response.FullReportResponseDto;
 import com.holovin.smidatestproject.controller.dto.report.response.ReportDetailsResponseDto;
 import com.holovin.smidatestproject.controller.dto.report.response.ReportResponseDto;
@@ -17,30 +17,30 @@ import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.to
 
 public class ReportDtoMapper {
 
-    public static Report toReportDetails(ReportRequestDto reportRequestDto) {
+    public static Report toReportDetails(GetReportRequestDto getReportRequestDto) {
         Report report = new Report();
-        report.setReportDate(reportRequestDto.getReportDate());
-        report.setTotalRevenue(reportRequestDto.getTotalRevenue());
-        report.setNetProfit(reportRequestDto.getNetProfit());
+        report.setReportDate(getReportRequestDto.getReportDate());
+        report.setTotalRevenue(getReportRequestDto.getTotalRevenue());
+        report.setNetProfit(getReportRequestDto.getNetProfit());
         return report;
     }
 
-    public static ReportDetails toReportDetails(ReportDetailsRequestDto reportDetailsRequestDto) {
+    public static ReportDetails toReportDetails(GetReportDetailsRequestDto getReportDetailsRequestDto) {
         ReportDetails report = new ReportDetails();
-        report.setReportId(reportDetailsRequestDto.getReportId());
-        report.setComments(reportDetailsRequestDto.getComments());
-        report.setFinancialData(reportDetailsRequestDto.getFinancialData());
+        report.setReportId(getReportDetailsRequestDto.getReportId());
+        report.setComments(getReportDetailsRequestDto.getComments());
+        report.setFinancialData(getReportDetailsRequestDto.getFinancialData());
         return report;
     }
 
-    public static FullReport toFullReport(FullReportRequestDto fullReportRequestDto) {
+    public static FullReport toFullReport(GetFullReportRequestDto getFullReportRequestDto) {
         FullReport fullReport = new FullReport();
-        fullReport.setId(fullReportRequestDto.getId());
-        fullReport.setReportDate(fullReportRequestDto.getReportDate());
-        fullReport.setTotalRevenue(fullReportRequestDto.getTotalRevenue());
-        fullReport.setNetProfit(fullReportRequestDto.getNetProfit());
-        fullReport.setFinancialData(fullReportRequestDto.getFinancialData());
-        fullReport.setComments(fullReportRequestDto.getComments());
+        fullReport.setId(getFullReportRequestDto.getId());
+        fullReport.setReportDate(getFullReportRequestDto.getReportDate());
+        fullReport.setTotalRevenue(getFullReportRequestDto.getTotalRevenue());
+        fullReport.setNetProfit(getFullReportRequestDto.getNetProfit());
+        fullReport.setFinancialData(getFullReportRequestDto.getFinancialData());
+        fullReport.setComments(getFullReportRequestDto.getComments());
         return fullReport;
     }
 

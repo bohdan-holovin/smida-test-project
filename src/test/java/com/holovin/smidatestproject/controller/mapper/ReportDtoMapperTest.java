@@ -1,8 +1,8 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.report.request.FullReportRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportDetailsRequestDto;
-import com.holovin.smidatestproject.controller.dto.report.request.ReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetFullReportRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportDetailsRequestDto;
+import com.holovin.smidatestproject.controller.dto.report.request.GetReportRequestDto;
 import com.holovin.smidatestproject.controller.dto.report.response.FullReportResponseDto;
 import com.holovin.smidatestproject.controller.dto.report.response.ReportDetailsResponseDto;
 import com.holovin.smidatestproject.controller.dto.report.response.ReportResponseDto;
@@ -24,7 +24,7 @@ class ReportDtoMapperTest {
     void shouldMapReportRequestDtoToReport() {
         // Given
         Report expectedReport = RandomUtils.createRandomReport(RandomUtils.createRandomCompany());
-        ReportRequestDto requestDto = new ReportRequestDto();
+        GetReportRequestDto requestDto = new GetReportRequestDto();
         requestDto.setReportDate(expectedReport.getReportDate());
         requestDto.setTotalRevenue(expectedReport.getTotalRevenue());
         requestDto.setNetProfit(expectedReport.getNetProfit());
@@ -42,7 +42,7 @@ class ReportDtoMapperTest {
     void shouldMapReportDetailsRequestDtoToReportDetails() {
         // Given
         ReportDetails expectedReportDetails = RandomUtils.createRandomReportDetails();
-        ReportDetailsRequestDto requestDto = new ReportDetailsRequestDto();
+        GetReportDetailsRequestDto requestDto = new GetReportDetailsRequestDto();
         requestDto.setReportId(expectedReportDetails.getReportId());
         requestDto.setComments(expectedReportDetails.getComments());
         requestDto.setFinancialData(expectedReportDetails.getFinancialData());
@@ -60,7 +60,7 @@ class ReportDtoMapperTest {
     void shouldMapFullReportRequestDtoToFullReport() {
         // Given
         FullReport expectedFullReport = RandomUtils.createRandomFullReport();
-        FullReportRequestDto requestDto = new FullReportRequestDto();
+        GetFullReportRequestDto requestDto = new GetFullReportRequestDto();
         requestDto.setId(expectedFullReport.getId());
         requestDto.setReportDate(expectedFullReport.getReportDate());
         requestDto.setTotalRevenue(expectedFullReport.getTotalRevenue());

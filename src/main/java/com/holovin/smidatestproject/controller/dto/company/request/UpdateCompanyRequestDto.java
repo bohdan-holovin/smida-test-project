@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyUpdateRequestDto {
+public class UpdateCompanyRequestDto {
 
     @NotNull(message = "ID cannot be null")
     private UUID id;

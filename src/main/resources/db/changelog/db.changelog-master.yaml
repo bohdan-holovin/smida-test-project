@@ -4,7 +4,7 @@ databaseChangeLog:
       author: bohdan-holovin
       changes:
         - createTable:
-            tableName: company
+            tableName: companies
             columns:
               - column:
                   name: id
@@ -22,9 +22,12 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: address
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: TIMESTAMP
@@ -35,7 +38,7 @@ databaseChangeLog:
       author: bohdan-holovin
       changes:
         - createTable:
-            tableName: report
+            tableName: reports
             columns:
               - column:
                   name: id
@@ -61,10 +64,10 @@ databaseChangeLog:
                   type: DECIMAL(19,2)
         - addForeignKeyConstraint:
             baseColumnNames: company_id
-            baseTableName: report
+            baseTableName: reports
             constraintName: fk_report_company
             referencedColumnNames: id
-            referencedTableName: company
+            referencedTableName: companies
   - changeSet:
       id: 3
       author: bohdan-holovin
@@ -73,7 +76,7 @@ databaseChangeLog:
             splitStatements: false
             stripComments: true
             sql: |
-              CREATE TYPE role AS ENUM ('USER', 'ADMIN');
+              CREATE TYPE role AS ENUM ('USER', 'ADMIN', 'COMPANY_OWNER', 'ACCOUNTANT');
   - changeSet:
       id: 4
       author: bohdan-holovin
@@ -83,10 +86,29 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: INT
-                  autoIncrement: true
+                  type: UUID
                   constraints:
                     primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: company_id
+                  type: UUID
+              - column:
+                  name: roles
+                  type: role[]
+                  constraints:
                     nullable: false
               - column:
                   name: username
@@ -100,7 +122,42 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: roles
-                  type: role[]
+                  name: first_name
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: address
+                  type: VARCHAR(255)
+              - column:
+                  name: date_of_birth
+                  type: TIMESTAMP
+              - column:
+                  name: date_of_start_work
+                  type: TIMESTAMP
+              - column:
+                  name: position
+                  type: VARCHAR(255)
+        - addForeignKeyConstraint:
+            baseColumnNames: company_id
+            baseTableName: users
+            constraintName: fk_users_company
+            referencedColumnNames: id
+            referencedTableName: companies

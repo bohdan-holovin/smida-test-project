@@ -5,8 +5,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -16,8 +20,17 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue
+    private UUID id;
+    @CreatedDate
+    private Date createdDate;
+    @LastModifiedDate
+    private Date lastModifiedDate;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+    @Convert(converter = RoleSetMapper.class)
+    private Set<Role> roles;
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
@@ -30,8 +43,8 @@ public class User {
     private String email;
     @Column(nullable = false, unique = true)
     private String phone;
-    @Column(nullable = false)
     private String address;
-    @Convert(converter = RoleSetMapper.class)
-    private Set<Role> roles;
+    private Date dateOfBirth;
+    private Date dateOfStartWork;
+    private String position;
 }

@@ -1,7 +1,7 @@
 package com.holovin.smidatestproject.controller.mapper;
 
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyCreateRequestDto;
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CreateCompanyRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.UpdateCompanyRequestDto;
 import com.holovin.smidatestproject.controller.dto.company.response.CompanyResponseDto;
 import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.utils.RandomUtils;
@@ -58,7 +58,7 @@ class CompanyDtoMapperTest {
     void shouldMapCompanyCreateRequestDtoToCompany() {
         // Given
         Company expectedCompany = RandomUtils.createRandomCompany();
-        CompanyCreateRequestDto requestDto = new CompanyCreateRequestDto();
+        CreateCompanyRequestDto requestDto = new CreateCompanyRequestDto();
         requestDto.setName(expectedCompany.getName());
         requestDto.setRegistrationNumber(expectedCompany.getRegistrationNumber());
         requestDto.setAddress(expectedCompany.getAddress());
@@ -76,7 +76,7 @@ class CompanyDtoMapperTest {
     void shouldMapCompanyUpdateRequestDtoToCompany() {
         // Given
         Company expectedCompany = RandomUtils.createRandomCompany();
-        CompanyUpdateRequestDto requestDto = new CompanyUpdateRequestDto();
+        UpdateCompanyRequestDto requestDto = new UpdateCompanyRequestDto();
         requestDto.setId(expectedCompany.getId());
         requestDto.setName(expectedCompany.getName());
         requestDto.setRegistrationNumber(expectedCompany.getRegistrationNumber());

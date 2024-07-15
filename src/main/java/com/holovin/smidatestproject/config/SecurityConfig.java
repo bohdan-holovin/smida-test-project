@@ -1,6 +1,6 @@
 package com.holovin.smidatestproject.config;
 
-import com.holovin.smidatestproject.config.jwt.JwtAuthFilter;
+import com.holovin.smidatestproject.service.OncePerRequestFilterService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    UserDetailsService userDetailsService,
-                                                   JwtAuthFilter jwtAuthFilter) throws Exception {
+                                                   OncePerRequestFilterService oncePerRequestFilterService) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/not-secured", "/login", "/register").permitAll())
@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/companies/**", "/reports/**").authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider(userDetailsService))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(oncePerRequestFilterService, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

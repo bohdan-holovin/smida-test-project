@@ -1,9 +1,9 @@
 package com.holovin.smidatestproject.controller;
 
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyCreateRequestDto;
-import com.holovin.smidatestproject.controller.dto.company.request.CompanyUpdateRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.CreateCompanyRequestDto;
+import com.holovin.smidatestproject.controller.dto.company.request.UpdateCompanyRequestDto;
 import com.holovin.smidatestproject.controller.dto.company.response.CompanyResponseDto;
-import com.holovin.smidatestproject.service.CompanyDeleteService;
+import com.holovin.smidatestproject.service.CompanyDeleteFacadeService;
 import com.holovin.smidatestproject.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,11 +24,11 @@ import static com.holovin.smidatestproject.controller.mapper.CompanyDtoMapper.*;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final CompanyDeleteService companyDeleteService;
+    private final CompanyDeleteFacadeService companyDeleteFacadeService;
     private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<List<CompanyResponseDto>> getAllCompanies() {
         logger.info("Fetching all companies");
         List<CompanyResponseDto> companies = toCompanyResponseDtoList(companyService.getAllCompanies());
@@ -37,7 +37,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER','ACCOUNTANT','COMPANY_OWNER','ADMIN')")
     public ResponseEntity<CompanyResponseDto> getCompanyById(@PathVariable UUID id) {
         logger.info("Fetching company with id {}", id);
         CompanyResponseDto company = toCompanyResponseDto(companyService.getCompanyByCompanyId(id));
@@ -46,8 +46,8 @@ public class CompanyController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CompanyResponseDto> createCompany(@Valid @RequestBody CompanyCreateRequestDto company) {
+    @PreAuthorize("hasAnyAuthority('USER','ACCOUNTANT','COMPANY_OWNER','ADMIN')")
+    public ResponseEntity<CompanyResponseDto> createCompany(@Valid @RequestBody CreateCompanyRequestDto company) {
         logger.info("Creating company request: {}", company);
         CompanyResponseDto createdCompany = toCompanyResponseDto(companyService.createUpdate(toCompany(company)));
         logger.info("Created company response: {}", createdCompany);
@@ -55,8 +55,8 @@ public class CompanyController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CompanyResponseDto> updateCompany(@Valid @RequestBody CompanyUpdateRequestDto company) {
+    @PreAuthorize("hasAnyAuthority('COMPANY_OWNER','ADMIN')")
+    public ResponseEntity<CompanyResponseDto> updateCompany(@Valid @RequestBody UpdateCompanyRequestDto company) {
         logger.info("Updating company request: {}", company);
         CompanyResponseDto updatedCompany = toCompanyResponseDto(companyService.updateCompany(toCompany(company)));
         logger.info("Updated company response: {}", updatedCompany);
@@ -64,10 +64,10 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('COMPANY_OWNER', 'ADMIN')")
     public ResponseEntity<Void> deleteCompany(@PathVariable UUID id) {
         logger.info("Deleting company with id {}", id);
-        companyDeleteService.cascadeCompanyDelete(id);
+        companyDeleteFacadeService.cascadeDeleteCompany(id);
         logger.info("Deleted company with id {}", id);
         return ResponseEntity.ok().build();
     }

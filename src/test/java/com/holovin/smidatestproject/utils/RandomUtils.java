@@ -20,6 +20,13 @@ public class RandomUtils {
         return user;
     }
 
+    public static User createRandomUser(Company company) {
+        User user = generator.nextObject(User.class);
+        user.setRoles(Set.of(Role.USER));
+        user.setCompany(company);
+        return user;
+    }
+
     public static Report createRandomReport(Company company) {
         Report report = generator.nextObject(Report.class);
         report.setCompany(company);

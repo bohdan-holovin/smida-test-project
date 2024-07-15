@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -19,9 +19,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(int id) throws UserNotFoundException {
+    public User getUserById(UUID id) throws UserNotFoundException {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
+                .orElseThrow(() -> new UserNotFoundException(id.toString()));
     }
 
     public User getUserByUsername(String username) throws UserNotFoundException {
@@ -29,24 +29,27 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    public User updateUser(User updatedUser) throws UserNotFoundException {
-        return Optional.of(getUserById(updatedUser.getId()))
+    public User updateUserPersonalData(User updatedUser) throws UserNotFoundException {
+        return userRepository.findByUsername(updatedUser.getUsername())
                 .map(user -> {
                     user.setUsername(updatedUser.getUsername());
-                    user.setPassword(updatedUser.getPassword());
                     user.setFirstName(updatedUser.getFirstName());
                     user.setLastName(updatedUser.getLastName());
                     user.setEmail(updatedUser.getEmail());
                     user.setPhone(updatedUser.getPhone());
                     user.setAddress(updatedUser.getAddress());
+                    user.setDateOfBirth(updatedUser.getDateOfBirth());
                     return user;
                 })
                 .map(userRepository::save)
-                .orElseThrow(() -> new UserNotFoundException(String.valueOf(updatedUser.getId())));
+                .orElseThrow(() -> new UserNotFoundException(updatedUser.getUsername()));
     }
 
-    public void deleteUserById(int id) throws UserNotFoundException {
-        getUserById(id);
-        userRepository.deleteById(id);
+    public void deleteUserByUsername(String username) throws UserNotFoundException {
+        userRepository.findByUsername(username)
+                .ifPresentOrElse(
+                        (it) -> userRepository.deleteUserByUsername(username),
+                        () -> { throw new UserNotFoundException(username); }
+                );
     }
 }

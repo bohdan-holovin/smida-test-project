@@ -15,8 +15,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin:admin@localhost:27017/smidadb?authSource=admin
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+#  liquibase:
+#    change-log: classpath:db/changelog/db.changelog-master.yaml
 
 logging:
   level:

@@ -1,8 +1,9 @@
 package com.holovin.smidatestproject.repository;
 
+import com.holovin.smidatestproject.model.Company;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.utils.RandomUtils;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
+import static com.holovin.smidatestproject.utils.RandomUtils.createRandomCompany;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -18,16 +20,20 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @BeforeEach
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @AfterEach
     public void setUp() {
         userRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 
     @Test
     public void shouldReturnUserWhenCallFindByUsername() {
         // Given
-        User expectedUser = RandomUtils.createRandomUser();
-        userRepository.save(expectedUser);
+        Company company = companyRepository.save(createRandomCompany());
+        User expectedUser = userRepository.save(RandomUtils.createRandomUser(company));
 
         // When
         Optional<User> actualUser = userRepository.findByUsername(expectedUser.getUsername());
@@ -40,8 +46,8 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUserWhenCallFindById() {
         // Given
-        User user = RandomUtils.createRandomUser();
-        User expectedUser = userRepository.save(user);
+        Company company = companyRepository.save(createRandomCompany());
+        User expectedUser = userRepository.save(RandomUtils.createRandomUser(company));
 
         // When
         Optional<User> actualUser = userRepository.findById(expectedUser.getId());
@@ -54,26 +60,25 @@ public class UserRepositoryTest {
     @Test
     public void shouldReturnUsersWhenCallFindAll() {
         // Given
-        User user1 = RandomUtils.createRandomUser();
-        User user2 = RandomUtils.createRandomUser();
-
-        userRepository.save(user1);
-        userRepository.save(user2);
+        Company company1 = companyRepository.save(createRandomCompany());
+        User expectedUser1 = userRepository.save(RandomUtils.createRandomUser(company1));
+        Company company2 = companyRepository.save(createRandomCompany());
+        User expectedUser2 = userRepository.save(RandomUtils.createRandomUser(company2));
 
         // When
         List<User> actualUsers = userRepository.findAll();
 
         // Then
         assertThat(actualUsers).hasSize(2);
-        assertUser(actualUsers.get(0), user1);
-        assertUser(actualUsers.get(1), user2);
+        assertUser(actualUsers.get(0), expectedUser1);
+        assertUser(actualUsers.get(1), expectedUser2);
     }
 
     @Test
     public void shouldDeleteUserWhenCallDeleteById() {
         // Given
-        User user = RandomUtils.createRandomUser();
-        userRepository.save(user);
+        Company company = companyRepository.save(createRandomCompany());
+        User user = userRepository.save(RandomUtils.createRandomUser(company));
 
         // When
         userRepository.deleteById(user.getId());

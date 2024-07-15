@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,7 +29,7 @@ public class CompanyService {
     }
 
     public Company updateCompany(Company updatedCompany) {
-        return Optional.of(getCompanyByCompanyId(updatedCompany.getId()))
+        return companyRepository.findById(updatedCompany.getId())
                 .map(company -> {
                     company.setName(updatedCompany.getName());
                     company.setRegistrationNumber(updatedCompany.getRegistrationNumber());
@@ -42,7 +41,12 @@ public class CompanyService {
     }
 
     void deleteCompanyByCompanyId(UUID id) {
-        getCompanyByCompanyId(id);
-        companyRepository.deleteById(id);
+        companyRepository.findById(id)
+                .ifPresentOrElse(
+                        (it) -> companyRepository.deleteById(id),
+                        () -> {
+                            throw new CompanyNotFoundException(id);
+                        }
+                );
     }
 }

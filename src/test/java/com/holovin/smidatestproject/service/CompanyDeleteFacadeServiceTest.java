@@ -16,7 +16,7 @@ import static com.holovin.smidatestproject.utils.RandomUtils.createRandomReport;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CompanyDeleteServiceTest extends AbstractUnitTest {
+class CompanyDeleteFacadeServiceTest extends AbstractUnitTest {
 
     @Mock
     private ReportService reportService;
@@ -25,7 +25,7 @@ class CompanyDeleteServiceTest extends AbstractUnitTest {
     private CompanyService companyService;
 
     @InjectMocks
-    private CompanyDeleteService companyDeleteService;
+    private CompanyDeleteFacadeService companyDeleteFacadeService;
 
     @Test
     void shouldCascadeDeleteCompany() {
@@ -37,7 +37,7 @@ class CompanyDeleteServiceTest extends AbstractUnitTest {
         when(reportService.getAllReportsByCompanyId(company.getId())).thenReturn(reports);
 
         // When
-        companyDeleteService.cascadeCompanyDelete(company.getId());
+        companyDeleteFacadeService.cascadeDeleteCompany(company.getId());
 
         // Then
         verify(reportService).getAllReportsByCompanyId(company.getId());

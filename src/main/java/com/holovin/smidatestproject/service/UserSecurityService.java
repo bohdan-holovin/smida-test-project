@@ -1,6 +1,7 @@
 package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.exception.UserNotFoundException;
+import com.holovin.smidatestproject.model.Role;
 import com.holovin.smidatestproject.model.User;
 import com.holovin.smidatestproject.model.UserDetailsImpl;
 import com.holovin.smidatestproject.repository.UserRepository;
@@ -11,23 +12,35 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 @AllArgsConstructor
-public class UserAuthService implements UserDetailsService {
+public class UserSecurityService implements UserDetailsService {
 
-    private UserRepository repository;
-    private PasswordEncoder encoder;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        return repository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     public User registerUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Set.of(Role.USER));
+        return userRepository.save(user);
+    }
+
+    public User updateUserPassword(User updatedUser) throws UserNotFoundException {
+        return userRepository.findByUsername(updatedUser.getUsername())
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+                    return user;
+                })
+                .map(userRepository::save)
+                .orElseThrow(() -> new UserNotFoundException(String.valueOf(updatedUser.getId())));
     }
 }

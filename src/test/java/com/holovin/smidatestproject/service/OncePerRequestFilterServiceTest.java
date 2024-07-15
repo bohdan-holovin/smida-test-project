@@ -1,7 +1,6 @@
-package com.holovin.smidatestproject.config.jwt;
+package com.holovin.smidatestproject.service;
 
 import com.holovin.smidatestproject.AbstractUnitTest;
-import com.holovin.smidatestproject.service.UserAuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +23,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class JwtAuthFilterTest extends AbstractUnitTest {
+class OncePerRequestFilterServiceTest extends AbstractUnitTest {
 
     @Mock
     private JwtService jwtService;
 
     @Mock
-    private UserAuthService userAuthService;
+    private UserSecurityService userSecurityService;
 
     @Mock
     private HttpServletRequest request;
@@ -42,7 +41,7 @@ class JwtAuthFilterTest extends AbstractUnitTest {
     private FilterChain filterChain;
 
     @InjectMocks
-    private JwtAuthFilter jwtAuthFilter;
+    private OncePerRequestFilterService oncePerRequestFilterService;
 
     @BeforeEach
     void setUp() {
@@ -55,7 +54,7 @@ class JwtAuthFilterTest extends AbstractUnitTest {
         when(request.getHeader("Authorization")).thenReturn(null);
 
         // When
-        jwtAuthFilter.doFilterInternal(request, response, filterChain);
+        oncePerRequestFilterService.doFilterInternal(request, response, filterChain);
 
         // Then
         verify(jwtService, never()).extractUsername(any());
@@ -68,7 +67,7 @@ class JwtAuthFilterTest extends AbstractUnitTest {
         when(request.getHeader("Authorization")).thenReturn("SomeToken 124124231421");
 
         // When
-        jwtAuthFilter.doFilterInternal(request, response, filterChain);
+        oncePerRequestFilterService.doFilterInternal(request, response, filterChain);
 
         // Then
         verify(jwtService, never()).extractUsername(any());
@@ -81,11 +80,11 @@ class JwtAuthFilterTest extends AbstractUnitTest {
         String invalidToken = "Bearer invalidToken";
         when(request.getHeader("Authorization")).thenReturn(invalidToken);
         when(jwtService.extractUsername(anyString())).thenReturn("user");
-        when(userAuthService.loadUserByUsername(anyString())).thenReturn(mock(UserDetails.class));
+        when(userSecurityService.loadUserByUsername(anyString())).thenReturn(mock(UserDetails.class));
         when(jwtService.validateToken(eq("invalidToken"), any(UserDetails.class))).thenReturn(false);
 
         // When
-        jwtAuthFilter.doFilterInternal(request, response, filterChain);
+        oncePerRequestFilterService.doFilterInternal(request, response, filterChain);
 
         // Then
         assertNull(SecurityContextHolder.getContext().getAuthentication());
@@ -104,11 +103,11 @@ class JwtAuthFilterTest extends AbstractUnitTest {
 
         when(request.getHeader("Authorization")).thenReturn(validToken);
         when(jwtService.extractUsername(anyString())).thenReturn(username);
-        when(userAuthService.loadUserByUsername(anyString())).thenReturn(userDetails);
+        when(userSecurityService.loadUserByUsername(anyString())).thenReturn(userDetails);
         when(jwtService.validateToken(eq("validToken"), eq(userDetails))).thenReturn(true);
 
         // When
-        jwtAuthFilter.doFilterInternal(request, response, filterChain);
+        oncePerRequestFilterService.doFilterInternal(request, response, filterChain);
 
         // Then
         UsernamePasswordAuthenticationToken authToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-class UserAuthServiceTest extends AbstractUnitTest {
+class UserSecurityServiceTest extends AbstractUnitTest {
 
     @Mock
     private UserRepository repository;
@@ -31,7 +31,7 @@ class UserAuthServiceTest extends AbstractUnitTest {
     private PasswordEncoder encoder;
 
     @InjectMocks
-    private UserAuthService userAuthService;
+    private UserSecurityService userSecurityService;
 
     private User user;
 
@@ -46,7 +46,7 @@ class UserAuthServiceTest extends AbstractUnitTest {
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
 
         // When
-        UserDetails actualUserDetails = userAuthService.loadUserByUsername(user.getUsername());
+        UserDetails actualUserDetails = userSecurityService.loadUserByUsername(user.getUsername());
 
         // Then
         assertThat(actualUserDetails).isNotNull();
@@ -62,7 +62,7 @@ class UserAuthServiceTest extends AbstractUnitTest {
         given(repository.findByUsername(user.getUsername())).willReturn(Optional.empty());
 
         // When-Then
-        assertThatThrownBy(() -> userAuthService.loadUserByUsername(user.getUsername()))
+        assertThatThrownBy(() -> userSecurityService.loadUserByUsername(user.getUsername()))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining(user.getUsername());
         verify(repository).findByUsername(user.getUsername());
@@ -72,23 +72,13 @@ class UserAuthServiceTest extends AbstractUnitTest {
     void shouldRegisterUserSuccessfully() {
         // Given
         PasswordEncoder customEncoder = new BCryptPasswordEncoder();
-        User expectedUser = new User(
-                user.getId(),
-                user.getUsername(),
-                customEncoder.encode(user.getPassword()),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getAddress(),
-                Set.of(Role.USER)
-        );
+        User expectedUser = getExpectedUser(customEncoder);
 
         given(encoder.encode(user.getPassword())).willReturn(user.getPassword());
         given(repository.save(user)).willReturn(expectedUser);
 
         // When
-        User actualUser = userAuthService.registerUser(user);
+        User actualUser = userSecurityService.registerUser(user);
 
         // Then
         assertThat(actualUser).isNotNull();
@@ -96,5 +86,25 @@ class UserAuthServiceTest extends AbstractUnitTest {
 
         verify(encoder).encode(user.getPassword());
         verify(repository).save(user);
+    }
+
+    private User getExpectedUser(PasswordEncoder customEncoder) {
+        return new User(
+                user.getId(),
+                user.getCreatedDate(),
+                user.getLastModifiedDate(),
+                user.getCompany(),
+                Set.of(Role.USER),
+                user.getUsername(),
+                customEncoder.encode(user.getPassword()),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress(),
+                user.getDateOfBirth(),
+                user.getDateOfStartWork(),
+                user.getPosition()
+        );
     }
 }
